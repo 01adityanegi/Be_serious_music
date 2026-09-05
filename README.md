@@ -42,11 +42,9 @@ BeSerious-Music/
 │   ├── images/
 │   └── music/
 │
-├── css/
-│   └── style.css
+├──style.css
 │
-├── js/
-│   └── script.js
+│── script.js
 │
 ├── index.html
 └── README.md
