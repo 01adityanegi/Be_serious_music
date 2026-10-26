@@ -1,2053 +1,3258 @@
-// Songs data (populated from the 'songs ' folder)
-const TRENDING_ICON = `
-<svg class="trending-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M22 7L13.5 15.5L8.5 10.5L2 17" stroke="url(#trending-gradient)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M16 7H22V13" stroke="url(#trending-gradient)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-    <defs>
-        <linearGradient id="trending-gradient" x1="2" y1="17" x2="22" y2="7" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#FF1D8E"/>
-            <stop offset="1" stop-color="#FF5D2D"/>
-        </linearGradient>
-    </defs>
-</svg>
-`;
 
-const songs = [
-    { id: 14, title: "Babes", artist: "BE_SERIOUS_MUSIC Artist", src: "Kunal/songs/babes.mp3", img: "Kunal/cover/babes.png", isNew: true, isTrending: true },
-    { id: 4, title: "My Name Priyanshu", artist: "BE_SERIOUS_MUSIC Artist", src: "MY_name_priyanshu/My_name_priyanshu.mp3", img: "MY_name_priyanshu/cover-pic/Mynamepriyanshu.png", isTrending: true },
-    { id: 1, title: "Be Serious Gang", artist: "BE_SERIOUS_MUSIC Artist", src: "MY_name_priyanshu/Be_Serious_Gang.mp3", img: "MY_name_priyanshu/cover-pic/be_serious.png" },
-    { id: 2, title: "Built by Hard Work", artist: "BE_SERIOUS_MUSIC Artist", src: "MY_name_priyanshu/Built_by_Hard-Work.mp3", img: "MY_name_priyanshu/cover-pic/priyanshu_masti_trip.png" },
-    { id: 3, title: "Mountain Dreamer", artist: "BE_SERIOUS_MUSIC Artist", src: "MY_name_priyanshu/Mountain_Dreamer.mp3", img: "MY_name_priyanshu/cover-pic/Mountain_dreamer.png" },
-    { id: 5, title: "Tu Hi Meri Jaan", artist: "BE_SERIOUS_MUSIC Artist", src: "MY_name_priyanshu/Tu_ Hi _Meri _Jaan.mp3", img: "MY_name_priyanshu/cover-pic/Tu_he_meri_jaan.png" },
-    { id: 6, title: "Ek Hai Sujal", artist: "BE_SERIOUS_MUSIC Artist", src: "ek_hai_sujal/songs/Ek hai Sujal.mp3", img: "ek_hai_sujal/cover_pic/ek_hai_sujal.png", isNew: true, isTrending: true },
-    { id: 7, title: "Aage Chala", artist: "BE_SERIOUS_MUSIC Artist", src: "ek_hai_sujal/songs/Aage_chala.mp3", img: "ek_hai_sujal/cover_pic/aagechala.png" },
-    { id: 8, title: "Adhoori Kahani Kamal Ki", artist: "BE_SERIOUS_MUSIC Artist", src: "Kamal_ki_khani/song/Adhoori_Kahani_Kamal_Ki.mp3", img: "Kamal_ki_khani/cover_pic/adhoori_kahani_kamal_ki.png", isNew: true, isTrending: true },
-    { id: 9, title: "Kya Kamal Mein Kami Thi", artist: "BE_SERIOUS_MUSIC Artist", src: "Kamal_ki_khani/song/Kya_Kamal_m_Kami_Thi.mp3", img: "Kamal_ki_khani/cover_pic/kyakamalmkamithi.png" },
-    { id: 10, title: "Vo Golu Hai", artist: "BE_SERIOUS_MUSIC Artist", src: "golu/song/vo golu hai.mp3", img: "golu/cover/vogoluh.png", isNew: true },
-    { id: 11, title: "Kiran Kiran", artist: "BE_SERIOUS_MUSIC Artist", src: "kiran/songs/Kiran_Kiran.mp3", img: "kiran/cover/kirankiran.png", isNew: true, isTrending: true },
-    { id: 12, title: "Ishq-e-kamal", artist: "BE_SERIOUS_MUSIC Artist", src: "Kamal_ki_khani/song/ishq_e_kamal.mp3", img: "Kamal_ki_khani/cover_pic/ishq_e_kamal.png", isNew: true },
-    { id: 13, title: "Golu on Grind", artist: "BE_SERIOUS_MUSIC Artist", src: "golu/song/golu_on_grind.mp3", img: "golu/cover/golu_on_grind.png", isNew: true },
-    { id: 15, title: "Raj Ka Raj", artist: "BE_SERIOUS_MUSIC Artist", src: "Raj/song/raj-ka-raj.mp3", img: "Raj/cover-pic/raj-ka-raj.png", isNew: true, isTrending: true }
-];
+// const GOOGLE_APPS_SCRIPT_URL = '';
+// const ADMIN_EMAIL = '';
+// const MEDIA_CACHE_NAME = '';
 
-const reviewerProfiles = [
-    { name: 'Aadi', comment: title => `${title} has an incredible energy and is a total mood lifter.` },
-    { name: 'Priyanshu', comment: title => `${title} has premium vibes and a standout chorus.` },
-    { name: 'Kunal', comment: title => `${title} is polished, powerful and instantly replayable.` },
-    { name: 'Raj', comment: title => `${title} feels cinematic and premium from start to finish.` },
-    { name: 'Karan', comment: title => `${title} has a perfect rhythm and unforgettable hook.` },
-    { name: 'Kamal', comment: title => `${title} is smooth, bold and packed with energy.` },
-    { name: 'Gaurav', comment: title => `${title} has a beautiful melody and huge replay value.` },
-    { name: 'Kamal Binwal', comment: title => `${title} sounds incredible and is radio-ready.` },
-    { name: 'Rahul', comment: title => `${title} delivers premium production and strong vocals.` },
-    { name: 'Sujal', comment: title => `${title} is fire — every part of it hits.` }
-];
-
-let reviewBannerTimeout;
-let reviewBannerInterval;
-let reviewBannerReviews = [];
-let reviewBannerIndex = 0;
-
-function titleCase(text) {
-    return text.toString().replace(/\w\S*/g, (word) => word.charAt(0).toUpperCase() + word.substr(1).toLowerCase());
-}
-
-function formatReviewText(text) {
-    return titleCase(text);
-}
-
-function getSongReviews(songId) {
-    const song = songs.find(s => s.id === songId);
-    const dynamicReviews = song ? reviewerProfiles.map(profile => ({
-        user: titleCase(profile.name),
-        rating: 5,
-        comment: formatReviewText(profile.comment(song.title))
-    })) : [];
-
-    return [
-        ...dynamicReviews,
-        ...((reviews[songId] || []).map(rev => ({
-            user: titleCase(rev.user),
-            rating: rev.rating,
-            comment: formatReviewText(rev.comment)
-        })))
-    ];
-}
-
-function updateReviewBannerContent() {
-    if (!reviewBanner || !reviewBannerReviews.length) return;
-
-    const review = reviewBannerReviews[reviewBannerIndex];
-    reviewBanner.innerHTML = `
-        <div class="review-banner-card">
-            <div class="review-banner-item">
-                <span class="review-banner-user">${review.user}</span>
-                <span class="review-banner-comment">${review.comment}</span>
-            </div>
-        </div>
-    `;
-}
-
-function hideReviewBanner() {
-    if (!reviewBanner) return;
-    reviewBanner.classList.remove('visible');
-    reviewBanner.classList.add('hidden');
-    clearInterval(reviewBannerInterval);
-}
-
-function showSongReviewBanner(song) {
-    if (!reviewBanner) return;
-
-    reviewBannerReviews = getSongReviews(song.id);
-    if (!reviewBannerReviews.length) return;
-
-    reviewBannerIndex = 0;
-    updateReviewBannerContent();
-    reviewBanner.classList.remove('hidden');
-    reviewBanner.classList.add('visible');
-
-    clearTimeout(reviewBannerTimeout);
-    clearInterval(reviewBannerInterval);
-
-    reviewBannerInterval = setInterval(() => {
-        reviewBannerIndex = (reviewBannerIndex + 1) % reviewBannerReviews.length;
-        updateReviewBannerContent();
-    }, 2600);
-
-    reviewBannerTimeout = setTimeout(hideReviewBanner, reviewBannerReviews.length * 2600 + 2000);
-}
-
-// Playlists data structure
-const playlists = {
-    "Luxury Vibes": [4, 6, 5, 7, 13, 14],  // My Name Priyanshu, Ek Hai Sujal, Tu Hi Meri Jaan, Aage Chala
-    "Late Night Jazz": [1, 2, 3, 7, 14, 12, 8, 9],  // Be Serious Gang, Built by Hard Work, Mountain Dreamer, Aage Chala
-    "My Name Priyanshu": [4, 1, 2, 3, 5]  // Without Ek Hai Sujal
+const LUX_ICONS = {
+    sparkle: `<svg class="lux-toast-icon" viewBox="0 0 24 24"><path d="M12 2L9.5 8.5 3 11l6.5 2.5L12 20l2.5-6.5L21 11l-6.5-2.5z"/></svg>`,
+    heart: `<svg class="lux-toast-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`,
+    shuffle: `<svg class="lux-toast-icon" viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>`,
+    repeat: `<svg class="lux-toast-icon" viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>`,
+    repeatOne: `<svg class="lux-toast-icon" viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/><text x="10" y="15" font-size="8" fill="currentColor" font-weight="bold">1</text></svg>`,
+    cloudDone: `<svg class="lux-toast-icon" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM10 17l-3.5-3.5 1.41-1.41L10 14.17l5.59-5.59L17 10l-7 7z"/></svg>`,
+    cloudDownload: `<svg class="lux-toast-icon" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>`,
+    check: `<svg class="lux-toast-icon" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`,
+    disc: `<svg class="lux-toast-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5zm0-5.5c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"/></svg>`,
+    sync: `<svg class="lux-toast-icon" viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>`,
+    globe: `<svg class="lux-toast-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`,
+    offline: `<svg class="lux-toast-icon" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM10 17l-3.5-3.5 1.41-1.41L10 14.17l5.59-5.59L17 10l-7 7z"/></svg>`,
+    flame: `<svg class="lux-toast-icon" viewBox="0 0 24 24"><path d="M12 23c-4.97 0-9-4.03-9-9 0-3.53 2.11-6.57 5.17-7.97-.04.48-.06.97-.06 1.47 0 3.23 1.83 6.04 4.54 7.42-.3-1.04-.47-2.14-.47-3.28 0-2.3 1.05-4.36 2.72-5.73C15.63 4.47 16 3.03 16 1.5c0-.17-.02-.34-.05-.5C19.55 3.39 22 7.41 22 12c0 6.08-4.92 11-10 11z"/></svg>`,
+    mail: `<svg class="lux-toast-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>`
 };
 
-let userPlaylists = ["My Name Priyanshu", "Luxury Vibes", "Late Night Jazz"];
-let filteredSongs = [...songs];
 
+function sanitizeAddressBarUrl() {
+    try {
+        const search = window.location.search || '';
+        const params = new URLSearchParams(search);
+        const trackId = params.get('track') || params.get('song');
+        const cleanQuery = trackId ? `?track=${encodeURIComponent(trackId)}` : '';
+        const cleanPath = (window.location.pathname || '/') + cleanQuery;
+        if (window.location.hash || (search && !trackId)) {
+            window.history.replaceState(null, document.title, cleanPath);
+        }
+    } catch (e) {
+  
+    }
+}
+
+sanitizeAddressBarUrl();
+
+
+const songs = [
+    {
+        id: 16,
+        title: "Ek Hai Sujal 2.0",
+        artist: "BE SERIOUS MUSIC",
+        category: "mountain",
+        audio: "ek_hai_sujal/songs/Ek hai sujal 2.O (1).mp3",
+        img: "ek_hai_sujal/cover_pic/Ek Hai Sujal 2.0_ Mountain Dreams.png",
+        color: "#1E90FF",
+        duration: "7:21",
+        isNew: true,
+        isTrending: true,
+        featured: true
+    },
+    {
+        id: 6,
+        title: "Ek Hai Sujal",
+        artist: "BE SERIOUS MUSIC",
+        category: "mountain",
+        audio: "ek_hai_sujal/songs/Ek hai Sujal.mp3",
+        img: "ek_hai_sujal/cover_pic/ek_hai_sujal.png",
+        color: "#32CD32",
+        duration: "3:54",
+        isTrending: true
+    },
+    {
+        id: 7,
+        title: "Aage Chala",
+        artist: "BE SERIOUS MUSIC",
+        category: "mountain",
+        audio: "ek_hai_sujal/songs/Aage_Chala.mp3",
+        img: "ek_hai_sujal/cover_pic/aagechala.png",
+        color: "#1E90FF",
+        duration: "2:49"
+    },
+    {
+        id: 14,
+        title: "Babes",
+        artist: "BE SERIOUS MUSIC",
+        category: "hustle",
+        audio: "Kunal/songs/babes.mp3",
+        img: "Kunal/cover/babes.png",
+        color: "#FFD700",
+        duration: "3:16",
+        isTrending: true
+    },
+    {
+        id: 4,
+        title: "My Name Priyanshu",
+        artist: "BE SERIOUS MUSIC",
+        category: "hustle",
+        audio: "MY_name_priyanshu/My_name_priyanshu.mp3",
+        img: "MY_name_priyanshu/cover-pic/Mynamepriyanshu.png",
+        color: "#FF4500",
+        duration: "4:20",
+        isTrending: true
+    },
+    {
+        id: 1,
+        title: "Be Serious Gang",
+        artist: "BE SERIOUS MUSIC",
+        category: "hustle",
+        audio: "MY_name_priyanshu/Be_Serious_Gang.mp3",
+        img: "MY_name_priyanshu/cover-pic/be_serious.png",
+        color: "#FFD700",
+        duration: "2:30"
+    },
+    {
+        id: 2,
+        title: "Built by Hard Work",
+        artist: "BE SERIOUS MUSIC",
+        category: "hustle",
+        audio: "MY_name_priyanshu/Built_by_Hard-Work.mp3",
+        img: "MY_name_priyanshu/cover-pic/priyanshu_masti_trip.png",
+        color: "#FF4500",
+        duration: "2:34"
+    },
+    {
+        id: 3,
+        title: "Mountain Dreamer",
+        artist: "BE SERIOUS MUSIC",
+        category: "mountain",
+        audio: "MY_name_priyanshu/Mountain_Dreamer.mp3",
+        img: "MY_name_priyanshu/cover-pic/Mountain_dreamer.png",
+        color: "#32CD32",
+        duration: "3:55"
+    },
+    {
+        id: 5,
+        title: "Tu Hi Meri Jaan",
+        artist: "BE SERIOUS MUSIC",
+        category: "melodies",
+        audio: "MY_name_priyanshu/Tu_ Hi _Meri _Jaan.mp3",
+        img: "MY_name_priyanshu/cover-pic/Tu_he_meri_jaan.png",
+        color: "#8A2BE2",
+        duration: "3:51"
+    },
+    {
+        id: 8,
+        title: "Adhoori Kahani Kamal Ki",
+        artist: "BE SERIOUS MUSIC",
+        category: "melodies",
+        audio: "Kamal_ki_khani/song/Adhoori_Kahani_Kamal_Ki.mp3",
+        img: "Kamal_ki_khani/cover_pic/adhoori_kahani_kamal_ki.png",
+        color: "#8A2BE2",
+        duration: "4:24",
+        isTrending: true
+    },
+    {
+        id: 9,
+        title: "Kya Kamal Mein Kami Thi",
+        artist: "BE SERIOUS MUSIC",
+        category: "melodies",
+        audio: "Kamal_ki_khani/song/Kya_Kamal_m_Kami_Thi.mp3",
+        img: "Kamal_ki_khani/cover_pic/kyakamalmkamithi.png",
+        color: "#8A2BE2",
+        duration: "4:13"
+    },
+    {
+        id: 12,
+        title: "Ishq-e-kamal",
+        artist: "BE SERIOUS MUSIC",
+        category: "melodies",
+        audio: "Kamal_ki_khani/song/ishq_e_kamal.mp3",
+        img: "Kamal_ki_khani/cover_pic/ishq_e_kamal.png",
+        color: "#8A2BE2",
+        duration: "5:04"
+    },
+    {
+        id: 10,
+        title: "Vo Golu Hai",
+        artist: "BE SERIOUS MUSIC",
+        category: "rap",
+        audio: "golu/song/vo golu hai.mp3",
+        img: "golu/cover/vogoluh.png",
+        color: "#FF4500",
+        duration: "4:28"
+    },
+    {
+        id: 13,
+        title: "Golu on Grind",
+        artist: "BE SERIOUS MUSIC",
+        category: "rap",
+        audio: "golu/song/golu_on_grind.mp3",
+        img: "golu/cover/golu_on_grind.png",
+        color: "#FFD700",
+        duration: "2:21"
+    },
+    {
+        id: 11,
+        title: "Kiran Kiran",
+        artist: "BE SERIOUS MUSIC",
+        category: "melodies",
+        audio: "kiran/songs/Kiran_Kiran.mp3",
+        img: "kiran/cover/kirankiran.png",
+        color: "#8A2BE2",
+        duration: "3:17",
+        isTrending: true
+    },
+    {
+        id: 15,
+        title: "Raj Ka Raj",
+        artist: "BE SERIOUS MUSIC",
+        category: "rap",
+        audio: "Raj/song/raj-ka-raj.mp3",
+        img: "Raj/cover-pic/raj-ka-raj.png",
+        color: "#1E90FF",
+        duration: "5:44",
+        isTrending: true
+    }
+];
+
+// Studio Synchronized Live Lyrics Database (All 16 Master Tracks)
+const SONG_LYRICS = {
+    16: [ // Ek Hai Sujal 2.0
+        { time: 0, text: "BE SERIOUS MUSIC • Studio Master 24-Bit" },
+        { time: 5, text: "Pahadon ki unchaiyon se aati ek aawaz..." },
+        { time: 14, text: "Hawaon mein khushbu, dil mein ek naya andaaz" },
+        { time: 25, text: "Ek hai Sujal, chalti hai uski hi shaan" },
+        { time: 36, text: "Dhadkanon mein basi hai yeh zameen, yeh aasmaan" },
+        { time: 48, text: "Raston par chala bina kisi darr ke" },
+        { time: 58, text: "Sapne sajaaye aankhon mein raat bhar ke" },
+        { time: 70, text: "Ek Hai Sujal 2.0, shuruaat naye daur ki" },
+        { time: 82, text: "Goonj uthi hai mehfil har ek mod ki" },
+        { time: 96, text: "Har mod pe mila ek naya imtihaan" },
+        { time: 110, text: "Sabko dikhaya kaise banta hai tufaan" },
+        { time: 125, text: "BE SERIOUS Gang, hum jhukte nahi kahin" },
+        { time: 140, text: "Mehnat se banate hain manzil yahin" },
+        { time: 160, text: "Hawaon ka rukh bhi mod denge hum" },
+        { time: 180, text: "Yeh pahadi jazba kabhi hoga na kam" },
+        { time: 205, text: "Ek hai Sujal, naam nahi yeh hai junoon" },
+        { time: 230, text: "Ragon mein behta hai mehnat ka khoon" },
+        { time: 260, text: "Suron ki ye lehar, dilon ka sukoon" },
+        { time: 290, text: "BE SERIOUS MUSIC... Official Drop 2.0" }
+    ],
+    6: [ // Ek Hai Sujal
+        { time: 0, text: "BE SERIOUS MUSIC Official" },
+        { time: 4, text: "Sheher ki galiyon se door, pahadon ki chaon mein" },
+        { time: 14, text: "Ek aawaz gunji har ek gaon mein" },
+        { time: 25, text: "Ek hai Sujal, jo karta hai sabko fida" },
+        { time: 38, text: "Uske suron mein hai dil ki sada" },
+        { time: 52, text: "Na koi fikar, na koi ranj-o-gham" },
+        { time: 66, text: "Jahan bhi jaye, badha de apna kadam" },
+        { time: 80, text: "Sujal ka andaaz sabse juda hai" },
+        { time: 94, text: "Har ek bol mein mehnat ka asar basa hai" },
+        { time: 110, text: "Pahadon ka beta, dilon ka sultaan" },
+        { time: 130, text: "BE SERIOUS MUSIC, shaan-e-pehchaan" }
+    ],
+    7: [ // Aage Chala
+        { time: 0, text: "BE SERIOUS MUSIC • Aage Chala" },
+        { time: 6, text: "Rukna nahi hai, bas chalte jana hai" },
+        { time: 16, text: "Apni taqdeer ko khud hi likh ke dikhana hai" },
+        { time: 28, text: "Aage chala main, aage chala" },
+        { time: 39, text: "Andheron ko cheer ke savera mila" },
+        { time: 52, text: "Kaante the raahon mein, par hausla tha saath" },
+        { time: 66, text: "Kismat ne bhi thaam liya mehnat ka haath" },
+        { time: 82, text: "Aage chala, kabhi mudke na dekha" },
+        { time: 98, text: "Kamyabi ne badal di haathon ki har rekha" },
+        { time: 118, text: "BE SERIOUS MUSIC... The Journey Continues" }
+    ],
+    14: [ // Babes
+        { time: 0, text: "BE SERIOUS MUSIC • Babes Official" },
+        { time: 5, text: "Late night city drives, bass in the trunk" },
+        { time: 15, text: "Look at the flow, we got that real luxury funk" },
+        { time: 26, text: "Babes, look at the grind we run every single day" },
+        { time: 38, text: "Nothing in this world can stand in our way" },
+        { time: 50, text: "High fidelity sound, gold chains and crown" },
+        { time: 63, text: "BE SERIOUS boys taking over the town" },
+        { time: 76, text: "Catch the rhythm, feel the heat" },
+        { time: 90, text: "Unstoppable energy drop on every beat" },
+        { time: 108, text: "Pure luxury frequency, BE SERIOUS MUSIC" }
+    ],
+    4: [ // My Name Priyanshu
+        { time: 0, text: "BE SERIOUS MUSIC • Signature Anthem" },
+        { time: 6, text: "Sun lo dhyan se, yeh aawaz kiski hai" },
+        { time: 16, text: "Mehnat aur junoon ki yeh dastan kiski hai" },
+        { time: 28, text: "My Name Priyanshu, flow mera barood hai" },
+        { time: 40, text: "Ragon mein behta yeh sach ka wajood hai" },
+        { time: 54, text: "Bina kisi sahare khada hua yahan" },
+        { time: 68, text: "Aaj dekh raha hai mera yeh saara jahan" },
+        { time: 84, text: "Hustle meri legacy, passion mera rule" },
+        { time: 100, text: "BE SERIOUS Gang, never plays by fool" },
+        { time: 120, text: "Priyanshu on the track, making history right" },
+        { time: 142, text: "Shining bright through the darkest night" }
+    ],
+    1: [ // Be Serious Gang
+        { time: 0, text: "BE SERIOUS GANG • Official Creed" },
+        { time: 5, text: "No games, no drama, strictly serious" },
+        { time: 15, text: "Our brotherhood is truly mysterious" },
+        { time: 25, text: "Be Serious Gang, kadam milake chalein" },
+        { time: 37, text: "Jahan bhi hum khade hon, dushman bhi jalein" },
+        { time: 50, text: "Wafadaari hamara pehla usool hai" },
+        { time: 64, text: "Dhokha dene walo ka rasta fuzool hai" },
+        { time: 78, text: "Unity, Power, Loyalty and Pride" },
+        { time: 92, text: "BE SERIOUS Gang forever on the ride" }
+    ],
+    2: [ // Built by Hard Work
+        { time: 0, text: "BE SERIOUS MUSIC • Hustle & Dedication" },
+        { time: 6, text: "Kismat se nahi mila kuch bhi yahan" },
+        { time: 18, text: "Raaton ko jag ke banaya hai aashiyan" },
+        { time: 30, text: "Built by Hard Work, har ek boond paseena" },
+        { time: 44, text: "Sikha diya mushkilon mein shaan se jeena" },
+        { time: 58, text: "Ungliyan uthane wale dekhte reh gaye" },
+        { time: 72, text: "Hum to apni manzil ki taraf beh gaye" },
+        { time: 88, text: "Raw dedication, no shortcuts allowed" },
+        { time: 104, text: "Making the entire family and team proud" }
+    ],
+    3: [ // Mountain Dreamer
+        { time: 0, text: "BE SERIOUS MUSIC • Pure Mountain Acoustic" },
+        { time: 8, text: "Badalon ke paar se dekha ek sapna" },
+        { time: 20, text: "Pahadon ki thandi hawa, har manzar apna" },
+        { time: 34, text: "Mountain Dreamer, khule aasmaan ke tale" },
+        { time: 48, text: "Roshni ki talash mein deepak yeh jale" },
+        { time: 64, text: "Shanti hai wadiyon mein, gehraiyon ka raaz" },
+        { time: 80, text: "Dil se nikalta hai ek meetha sa saaz" },
+        { time: 98, text: "Prakriti ka sparsh, sukoon-e-jaan" },
+        { time: 118, text: "BE SERIOUS MUSIC, Pahadi Shaan" }
+    ],
+    5: [ // Tu Hi Meri Jaan
+        { time: 0, text: "BE SERIOUS MUSIC • Romantic Melodies" },
+        { time: 7, text: "Tere bina yeh zindagani be-rang si lage" },
+        { time: 18, text: "Tere aane se har ek raat gulzar si lage" },
+        { time: 30, text: "Tu hi meri jaan, tu hi mera jahan" },
+        { time: 44, text: "Tujhse hi shuru hota hai mera har armaan" },
+        { time: 58, text: "Teri muskurahat mein meri khushi hai" },
+        { time: 72, text: "Tere bina har ek saans adhuri si hai" },
+        { time: 88, text: "Hamesha tera saath chahiye is safar mein" },
+        { time: 105, text: "Tu basi hai meri har ek nazar mein" }
+    ],
+    8: [ // Adhoori Kahani Kamal Ki
+        { time: 0, text: "BE SERIOUS MUSIC • Kamal Ki Kahani Vol. 1" },
+        { time: 6, text: "Kitabon ke panno pe likhi ek daastan" },
+        { time: 18, text: "Jahan ro pada tha dil, ro pada aasmaan" },
+        { time: 30, text: "Adhoori kahani Kamal ki, dard se bhari" },
+        { time: 45, text: "Wafa karke bhi usko judai mili" },
+        { time: 60, text: "Kyun chhod gaye beech raah mein saathi" },
+        { time: 75, text: "Bujh gayi jaise mandir ki baati" },
+        { time: 92, text: "Kamal ki aahon mein chhupa ek geet hai" },
+        { time: 110, text: "Yeh dukh hi ab uski sacchi jeet hai" }
+    ],
+    9: [ // Kya Kamal Mein Kami Thi
+        { time: 0, text: "BE SERIOUS MUSIC • Kamal Ki Kahani Vol. 2" },
+        { time: 8, text: "Sab kuch to de diya tha bina kisi shart ke" },
+        { time: 20, text: "Dil ko luta diya tha tere ek harf pe" },
+        { time: 32, text: "Kya Kamal mein kami thi, jo thukra diya?" },
+        { time: 46, text: "Haste huye chehre ko pal mein rula diya" },
+        { time: 62, text: "Wafa ka sila yeh kaisa tune diya" },
+        { time: 78, text: "Zeher-e-judai ka ghunt humne piya" },
+        { time: 96, text: "Kamal ka dil rota hai tanhai mein" },
+        { time: 115, text: "Khuda bhi chup hai is judai mein" }
+    ],
+    10: [ // Ishq-e-kamal
+        { time: 0, text: "BE SERIOUS MUSIC • Kamal Ki Kahani Vol. 3" },
+        { time: 6, text: "Ishq jab junoon ban jaye toh Kamal hota hai" },
+        { time: 18, text: "Dard bhi dil ka bada bemisaal hota hai" },
+        { time: 32, text: "Ishq-e-kamal, aag ka dariya hai yeh" },
+        { time: 46, text: "Mohabbat mein jeene ka naya zariya hai yeh" },
+        { time: 60, text: "Na koi shikwa, na koi gila bacha hai" },
+        { time: 76, text: "Sirf ishq ka ek nasha sa chadh gaya hai" },
+        { time: 94, text: "Kamal ki deewangi ka koi tod nahi" },
+        { time: 112, text: "Is sacchi mohabbat ka koi mod nahi" }
+    ],
+    11: [ // Vo Golu Hai
+        { time: 0, text: "BE SERIOUS MUSIC • Energetic Street Anthem" },
+        { time: 5, text: "Gali gali mein charcha, sabki zabaan pe naam" },
+        { time: 15, text: "Subah se shaam tak chalta jiska kaalam" },
+        { time: 26, text: "Vo Golu hai, energy ka powerhouse" },
+        { time: 38, text: "Jab aata hai stage pe, rocking the house" },
+        { time: 52, text: "Bindaas andaaz, dil ka saaf parinda" },
+        { time: 66, text: "Uski yaari mein har ek dost hai zinda" },
+        { time: 80, text: "Vo Golu hai, swagger sabse top" },
+        { time: 96, text: "BE SERIOUS MUSIC... Never gonna stop" }
+    ],
+    12: [ // Golu on Grind
+        { time: 0, text: "BE SERIOUS MUSIC • High Tempo Hip-Hop" },
+        { time: 4, text: "Wake up early morning, eyes on the prize" },
+        { time: 14, text: "Every single setback helps the warrior rise" },
+        { time: 25, text: "Golu on Grind, unstoppable momentum" },
+        { time: 38, text: "Turning hard pressure into diamond magnum" },
+        { time: 52, text: "Bass bumping heavy through the sound system" },
+        { time: 66, text: "Defeating all odds, rewriting the algorithm" },
+        { time: 82, text: "Grind 24/7, hustle in the blood" },
+        { time: 100, text: "BE SERIOUS beats rushing like a flood" }
+    ],
+    13: [ // Kiran Kiran
+        { time: 0, text: "BE SERIOUS MUSIC • Melodic Reflection" },
+        { time: 6, text: "Subah ki pehli kiran jab dhalne lage" },
+        { time: 17, text: "Yaadon ke charag dil mein jalne lage" },
+        { time: 30, text: "Kiran Kiran, roshni banke aana" },
+        { time: 44, text: "Andhere dilon ko phir se mehkaana" },
+        { time: 58, text: "Komal hawaon sa tera sparsh hai" },
+        { time: 72, text: "Teri khushiyon mein hi mera harsh hai" },
+        { time: 88, text: "Zindagi bhar rahega tera intezaar" },
+        { time: 106, text: "Kiran Kiran, mera saccha pyaar" }
+    ],
+    15: [ // Raj Ka Raj
+        { time: 0, text: "BE SERIOUS MUSIC • Regal Flow & Heavy Bass" },
+        { time: 6, text: "Sikandar wahi jo taqdeer ko jeet le" },
+        { time: 16, text: "Waqt ki nabz ko jo apne haath mein le" },
+        { time: 28, text: "Raj Ka Raj, shahi andaaz hamara" },
+        { time: 42, text: "Jhukta hai aage hamare yeh sitara" },
+        { time: 56, text: "Royalty in our DNA, leadership in stride" },
+        { time: 70, text: "BE SERIOUS legacy spreading far and wide" },
+        { time: 86, text: "Duniya dekhegi yeh shaan-e-hukumat" },
+        { time: 104, text: "Raj Ka Raj... Pure Power & Respect" }
+    ]
+};
+
+// Albums & Carousel Top Charts
+const albums = [
+    songs[0], // Ek Hai Sujal 2.0
+    songs[4], // My Name Priyanshu
+    songs[3], // Babes
+    songs[9], // Adhoori Kahani
+    songs[14], // Kiran Kiran
+    songs[1]  // Ek Hai Sujal
+];
+
+// Curated Playlists
+const curatedPlaylists = [
+    {
+        id: 'ek-hai-sujal',
+        title: 'Ek Hai Sujal',
+        desc: 'Official BE SERIOUS MUSIC mountain atmospheric soundscapes',
+        cover: 'ek_hai_sujal/cover_pic/Ek Hai Sujal 2.0_ Mountain Dreams.png',
+        songs: [16, 6, 7]
+    },
+    {
+        id: 'my-name-priyanshu',
+        title: 'My Name Is Priyanshu',
+        desc: 'Hard-hitting hustle anthems & street energy by BE SERIOUS MUSIC',
+        cover: 'MY_name_priyanshu/cover-pic/Mynamepriyanshu.png',
+        songs: [4, 1, 2, 3, 5]
+    },
+    {
+        id: 'kamal-ki-khani',
+        title: 'Kamal_ki_khani',
+        desc: 'Deep emotional acoustics & soulful melodies by BE SERIOUS MUSIC',
+        cover: 'Kamal_ki_khani/cover_pic/adhoori_kahani_kamal_ki.png',
+        songs: [8, 9, 10]
+    },
+    {
+        id: 'luxury-beats',
+        title: 'Luxury Beats & Street Flow',
+        desc: 'Chart-topping luxury flow, rap & signature master bass',
+        cover: 'Kunal/cover/babes.png',
+        songs: [14, 11, 12, 13, 15]
+    }
+];
+
+// App State
 let currentSongIndex = 0;
 let isPlaying = false;
-const audio = new Audio();
+let currentPlaylist = [...songs];
+let queue = [...songs];
+let isShuffle = false;
+let repeatMode = 'off'; // 'off' | 'all' | 'one'
+let volume = parseFloat(localStorage.getItem('beserious_volume') || '0.85');
+let isMuted = false;
+let favorites = JSON.parse(localStorage.getItem('beserious_favorites') || '[]');
+let cachedSongUrls = new Set();
+let carouselActiveIndex = 0;
+let carouselTimer = null;
+let deferredPrompt = null;
+let audioContext = null;
+let analyser = null;
+let visualizerRunning = false;
+
+// Generated OTP storage for Verification
+let activeGeneratedOtp = null;
+let activeTargetEmail = null;
+let activeTargetName = null;
+
+// Sponsored Promotional Advertisements Data
+const PROMO_ADS = [
+    {
+        title: "Official beserious.in Drop",
+        description: "Explore exclusive merchandise, latest drops & official releases at beserious.in.",
+        siteUrl: "https://beserious.in",
+        reelUrl: "https://www.instagram.com/reel/DNN2InkPi5_/?utm_source=ig_web_copy_link&psln=MzRlODBiNWFlZA==&srtk=MzRlODBiNWFlZA==",
+        thumb: "ek_hai_sujal/cover_pic/Ek%20Hai%20Sujal%202.0_%20Mountain%20Dreams.png",
+        tag: "Official Reel 1"
+    },
+    {
+        title: "BE SERIOUS Studio Visuals",
+        description: "Watch trending visuals, recording sessions & behind-the-scenes on Instagram.",
+        siteUrl: "https://beserious.in",
+        reelUrl: "https://www.instagram.com/reel/DMmaC7YvrRw/?utm_source=ig_web_copy_link&cplk=MzRlODBiNWFlZA==&srtk=MzRlODBiNWFlZA==",
+        thumb: "Kunal/cover/babes.png",
+        tag: "Studio Reel 2"
+    },
+    {
+        title: "BE SERIOUS Mountain Melodies",
+        description: "Stream raw acoustics and live concert moments on Instagram Reels.",
+        siteUrl: "https://beserious.in",
+        reelUrl: "https://www.instagram.com/reel/CokJd0attF1/?utm_source=ig_web_copy_link&obrf=MzRlODBiNWFlZA==&srtk=MzRlODBiNWFlZA==",
+        thumb: "Kamal_ki_khani/cover_pic/ishq_e_kamal.png",
+        tag: "Live Reel 3"
+    },
+    {
+        title: "BE SERIOUS Grind & Flow",
+        description: "Check out the newest viral track and exclusive artist updates on beserious.in.",
+        siteUrl: "https://beserious.in",
+        reelUrl: "https://www.instagram.com/reel/C4m6q0QMVV0/?utm_source=ig_web_copy_link&rpxt=MzRlODBiNWFlZA==&srtk=MzRlODBiNWFlZA==",
+        thumb: "golu/cover/vogoluh.png",
+        tag: "Trending Reel 4"
+    }
+];
+
+let adQueueCounter = 0;
+let isAdPlaying = false;
+let adTimerInterval = null;
+let hasPlayedMidRoll = false;
+let hasPlayedPreRoll = false;
+let floatingBannerInterval = null;
+let floatingAdTimer = null;
+
+function isUserVipVerified() {
+    return !!localStorage.getItem('beserious_verified_email');
+}
+
+// Sponsored Audio Ad Overlay Controller (10s Ad with Active Song Cover)
+function playAudioAd(durationSeconds = 10, adLabel = 'Sponsored Ad (10s)', onComplete) {
+    if (isUserVipVerified()) {
+        if (typeof onComplete === 'function') onComplete();
+        return;
+    }
+
+    if (adTimerInterval) {
+        clearInterval(adTimerInterval);
+        adTimerInterval = null;
+    }
+
+    isAdPlaying = true;
+    audio.pause();
+    updatePlayPauseButtonUI();
+
+    const adOverlay = document.getElementById('audio-ad-overlay');
+    const adCardBody = document.getElementById('ad-card-body');
+    const adCountdownSec = document.getElementById('ad-countdown-sec');
+
+    const promo = PROMO_ADS[adQueueCounter % PROMO_ADS.length];
+    adQueueCounter++;
+
+    // Resolve song user just clicked to play
+    const currentSong = currentPlaylist[currentSongIndex] || songs[0];
+
+    // FIX: Immediately update player bar & vinyl disc to show the selected song's cover!
+    if (playerArt && currentSong) {
+        playerArt.src = currentSong.img;
+        playerArt.alt = currentSong.title;
+    }
+    if (playerTitle && currentSong) {
+        playerTitle.textContent = currentSong.title;
+        playerTitle.setAttribute('title', currentSong.title);
+    }
+    const cdVinylArt = document.getElementById('cd-vinyl-art');
+    if (cdVinylArt && currentSong) cdVinylArt.src = currentSong.img;
+    const cdMetaTitle = document.getElementById('cd-meta-title');
+    if (cdMetaTitle && currentSong) cdMetaTitle.textContent = currentSong.title;
+
+    // Immediately dismiss any floating banner so it doesn't obstruct or conflict
+    const floatingBanner = document.getElementById('floating-ad-banner');
+    if (floatingBanner) {
+        floatingBanner.classList.remove('show');
+        floatingBanner.setAttribute('aria-hidden', 'true');
+        if (floatingAdTimer) {
+            clearInterval(floatingAdTimer);
+            floatingAdTimer = null;
+        }
+    }
+
+    if (adCardBody && currentSong) {
+        adCardBody.innerHTML = `
+            <!-- Prominent Active Track Card: Shows user's exact clicked song cover -->
+            <div class="ad-now-queued-card">
+                <img src="${currentSong.img}" class="ad-queued-cover" alt="${currentSong.title}">
+                <div class="ad-queued-details">
+                    <span class="ad-queued-badge">Selected Track • Ready to Play</span>
+                    <div class="ad-queued-title">${currentSong.title}</div>
+                    <div class="ad-queued-artist">BE SERIOUS MUSIC • Studio Master</div>
+                </div>
+            </div>
+
+            <div class="ad-media-row">
+                <div class="ad-media-thumb">
+                    <img src="${promo.thumb}" alt="Promo Banner">
+                </div>
+                <div class="ad-media-info">
+                    <div class="ad-media-brand">${promo.tag} • ${adLabel}</div>
+                    <div class="ad-media-title">${promo.title}</div>
+                    <div class="ad-media-caption">${promo.description}</div>
+                </div>
+            </div>
+
+            <div class="ad-links-row">
+                <a href="${promo.siteUrl}" target="_blank" rel="noopener" class="ad-btn-link brand">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    Visit beserious.in
+                </a>
+                <a href="${promo.reelUrl}" target="_blank" rel="noopener" class="ad-btn-link">
+                    <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.13-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    Watch Reel
+                </a>
+            </div>
+
+            <!-- Instant skip button -->
+            <button class="btn-skip-track-ad" id="btn-skip-ad-direct">
+                <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                Play "${currentSong.title}" Now
+            </button>
+        `;
+
+        const skipBtn = document.getElementById('btn-skip-ad-direct');
+        if (skipBtn) {
+            skipBtn.addEventListener('click', () => {
+                if (adTimerInterval) {
+                    clearInterval(adTimerInterval);
+                    adTimerInterval = null;
+                }
+                isAdPlaying = false;
+                if (adOverlay) {
+                    adOverlay.classList.remove('open');
+                    adOverlay.setAttribute('aria-hidden', 'true');
+                }
+                if (typeof onComplete === 'function') onComplete();
+            });
+        }
+    }
+
+    if (adOverlay) {
+        adOverlay.classList.add('open');
+        adOverlay.setAttribute('aria-hidden', 'false');
+    }
+
+    let remaining = durationSeconds;
+    if (adCountdownSec) adCountdownSec.textContent = remaining;
+
+    adTimerInterval = setInterval(() => {
+        if (isUserVipVerified()) {
+            clearInterval(adTimerInterval);
+            adTimerInterval = null;
+            isAdPlaying = false;
+            if (adOverlay) {
+                adOverlay.classList.remove('open');
+                adOverlay.setAttribute('aria-hidden', 'true');
+            }
+            if (typeof onComplete === 'function') onComplete();
+            return;
+        }
+
+        remaining--;
+        if (adCountdownSec) adCountdownSec.textContent = remaining;
+
+        if (remaining <= 0) {
+            clearInterval(adTimerInterval);
+            adTimerInterval = null;
+            isAdPlaying = false;
+            if (adOverlay) {
+                adOverlay.classList.remove('open');
+                adOverlay.setAttribute('aria-hidden', 'true');
+            }
+            if (typeof onComplete === 'function') {
+                onComplete();
+            }
+        }
+    }, 1000);
+}
+
+// Floating Website Banner Ad (10s periodic promotion)
+function triggerFloatingBanner() {
+    if (isUserVipVerified()) return;
+    const banner = document.getElementById('floating-ad-banner');
+    if (!banner || banner.classList.contains('show')) return;
+
+    const promo = PROMO_ADS[adQueueCounter % PROMO_ADS.length];
+    adQueueCounter++;
+
+    const thumbImg = banner.querySelector('.floating-ad-thumb img');
+    const titleEl = document.getElementById('floating-ad-title');
+    const siteBtn = document.getElementById('floating-ad-site-btn');
+    const reelBtn = document.getElementById('floating-ad-reel-btn');
+    const timerEl = document.getElementById('floating-ad-timer');
+
+    if (thumbImg) thumbImg.src = promo.thumb;
+    if (titleEl) titleEl.textContent = promo.title;
+    if (siteBtn) siteBtn.href = promo.siteUrl;
+    if (reelBtn) reelBtn.href = promo.reelUrl;
+
+    banner.classList.add('show');
+    banner.setAttribute('aria-hidden', 'false');
+
+    let timeLeft = 10;
+    if (timerEl) timerEl.textContent = `${timeLeft}s`;
+
+    if (floatingAdTimer) clearInterval(floatingAdTimer);
+
+    floatingAdTimer = setInterval(() => {
+        if (isUserVipVerified()) {
+            clearInterval(floatingAdTimer);
+            floatingAdTimer = null;
+            banner.classList.remove('show');
+            banner.setAttribute('aria-hidden', 'true');
+            return;
+        }
+
+        timeLeft--;
+        if (timerEl) timerEl.textContent = `${timeLeft}s`;
+
+        if (timeLeft <= 0) {
+            clearInterval(floatingAdTimer);
+            floatingAdTimer = null;
+            banner.classList.remove('show');
+            banner.setAttribute('aria-hidden', 'true');
+        }
+    }, 1000);
+}
+
+function initFloatingBannerAds() {
+    const banner = document.getElementById('floating-ad-banner');
+    const closeBtn = document.getElementById('close-floating-ad-btn');
+
+    if (closeBtn && banner) {
+        closeBtn.addEventListener('click', () => {
+            if (floatingAdTimer) {
+                clearInterval(floatingAdTimer);
+                floatingAdTimer = null;
+            }
+            banner.classList.remove('show');
+            banner.setAttribute('aria-hidden', 'true');
+        });
+    }
+
+    if (isUserVipVerified()) return;
+
+    setTimeout(() => {
+        if (!isUserVipVerified()) triggerFloatingBanner();
+    }, 12000);
+
+    floatingBannerInterval = setInterval(() => {
+        if (isUserVipVerified()) {
+            clearInterval(floatingBannerInterval);
+            floatingBannerInterval = null;
+            return;
+        }
+        triggerFloatingBanner();
+    }, 65000);
+}
+
+function dismissAllAdsOnVipUnlock() {
+    if (adTimerInterval) {
+        clearInterval(adTimerInterval);
+        adTimerInterval = null;
+    }
+    isAdPlaying = false;
+    const overlay = document.getElementById('audio-ad-overlay');
+    if (overlay) {
+        overlay.classList.remove('open');
+        overlay.setAttribute('aria-hidden', 'true');
+    }
+    if (floatingAdTimer) {
+        clearInterval(floatingAdTimer);
+        floatingAdTimer = null;
+    }
+    if (floatingBannerInterval) {
+        clearInterval(floatingBannerInterval);
+        floatingBannerInterval = null;
+    }
+    const floatingBanner = document.getElementById('floating-ad-banner');
+    if (floatingBanner) {
+        floatingBanner.classList.remove('show');
+        floatingBanner.setAttribute('aria-hidden', 'true');
+    }
+    if (audio.src && audio.paused && !isAdPlaying) {
+        playAudio();
+    }
+}
+
+// Safe URL encoding helper
+function getSafeMediaUrl(relativePath) {
+    if (!relativePath) return '';
+    return encodeURI(relativePath);
+}
 
 // DOM Elements
-const songGrid = document.getElementById('song-grid');
-const priyanshuGrid = document.getElementById('priyanshu-playlist');
-const mostLikedGrid = document.getElementById('most-liked-grid');
-const heroSongTitle = document.getElementById('hero-song-title');
-const heroSongArtist = document.getElementById('hero-song-artist');
-const heroSection = document.getElementById('current-cover-section');
-const heroPlayBtn = document.getElementById('hero-play-btn');
+const audio = document.getElementById('main-audio');
 const playPauseBtn = document.getElementById('play-pause-btn');
 const playIcon = document.getElementById('play-icon');
 const pauseIcon = document.getElementById('pause-icon');
-const playerTrackImg = document.getElementById('player-track-img');
-const reviewBanner = document.getElementById('song-review-banner');
-const searchInput = document.getElementById('main-search-input');
-const playlistList = document.getElementById('user-playlists');
-const createPlaylistBtn = document.getElementById('create-playlist-btn');
 const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
-const progressBarFill = document.getElementById('progress-bar-fill');
-const progressBarBg = document.getElementById('progress-bar-bg');
-const currentTimeEl = document.getElementById('current-time');
-const totalDurationEl = document.getElementById('total-duration');
+const shuffleBtn = document.getElementById('shuffle-btn');
+const repeatBtn = document.getElementById('repeat-btn');
+const playerArt = document.getElementById('player-art');
+const playerTitle = document.getElementById('player-title');
+const playerArtist = document.getElementById('player-artist');
+const progressBar = document.getElementById('player-progress-bar');
+const progressFill = document.getElementById('player-progress-fill');
+const bufferFill = document.getElementById('player-buffer-fill');
+const currentTimeEl = document.getElementById('player-current-time');
+const totalTimeEl = document.getElementById('player-total-time');
+const volumeBtn = document.getElementById('volume-btn');
 const volumeSlider = document.getElementById('volume-slider');
-const currentTitleEl = document.getElementById('current-title');
-const currentArtistEl = document.getElementById('current-artist');
-currentArtistEl.innerText = "BE_SERIOUS_MUSIC Premium";
+const likeBtn = document.getElementById('like-btn');
+const queueBtn = document.getElementById('queue-btn');
+const queueDrawer = document.getElementById('queue-drawer');
+const closeQueueBtn = document.getElementById('close-queue-btn');
+const queueListEl = document.getElementById('queue-list');
+const offlineStatusPill = document.getElementById('offline-status-pill');
+const downloadAllBtn = document.getElementById('download-all-btn');
+const installAppBtn = document.getElementById('install-app-btn');
+const searchInput = document.getElementById('search-input');
+const filterChips = document.querySelectorAll('.filter-chip');
+const visualizerCanvas = document.getElementById('visualizer-canvas');
+const visualizerCtx = visualizerCanvas ? visualizerCanvas.getContext('2d') : null;
 
-// Auth Modal Elements
-const authModal = document.getElementById('auth-modal');
-const loginForm = document.getElementById('login-form');
-const signupForm = document.getElementById('signup-form');
-const listenerCountEl = document.getElementById('listener-count');
-const profilePic = document.getElementById('profile-pic');
-
-let isUserLoggedIn = false;
-let currentListenerCount = 45176; // Start with the "real" number from the user's view
-let currentUser = null;
-
-// Advertisement Popup Configuration
-const adUrls = ['beserious.in', 'beseriousofficial.in', 'adityanegi.in'];
-let adPopupTimeout = null;
-let adShownForCurrentSong = false;
-
-// Instagram Ads Configuration
-const adReels = [
-    'https://www.instagram.com/reel/DWAeYN1E_bF/embed',
-    'https://www.instagram.com/reel/DUvTh6xE9W9/embed'
-];
-let currentAdIndex = 0;
-
-// Play Statistics
-let songPlays = JSON.parse(localStorage.getItem('thehits_plays')) || {};
-
-// Admin Email
-const ADMIN_EMAIL = '01adityanegi@gmail.com';
-
-// Likes Data (songId -> array of names)
-let songLikes = JSON.parse(localStorage.getItem('thehits_likes')) || {};
-
-
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEIiwhJkboySko_EOA-cT1ZQl3pdg5XJWCRY88JR7g6Fywi4UE-zhiPefKNrffkblIeA/exec';
-
-// Check if Google Apps Script URL is configured
-function isGoogleAppsScriptConfigured() {
-    return GOOGLE_APPS_SCRIPT_URL && !GOOGLE_APPS_SCRIPT_URL.includes('YOUR_DEPLOYMENT_ID');
+// Initialize Web Audio Visualizer
+function initAudioVisualizer() {
+    if (audioContext || !visualizerCanvas) return;
+    try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        audioContext = new AudioCtx();
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 64;
+        const source = audioContext.createMediaElementSource(audio);
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+    } catch (e) {
+        analyser = null;
+    }
 }
 
-// Send email via Google Apps Script
-async function sendEmailViaGoogleAppsScript(emailType, userData) {
-    if (!isGoogleAppsScriptConfigured()) {
-        console.warn('⚠️ Google Apps Script URL not configured.');
-        return false;
+function startVisualizer() {
+    if (!visualizerCanvas || visualizerRunning) return;
+    visualizerRunning = true;
+
+    const bufferLength = analyser ? analyser.frequencyBinCount : 32;
+    const dataArray = analyser ? new Uint8Array(bufferLength) : null;
+
+    function renderFrame() {
+        if (!visualizerRunning) return;
+        requestAnimationFrame(renderFrame);
+
+        const width = visualizerCanvas.width;
+        const height = visualizerCanvas.height;
+        if (!visualizerCtx) return;
+
+        visualizerCtx.clearRect(0, 0, width, height);
+
+        if (isPlaying) {
+            if (analyser && dataArray) {
+                analyser.getByteFrequencyData(dataArray);
+            }
+            const barCount = 24;
+            const barWidth = (width / barCount) - 3;
+            let x = 0;
+
+            for (let i = 0; i < barCount; i++) {
+                let barHeight;
+                if (analyser && dataArray) {
+                    const val = dataArray[i % dataArray.length];
+                    barHeight = (val / 255) * height * 0.9;
+                } else {
+                    const t = Date.now() / 200;
+                    barHeight = (Math.sin(t + i * 0.4) * 0.5 + 0.5) * (height * 0.7) + (height * 0.15);
+                }
+
+                barHeight = Math.max(3, barHeight);
+                const gradient = visualizerCtx.createLinearGradient(0, height, 0, 0);
+                gradient.addColorStop(0, '#FF4500');    // Bass foundation: Orange-Red
+                gradient.addColorStop(0.25, '#FFD700'); // Low harmonics: Warm Gold
+                gradient.addColorStop(0.5, '#32CD32');  // Crisp mids: Emerald Green
+                gradient.addColorStop(0.75, '#1E90FF'); // High mids: Royal Azure
+                gradient.addColorStop(1, '#8A2BE2');    // Treble air: Royal Purple
+
+                visualizerCtx.fillStyle = gradient;
+                visualizerCtx.fillRect(x, height - barHeight, barWidth, barHeight);
+                x += barWidth + 3;
+            }
+        } else {
+            const barCount = 24;
+            const barWidth = (width / barCount) - 3;
+            let x = 0;
+            visualizerCtx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+            for (let i = 0; i < barCount; i++) {
+                visualizerCtx.fillRect(x, height - 2, barWidth, 2);
+                x += barWidth + 3;
+            }
+        }
     }
+    renderFrame();
+}
+
+// MediaSession API setup
+function updateMediaSession(song) {
+    if (!('mediaSession' in navigator)) return;
 
     try {
-        // Using text/plain (no-cors) to avoid preflight issues
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: song.title,
+            artist: "BE SERIOUS MUSIC",
+            album: 'BE SERIOUS MUSIC Master Audio',
+            artwork: [
+                { src: song.img, sizes: '96x96', type: 'image/png' },
+                { src: song.img, sizes: '192x192', type: 'image/png' },
+                { src: song.img, sizes: '512x512', type: 'image/png' }
+            ]
+        });
+
+        navigator.mediaSession.setActionHandler('play', () => playAudio());
+        navigator.mediaSession.setActionHandler('pause', () => pauseAudio());
+        navigator.mediaSession.setActionHandler('previoustrack', () => playPrevSong());
+        navigator.mediaSession.setActionHandler('nexttrack', () => playNextSong());
+        navigator.mediaSession.setActionHandler('seekto', (details) => {
+            if (details.seekTime && isFinite(details.seekTime)) {
+                audio.currentTime = details.seekTime;
+            }
+        });
+    } catch (err) {
+        console.warn('MediaSession setup warning:', err);
+    }
+}
+
+// Format seconds into MM:SS
+function formatTime(seconds) {
+    if (isNaN(seconds) || !isFinite(seconds)) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+}
+
+// Load Song into Audio Engine
+function loadSong(index, autoPlay = true) {
+    if (index < 0) index = currentPlaylist.length - 1;
+    if (index >= currentPlaylist.length) index = 0;
+
+    currentSongIndex = index;
+    const song = currentPlaylist[currentSongIndex];
+    if (!song) return;
+
+    const safeUrl = getSafeMediaUrl(song.audio);
+    const wasPlaying = isPlaying;
+
+    if (playPauseBtn) playPauseBtn.classList.remove('buffering');
+
+    // 2G Network Optimization: Only set audio src and trigger network stream if active playback is requested
+    if (autoPlay || wasPlaying) {
+        if (!audio.src.endsWith(encodeURI(song.audio)) && audio.src !== safeUrl) {
+            audio.src = safeUrl;
+            audio.load();
+        }
+        cacheSingleSongInBackground(song);
+    } else {
+        // Defer audio stream download to preserve bandwidth on 2G connections
+        audio.dataset.pendingSrc = safeUrl;
+    }
+
+    // Always immediately display active song cover, title, and studio master badge in bottom player bar
+    if (playerArt) {
+        playerArt.src = song.img;
+        playerArt.alt = song.title;
+    }
+    if (playerTitle) {
+        playerTitle.textContent = song.title;
+        playerTitle.setAttribute('title', song.title);
+    }
+    if (playerArtist) {
+        playerArtist.innerHTML = `
+            <span class="player-artist-name">BE SERIOUS MUSIC</span>
+            <span class="hi-res-badge player-hi-res-badge">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                STUDIO MASTER
+            </span>
+        `;
+    }
+    if (totalTimeEl) totalTimeEl.textContent = song.duration || '0:00';
+    if (currentTimeEl) currentTimeEl.textContent = '0:00';
+    if (progressFill) progressFill.style.width = '0%';
+    if (bufferFill) bufferFill.style.width = '0%';
+
+    // Dismiss any active 10s floating banner ad immediately so user never sees conflicting cover
+    const floatingBanner = document.getElementById('floating-ad-banner');
+    if (floatingBanner) {
+        floatingBanner.classList.remove('show');
+        floatingBanner.setAttribute('aria-hidden', 'true');
+        if (floatingAdTimer) {
+            clearInterval(floatingAdTimer);
+            floatingAdTimer = null;
+        }
+    }
+
+    // Update CD Modal metadata, spinning vinyl cover, and lyrics immediately
+    const cdVinylArt = document.getElementById('cd-vinyl-art');
+    if (cdVinylArt) cdVinylArt.src = song.img;
+    const cdMetaTitle = document.getElementById('cd-meta-title');
+    if (cdMetaTitle) cdMetaTitle.textContent = song.title;
+    const cdTotalTime = document.getElementById('cd-total-time');
+    if (cdTotalTime) cdTotalTime.textContent = song.duration || '0:00';
+    renderSongLyrics(song);
+
+    // Update Clean Share URL in Address Bar so user can copy anytime (?track=ID)
+    try {
+        const cleanPath = `${window.location.pathname}?track=${song.id}`;
+        window.history.replaceState({ trackId: song.id }, `${song.title} - BE SERIOUS MUSIC`, cleanPath);
+    } catch (e) {}
+
+    // Update OpenGraph social sharing meta tags
+    updateShareMetaTags(song);
+
+    document.documentElement.style.setProperty('--blob-color', song.color || '#FFD700');
+
+    updateMediaSession(song);
+    updateLikeButtonState(song.id);
+    highlightActivePlayingCard(song.id);
+    renderQueue();
+
+    hasPlayedMidRoll = false;
+    hasPlayedPreRoll = false;
+
+    if (autoPlay || wasPlaying) {
+        if (!isUserVipVerified()) {
+            hasPlayedPreRoll = true;
+            playAudioAd(10, 'Pre-Roll Sponsor (10s)', () => {
+                playAudio();
+            });
+        } else {
+            playAudio();
+        }
+    }
+}
+
+// Play Audio safely (resolves deferred 2G source if needed)
+function playAudio() {
+    const song = currentPlaylist[currentSongIndex] || songs[0];
+    if (song) {
+        const safeUrl = getSafeMediaUrl(song.audio);
+        if (!audio.src || (!audio.src.endsWith(encodeURI(song.audio)) && audio.src !== safeUrl)) {
+            audio.src = safeUrl;
+            audio.load();
+        }
+    } else if (!audio.src) {
+        loadSong(0, true);
+        return;
+    }
+
+    if (!isUserVipVerified() && !hasPlayedPreRoll && audio.currentTime < 1) {
+        hasPlayedPreRoll = true;
+        playAudioAd(10, 'Pre-Roll Sponsor (10s)', () => {
+            playAudio();
+        });
+        return;
+    }
+
+    if (audioContext && audioContext.state === 'suspended') {
+        audioContext.resume();
+    }
+
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+        playPromise.then(() => {
+            isPlaying = true;
+            updatePlayPauseButtonUI();
+            startVisualizer();
+        }).catch((err) => {
+            console.warn('Audio play prevented or interrupted:', err);
+            isPlaying = false;
+            updatePlayPauseButtonUI();
+        });
+    }
+}
+
+// Pause Audio
+function pauseAudio() {
+    audio.pause();
+    isPlaying = false;
+    updatePlayPauseButtonUI();
+}
+
+// Toggle Play/Pause
+function togglePlayPause() {
+    if (isPlaying) {
+        pauseAudio();
+    } else {
+        playAudio();
+    }
+}
+
+function updatePlayPauseButtonUI() {
+    const cdVinylDisc = document.getElementById('cd-vinyl-disc');
+    const cdTonearm = document.getElementById('cd-tonearm');
+    const cdPlayIcon = document.getElementById('cd-play-icon');
+    const cdPauseIcon = document.getElementById('cd-pause-icon');
+
+    if (isPlaying) {
+        if (playIcon) playIcon.style.display = 'none';
+        if (pauseIcon) pauseIcon.style.display = 'block';
+        if (playPauseBtn) {
+            playPauseBtn.classList.add('playing');
+            playPauseBtn.setAttribute('data-tooltip', 'Pause (Space)');
+        }
+        if (cdVinylDisc) cdVinylDisc.classList.add('playing');
+        if (cdTonearm) cdTonearm.classList.add('playing');
+        if (cdPlayIcon) cdPlayIcon.style.display = 'none';
+        if (cdPauseIcon) cdPauseIcon.style.display = 'block';
+    } else {
+        if (playIcon) playIcon.style.display = 'block';
+        if (pauseIcon) pauseIcon.style.display = 'none';
+        if (playPauseBtn) {
+            playPauseBtn.classList.remove('playing');
+            playPauseBtn.setAttribute('data-tooltip', 'Play (Space)');
+        }
+        if (cdVinylDisc) cdVinylDisc.classList.remove('playing');
+        if (cdTonearm) cdTonearm.classList.remove('playing');
+        if (cdPlayIcon) cdPlayIcon.style.display = 'block';
+        if (cdPauseIcon) cdPauseIcon.style.display = 'none';
+    }
+
+    if (typeof updateActivePlaylistTrackHighlight === 'function') {
+        updateActivePlaylistTrackHighlight();
+    }
+}
+
+// Next Song
+function playNextSong() {
+    if (isShuffle) {
+        const nextIndex = Math.floor(Math.random() * currentPlaylist.length);
+        loadSong(nextIndex, true);
+    } else {
+        loadSong(currentSongIndex + 1, true);
+    }
+}
+
+// Previous Song
+function playPrevSong() {
+    if (audio.currentTime > 3) {
+        audio.currentTime = 0;
+        playAudio();
+        return;
+    }
+    loadSong(currentSongIndex - 1, true);
+}
+
+// Toggle Shuffle
+function toggleShuffle() {
+    isShuffle = !isShuffle;
+    if (shuffleBtn) {
+        shuffleBtn.classList.toggle('active', isShuffle);
+        showToast(isShuffle ? 'Shuffle Playback Enabled' : 'Sequential Playback Mode', 'shuffle');
+    }
+}
+
+// Toggle Repeat
+function toggleRepeat() {
+    if (repeatMode === 'off') {
+        repeatMode = 'all';
+        if (repeatBtn) {
+            repeatBtn.classList.add('active');
+            repeatBtn.innerHTML = `
+                <svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+            `;
+            repeatBtn.setAttribute('data-tooltip', 'Repeat All');
+        }
+        showToast('Repeat All Tracks Enabled', 'repeat');
+    } else if (repeatMode === 'all') {
+        repeatMode = 'one';
+        if (repeatBtn) {
+            repeatBtn.classList.add('active');
+            repeatBtn.innerHTML = `
+                <svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/><text x="10" y="15" font-size="8" fill="currentColor" font-weight="bold">1</text></svg>
+            `;
+            repeatBtn.setAttribute('data-tooltip', 'Repeat One');
+        }
+        showToast('Repeat Single Track Active', 'repeatOne');
+    } else {
+        repeatMode = 'off';
+        if (repeatBtn) {
+            repeatBtn.classList.remove('active');
+            repeatBtn.innerHTML = `
+                <svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+            `;
+            repeatBtn.setAttribute('data-tooltip', 'Repeat Off');
+        }
+        showToast('Repeat Playback Disabled', 'repeat');
+    }
+}
+
+// Audio Engine Reliability & Event Listeners
+function setupAudioEngineEvents() {
+    audio.addEventListener('timeupdate', () => {
+        if (!audio.duration || isNaN(audio.duration)) return;
+
+        const current = audio.currentTime;
+        const total = audio.duration;
+        const percent = (current / total) * 100;
+
+        if (progressFill) progressFill.style.width = `${percent}%`;
+        if (currentTimeEl) currentTimeEl.textContent = formatTime(current);
+        if (totalTimeEl) totalTimeEl.textContent = formatTime(total);
+
+        // CD Player Modal Scrubber & Live Flowing Lyrics Synchronization
+        const cdCurrentTime = document.getElementById('cd-current-time');
+        const cdTotalTime = document.getElementById('cd-total-time');
+        const cdProgressFill = document.getElementById('cd-progress-fill');
+        if (cdCurrentTime) cdCurrentTime.textContent = formatTime(current);
+        if (cdTotalTime) cdTotalTime.textContent = formatTime(total);
+        if (cdProgressFill) cdProgressFill.style.width = `${percent}%`;
+        syncLyricsWithAudio(current);
+
+        if (audio.buffered.length > 0 && bufferFill) {
+            const bufferedEnd = audio.buffered.end(audio.buffered.length - 1);
+            const bufferPercent = (bufferedEnd / total) * 100;
+            bufferFill.style.width = `${Math.min(100, bufferPercent)}%`;
+        }
+
+        // Mid-Roll Ad (10s at 50% of track) for Non-Verified users
+        if (!hasPlayedMidRoll && !isUserVipVerified() && total > 20 && !isAdPlaying) {
+            if (current >= total * 0.5) {
+                hasPlayedMidRoll = true;
+                pauseAudio();
+                playAudioAd(10, 'Mid-Track Intermission (10s)', () => {
+                    playAudio();
+                });
+            }
+        }
+    });
+
+    const handleSongEndedNavigation = () => {
+        if (repeatMode === 'one') {
+            audio.currentTime = 0;
+            playAudio();
+        } else if (repeatMode === 'all' || isShuffle || currentSongIndex < currentPlaylist.length - 1) {
+            playNextSong();
+        } else {
+            pauseAudio();
+            audio.currentTime = 0;
+        }
+    };
+
+    audio.addEventListener('ended', () => {
+        if (!isUserVipVerified()) {
+            // Post-Roll Sponsor Ad (10s)
+            playAudioAd(10, 'Post-Track Sponsor (10s)', () => {
+                handleSongEndedNavigation();
+            });
+        } else {
+            handleSongEndedNavigation();
+        }
+    });
+
+    audio.addEventListener('waiting', () => {
+        if (playPauseBtn) playPauseBtn.classList.add('buffering');
+    });
+
+    audio.addEventListener('playing', () => {
+        if (playPauseBtn) playPauseBtn.classList.remove('buffering');
+        isPlaying = true;
+        updatePlayPauseButtonUI();
+    });
+
+    audio.addEventListener('stalled', () => {
+        if (isPlaying) {
+            setTimeout(() => {
+                if (audio.paused && isPlaying) {
+                    audio.play().catch(() => {});
+                }
+            }, 1000);
+        }
+    });
+
+    audio.addEventListener('error', (e) => {
+        console.warn('Audio stream dropped, recovering:', e);
+        if (playPauseBtn) playPauseBtn.classList.remove('buffering');
+
+        const currentPos = audio.currentTime;
+        const currentSrc = audio.src;
+
+        if (currentSrc) {
+            showToast('Reconnecting audio stream...', 'sync');
+            setTimeout(() => {
+                audio.load();
+                audio.currentTime = currentPos;
+                if (isPlaying) audio.play().catch(() => {});
+            }, 1500);
+        }
+    });
+
+    // Scrubber interaction
+    let isScrubbing = false;
+
+    function seek(e) {
+        if (!audio.duration) return;
+        const rect = progressBar.getBoundingClientRect();
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+        const clickPos = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+        audio.currentTime = clickPos * audio.duration;
+        if (progressFill) progressFill.style.width = `${clickPos * 100}%`;
+    }
+
+    if (progressBar) {
+        progressBar.addEventListener('mousedown', (e) => {
+            isScrubbing = true;
+            seek(e);
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (isScrubbing) seek(e);
+        });
+
+        window.addEventListener('mouseup', () => {
+            isScrubbing = false;
+        });
+
+        progressBar.addEventListener('touchstart', (e) => {
+            isScrubbing = true;
+            seek(e);
+        }, { passive: true });
+
+        window.addEventListener('touchmove', (e) => {
+            if (isScrubbing) seek(e);
+        }, { passive: true });
+
+        window.addEventListener('touchend', () => {
+            isScrubbing = false;
+        });
+    }
+
+    // Volume Slider & Mute
+    if (volumeSlider) {
+        volumeSlider.value = volume;
+        audio.volume = volume;
+
+        volumeSlider.addEventListener('input', (e) => {
+            volume = parseFloat(e.target.value);
+            audio.volume = volume;
+            isMuted = volume === 0;
+            localStorage.setItem('beserious_volume', volume.toString());
+            updateVolumeIcon();
+        });
+    }
+
+    if (volumeBtn) {
+        volumeBtn.addEventListener('click', () => {
+            if (isMuted) {
+                audio.volume = volume > 0 ? volume : 0.85;
+                if (volumeSlider) volumeSlider.value = audio.volume;
+                isMuted = false;
+            } else {
+                audio.volume = 0;
+                if (volumeSlider) volumeSlider.value = 0;
+                isMuted = true;
+            }
+            updateVolumeIcon();
+        });
+    }
+}
+
+function updateVolumeIcon() {
+    if (!volumeBtn) return;
+    const currentVol = audio.volume;
+    if (isMuted || currentVol === 0) {
+        volumeBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>`;
+    } else if (currentVol < 0.5) {
+        volumeBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM5 9v6h4l5 5V4L9 9H5z"/></svg>`;
+    } else {
+        volumeBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>`;
+    }
+}
+
+// Like / Favorite Management
+function updateLikeButtonState(songId) {
+    if (!likeBtn) return;
+    const isLiked = favorites.includes(songId);
+    likeBtn.classList.toggle('liked', isLiked);
+    likeBtn.innerHTML = isLiked
+        ? `<svg viewBox="0 0 24 24" style="fill: #FF4500;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`
+        : `<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+}
+
+function toggleLikeSong(songId) {
+    const idx = favorites.indexOf(songId);
+    if (idx > -1) {
+        favorites.splice(idx, 1);
+        showToast('Removed from Liked Songs', 'heart');
+    } else {
+        favorites.push(songId);
+        showToast('Saved to Liked Songs', 'heart');
+    }
+    localStorage.setItem('beserious_favorites', JSON.stringify(favorites));
+    updateLikeButtonState(songs[currentSongIndex].id);
+    renderSongsGrid(currentPlaylist);
+}
+
+// Luxury Toast Notifications (Zero Emojis, Pure SVG)
+function showToast(message, iconKey = 'sparkle', duration = 2800) {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    const iconHtml = LUX_ICONS[iconKey] || LUX_ICONS.sparkle;
+    toast.innerHTML = `${iconHtml}<span>${message}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => toast.classList.add('visible'), 20);
+    setTimeout(() => {
+        toast.classList.remove('visible');
+        setTimeout(() => toast.remove(), 300);
+    }, duration);
+}
+
+// Highlighting active song card across the page
+function highlightActivePlayingCard(songId) {
+    document.querySelectorAll('.song-card, .table-row, .playlist-track-row').forEach(el => {
+        const id = parseInt(el.getAttribute('data-song-id'), 10);
+        if (id === songId) {
+            el.classList.add('active-playing');
+        } else {
+            el.classList.remove('active-playing');
+        }
+    });
+}
+
+// 3D Hero Carousel
+function initCarousel() {
+    const carouselContainer = document.getElementById('carousel');
+    const heroSongTitle = document.getElementById('hero-song');
+    const heroArtistName = document.getElementById('hero-artist');
+    if (!carouselContainer) return;
+
+    function renderCarousel() {
+        carouselContainer.innerHTML = '';
+        albums.forEach((album, index) => {
+            const item = document.createElement('div');
+            item.className = 'carousel-item';
+
+            if (index === carouselActiveIndex) {
+                item.classList.add('active');
+                if (heroSongTitle) heroSongTitle.textContent = album.title;
+                if (heroArtistName) heroArtistName.textContent = "BE SERIOUS MUSIC";
+                document.documentElement.style.setProperty('--blob-color', album.color || '#FFD700');
+            } else if (index === (carouselActiveIndex - 1 + albums.length) % albums.length) {
+                item.classList.add('prev');
+            } else if (index === (carouselActiveIndex + 1) % albums.length) {
+                item.classList.add('next');
+            } else {
+                item.classList.add('hidden');
+            }
+
+            const img = document.createElement('img');
+            img.src = album.img;
+            img.alt = album.title;
+            img.loading = 'eager';
+            item.appendChild(img);
+
+            item.addEventListener('click', () => {
+                carouselActiveIndex = index;
+                renderCarousel();
+                const songIdx = songs.findIndex(s => s.id === album.id);
+                if (songIdx !== -1) {
+                    currentPlaylist = [...songs];
+                    loadSong(songIdx, true);
+                }
+            });
+
+            carouselContainer.appendChild(item);
+        });
+    }
+
+    renderCarousel();
+
+    clearInterval(carouselTimer);
+    carouselTimer = setInterval(() => {
+        carouselActiveIndex = (carouselActiveIndex + 1) % albums.length;
+        renderCarousel();
+    }, 4500);
+}
+
+// Render Latest Drops Grid - Artist: BE SERIOUS MUSIC
+function renderSongsGrid(songList = songs) {
+    const songsGrid = document.getElementById('songsGrid');
+    if (!songsGrid) return;
+    songsGrid.innerHTML = '';
+
+    if (songList.length === 0) {
+        songsGrid.innerHTML = `
+            <div class="no-results" style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary);">
+                <p>No tracks found matching your query.</p>
+            </div>
+        `;
+        return;
+    }
+
+    songList.forEach((song, index) => {
+        const card = document.createElement('div');
+        card.className = 'song-card visible';
+        card.setAttribute('data-song-id', song.id);
+        if (songs[currentSongIndex] && songs[currentSongIndex].id === song.id && isPlaying) {
+            card.classList.add('active-playing');
+        }
+
+        const isLiked = favorites.includes(song.id);
+        const isOffline = cachedSongUrls.has(song.audio);
+
+        card.innerHTML = `
+            <div class="song-art">
+                <img src="${song.img}" alt="${song.title}" loading="lazy">
+                ${song.isNew ? '<span class="badge-tag new">NEW</span>' : ''}
+                ${song.isTrending && !song.isNew ? '<span class="badge-tag trending">Trending</span>' : ''}
+                ${isOffline ? '<span class="badge-tag offline"><svg class="badge-svg" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM10 17l-3.5-3.5 1.41-1.41L10 14.17l5.59-5.59L17 10l-7 7z"/></svg>OFFLINE</span>' : ''}
+                <div class="song-overlay">
+                    <button class="play-btn" aria-label="Play ${song.title}">
+                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="song-details-row">
+                <div class="song-info-meta">
+                    <div class="song-title">${song.title}</div>
+                    <div class="song-artist">BE SERIOUS MUSIC &bull; <span class="song-duration">${song.duration}</span></div>
+                </div>
+                <button class="card-like-btn ${isLiked ? 'liked' : ''}" data-id="${song.id}" aria-label="Favorite">
+                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </button>
+            </div>
+        `;
+
+        card.querySelector('.play-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentPlaylist = [...songList];
+            const songIdx = currentPlaylist.findIndex(s => s.id === song.id);
+            loadSong(songIdx !== -1 ? songIdx : index, true);
+        });
+
+        card.addEventListener('click', () => {
+            currentPlaylist = [...songList];
+            const songIdx = currentPlaylist.findIndex(s => s.id === song.id);
+            loadSong(songIdx !== -1 ? songIdx : index, true);
+        });
+
+        const cardLike = card.querySelector('.card-like-btn');
+        cardLike.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleLikeSong(song.id);
+        });
+
+        songsGrid.appendChild(card);
+    });
+}
+
+// Render Top Albums Table - Artist: BE SERIOUS MUSIC
+function renderAlbumsTable() {
+    const albumsTable = document.getElementById('albumsTable');
+    if (!albumsTable) return;
+    albumsTable.innerHTML = '';
+
+    albums.forEach((album, index) => {
+        const row = document.createElement('div');
+        row.className = 'table-row visible';
+        row.setAttribute('data-song-id', album.id);
+        if (songs[currentSongIndex] && songs[currentSongIndex].id === album.id && isPlaying) {
+            row.classList.add('active-playing');
+        }
+
+        row.innerHTML = `
+            <div class="row-rank">${index + 1}</div>
+            <div class="row-art"><img src="${album.img}" alt="${album.title}" loading="lazy"></div>
+            <div class="row-meta">
+                <div class="row-title">${album.title}</div>
+                <div class="row-artist-sub">BE SERIOUS MUSIC</div>
+            </div>
+            <div class="row-artist hide-mobile">BE SERIOUS MUSIC</div>
+            <div class="row-duration">${album.duration}</div>
+            <div class="row-play">
+                <div class="play-btn-small">
+                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+            </div>
+        `;
+
+        row.addEventListener('click', () => {
+            currentPlaylist = [...albums];
+            loadSong(index, true);
+        });
+
+        albumsTable.appendChild(row);
+    });
+}
+
+// ==========================================
+// CURATED PLAYLISTS & AVAILABLE SONGS VIEWER
+// ==========================================
+let activeDetailPlaylistId = null;
+
+function renderPlaylists() {
+    const playlistGrid = document.getElementById('playlists-grid');
+    if (!playlistGrid) return;
+    playlistGrid.innerHTML = '';
+
+    curatedPlaylists.forEach(pl => {
+        const card = document.createElement('div');
+        card.className = 'playlist-card';
+        card.setAttribute('data-playlist-id', pl.id);
+        card.innerHTML = `
+            <div class="playlist-art">
+                <img src="${pl.cover}" alt="${pl.title}" loading="lazy">
+                <div class="playlist-badge">${pl.songs.length} Tracks Available</div>
+                <button class="playlist-play-btn" aria-label="Play ${pl.title}">
+                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+            </div>
+            <div class="playlist-title">${pl.title}</div>
+            <div class="playlist-desc">${pl.desc}</div>
+        `;
+
+        card.addEventListener('click', (e) => {
+            const playBtn = card.querySelector('.playlist-play-btn');
+            const isPlayBtnClick = (e.target === playBtn || playBtn.contains(e.target));
+            
+            // Show all songs available in this playlist
+            openPlaylistDetail(pl.id, isPlayBtnClick);
+        });
+
+        playlistGrid.appendChild(card);
+    });
+}
+
+function openPlaylistDetail(playlistId, autoPlayFirst = false) {
+    const pl = curatedPlaylists.find(p => p.id === playlistId);
+    if (!pl) return;
+
+    activeDetailPlaylistId = playlistId;
+
+    const container = document.getElementById('playlist-detail-container');
+    const coverEl = document.getElementById('playlist-detail-cover');
+    const trackCountEl = document.getElementById('playlist-detail-track-count');
+    const titleEl = document.getElementById('playlist-detail-title');
+    const descEl = document.getElementById('playlist-detail-desc');
+    const tracksListEl = document.getElementById('playlist-tracks-list');
+    const playAllBtn = document.getElementById('playlist-play-all-btn');
+    const closeBtn = document.getElementById('close-playlist-detail-btn');
+    const closeActionBtn = document.getElementById('playlist-detail-close-action');
+
+    const playlistSongs = pl.songs.map(id => songs.find(s => s.id === id)).filter(Boolean);
+
+    if (coverEl) coverEl.src = pl.cover;
+    if (trackCountEl) trackCountEl.textContent = `${playlistSongs.length} Tracks Available`;
+    if (titleEl) titleEl.textContent = pl.title;
+    if (descEl) descEl.textContent = pl.desc;
+
+    // Render list of all songs available in this playlist
+    if (tracksListEl) {
+        tracksListEl.innerHTML = '';
+        playlistSongs.forEach((song, idx) => {
+            const row = document.createElement('div');
+            row.className = 'playlist-track-row';
+            row.setAttribute('data-song-id', song.id);
+            if (songs[currentSongIndex] && songs[currentSongIndex].id === song.id && isPlaying) {
+                row.classList.add('active-playing');
+            }
+
+            row.innerHTML = `
+                <div class="pl-row-idx">${idx + 1}</div>
+                <div class="pl-row-info">
+                    <div class="pl-row-thumb">
+                        <img src="${song.img}" alt="${song.title}" loading="lazy">
+                    </div>
+                    <div class="pl-row-meta">
+                        <div class="pl-row-title">${song.title}</div>
+                        <div class="pl-row-artist">BE SERIOUS MUSIC</div>
+                    </div>
+                </div>
+                <div class="pl-row-cat hide-mobile">${song.category || 'Studio'}</div>
+                <div class="pl-row-dur">${song.duration || '0:00'}</div>
+                <div class="pl-row-action">
+                    <button class="pl-row-play-btn" aria-label="Play ${song.title}">
+                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </button>
+                </div>
+            `;
+
+            row.addEventListener('click', () => {
+                currentPlaylist = [...playlistSongs];
+                const songIndex = currentPlaylist.findIndex(s => s.id === song.id);
+                loadSong(songIndex !== -1 ? songIndex : idx, true);
+                updateActivePlaylistTrackHighlight();
+                showToast(`Now Playing: ${song.title}`, 'sparkle');
+            });
+
+            tracksListEl.appendChild(row);
+        });
+    }
+
+    // Play All Songs action
+    if (playAllBtn) {
+        playAllBtn.onclick = () => {
+            currentPlaylist = [...playlistSongs];
+            loadSong(0, true);
+            updateActivePlaylistTrackHighlight();
+            showToast(`Playing all ${playlistSongs.length} songs from ${pl.title}`, 'disc');
+        };
+    }
+
+    const closeHandler = () => {
+        if (container) {
+            container.style.display = 'none';
+            container.setAttribute('aria-hidden', 'true');
+        }
+        activeDetailPlaylistId = null;
+        document.querySelectorAll('.playlist-card').forEach(c => c.classList.remove('active-playlist'));
+    };
+
+    if (closeBtn) closeBtn.onclick = closeHandler;
+    if (closeActionBtn) closeActionBtn.onclick = closeHandler;
+
+    if (container) {
+        container.style.display = 'block';
+        container.setAttribute('aria-hidden', 'false');
+        setTimeout(() => {
+            container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 50);
+    }
+
+    // Highlight active playlist card in grid
+    document.querySelectorAll('.playlist-card').forEach(c => {
+        if (c.getAttribute('data-playlist-id') === playlistId) {
+            c.classList.add('active-playlist');
+        } else {
+            c.classList.remove('active-playlist');
+        }
+    });
+
+    if (autoPlayFirst && playlistSongs.length) {
+        currentPlaylist = [...playlistSongs];
+        loadSong(0, true);
+        showToast(`Playing playlist: ${pl.title}`, 'disc');
+    } else {
+        showToast(`Displaying all ${playlistSongs.length} tracks in ${pl.title}`, 'sparkle');
+    }
+
+    updateActivePlaylistTrackHighlight();
+}
+
+function updateActivePlaylistTrackHighlight() {
+    const activeSong = currentPlaylist[currentSongIndex];
+    if (!activeSong) return;
+    document.querySelectorAll('.playlist-track-row').forEach(row => {
+        const id = parseInt(row.getAttribute('data-song-id'), 10);
+        if (id === activeSong.id && isPlaying) {
+            row.classList.add('active-playing');
+        } else {
+            row.classList.remove('active-playing');
+        }
+    });
+}
+
+// Queue Drawer Management with Animated Luxury Soundwave
+function renderQueue() {
+    if (!queueListEl) return;
+    queueListEl.innerHTML = '';
+
+    currentPlaylist.forEach((song, idx) => {
+        const item = document.createElement('div');
+        item.className = 'queue-item';
+        if (idx === currentSongIndex) item.classList.add('now-playing');
+
+        const isCurrent = idx === currentSongIndex;
+        const numContent = isCurrent
+            ? `<span class="queue-soundwave"><span></span><span></span><span></span></span>`
+            : idx + 1;
+
+        item.innerHTML = `
+            <span class="queue-num">${numContent}</span>
+            <img src="${song.img}" alt="${song.title}" class="queue-art">
+            <div class="queue-info">
+                <div class="queue-title">${song.title}</div>
+                <div class="queue-artist">BE SERIOUS MUSIC</div>
+            </div>
+            <span class="queue-duration">${song.duration}</span>
+        `;
+
+        item.addEventListener('click', () => {
+            loadSong(idx, true);
+        });
+
+        queueListEl.appendChild(item);
+    });
+}
+
+function toggleQueueDrawer() {
+    if (!queueDrawer) return;
+    queueDrawer.classList.toggle('open');
+    renderQueue();
+}
+
+// Offline Caching & PWA Architecture (Zero Emojis)
+async function checkOfflineCachedSongs() {
+    if (!('caches' in window)) return;
+    try {
+        const mediaCache = await caches.open(MEDIA_CACHE_NAME);
+        const keys = await mediaCache.keys();
+        cachedSongUrls.clear();
+
+        keys.forEach(req => {
+            songs.forEach(s => {
+                if (req.url.includes(encodeURI(s.audio)) || req.url.includes(s.audio)) {
+                    cachedSongUrls.add(s.audio);
+                }
+            });
+        });
+
+        updateOfflineStatusUI();
+    } catch (e) {
+        console.warn('Failed to query media cache:', e);
+    }
+}
+
+function updateOfflineStatusUI() {
+    const isOnline = navigator.onLine;
+    const count = cachedSongUrls.size;
+    const total = songs.length;
+
+    if (offlineStatusPill) {
+        if (!isOnline) {
+            offlineStatusPill.className = 'status-pill offline';
+            offlineStatusPill.innerHTML = `
+                <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM10 17l-3.5-3.5 1.41-1.41L10 14.17l5.59-5.59L17 10l-7 7z"/></svg>
+                Offline Vault (${count}/${total} Ready)
+            `;
+        } else if (count === total) {
+            offlineStatusPill.className = 'status-pill all-cached';
+            offlineStatusPill.innerHTML = `
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                100% Offline Ready (${total}/${total})
+            `;
+        } else if (count > 0) {
+            offlineStatusPill.className = 'status-pill ready';
+            offlineStatusPill.innerHTML = `
+                <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM10 17l-3.5-3.5 1.41-1.41L10 14.17l5.59-5.59L17 10l-7 7z"/></svg>
+                ${count}/${total} Stored Locally
+            `;
+        } else {
+            offlineStatusPill.className = 'status-pill ready';
+            offlineStatusPill.innerHTML = `
+                <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                Offline Ready
+            `;
+        }
+    }
+}
+
+// Background auto-cache of single song (2G-aware)
+async function cacheSingleSongInBackground(song) {
+    if (!song || !('caches' in window) || cachedSongUrls.has(song.audio)) return;
+    // Don't auto-download large audio buffers on 2G or Save-Data connections
+    if (navigator.connection && (navigator.connection.effectiveType === '2g' || navigator.connection.saveData)) {
+        return;
+    }
+    try {
+        const mediaCache = await caches.open(MEDIA_CACHE_NAME);
+        const safeUrl = getSafeMediaUrl(song.audio);
+        const match = await mediaCache.match(safeUrl);
+        if (!match) {
+            const res = await fetch(safeUrl);
+            if (res.status === 200) {
+                await mediaCache.put(safeUrl, res);
+                cachedSongUrls.add(song.audio);
+                updateOfflineStatusUI();
+            }
+        }
+    } catch (e) {
+        // network or quota issue - fail silently
+    }
+}
+
+// Download ALL 16 Songs for Offline Listening
+async function downloadAllSongsForOffline() {
+    if (!('caches' in window)) {
+        showToast('Offline cache storage not supported on this browser.', 'sparkle');
+        return;
+    }
+
+    if (!navigator.onLine) {
+        showToast('Connect to internet to download high-fidelity master tracks.', 'globe');
+        return;
+    }
+
+    const modal = document.getElementById('offline-modal');
+    const progressBar = document.getElementById('offline-progress-bar');
+    const statusText = document.getElementById('offline-progress-text');
+    if (modal) modal.classList.add('visible');
+
+    const total = songs.length;
+    let completed = 0;
+
+    showToast(`Downloading all ${total} tracks for offline listening...`, 'cloudDownload', 3500);
+
+    const mediaCache = await caches.open(MEDIA_CACHE_NAME);
+
+    for (let i = 0; i < songs.length; i++) {
+        const song = songs[i];
+        const safeUrl = getSafeMediaUrl(song.audio);
+
+        if (statusText) statusText.textContent = `Downloading (${i + 1}/${total}): ${song.title}...`;
+        if (progressBar) progressBar.style.width = `${((i + 1) / total) * 100}%`;
+
+        try {
+            const match = await mediaCache.match(safeUrl);
+            if (!match) {
+                const res = await fetch(safeUrl);
+                if (res.status === 200) {
+                    await mediaCache.put(safeUrl, res);
+                }
+            }
+            const coverMatch = await mediaCache.match(song.img);
+            if (!coverMatch) {
+                const coverRes = await fetch(song.img);
+                if (coverRes.status === 200) {
+                    await mediaCache.put(song.img, coverRes);
+                }
+            }
+            cachedSongUrls.add(song.audio);
+            completed++;
+        } catch (err) {
+            console.warn(`Failed to cache ${song.title}:`, err);
+        }
+    }
+
+    updateOfflineStatusUI();
+    renderSongsGrid(currentPlaylist);
+
+    setTimeout(() => {
+        if (modal) modal.classList.remove('visible');
+        showToast(`All ${completed}/${total} master tracks stored offline`, 'check', 4000);
+    }, 800);
+}
+
+// Service Worker Registration with Instant Auto-Update for Downloaded App
+function registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then((reg) => {
+                    console.log('BE SERIOUS MUSIC Service Worker active:', reg.scope);
+                    checkOfflineCachedSongs();
+
+                    // Check for updates on every launch
+                    reg.update();
+
+                    // Listen for updates found
+                    reg.addEventListener('updatefound', () => {
+                        const newWorker = reg.installing;
+                        if (newWorker) {
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New code detected - activate immediately
+                                    newWorker.postMessage({ type: 'SKIP_WAITING' });
+                                }
+                            });
+                        }
+                    });
+                })
+                .catch((err) => {
+                    console.warn('Service Worker registration failed:', err);
+                });
+
+            // Auto-reload the downloaded app as soon as a new version takes control
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) {
+                    refreshing = true;
+                    window.location.reload();
+                }
+            });
+
+            // Whenever the downloaded app comes into view/focus, check for updates
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    navigator.serviceWorker.getRegistration().then((reg) => {
+                        if (reg) reg.update();
+                    });
+                }
+            });
+
+            // Periodic background check every 30 seconds
+            setInterval(() => {
+                navigator.serviceWorker.getRegistration().then((reg) => {
+                    if (reg) reg.update();
+                });
+            }, 30000);
+        });
+    }
+}
+
+// PWA Install Prompt
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (installAppBtn) installAppBtn.style.display = 'inline-flex';
+});
+
+if (installAppBtn) {
+    installAppBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) {
+            showToast('App is already installed or open in standalone mode', 'sparkle');
+            return;
+        }
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            installAppBtn.style.display = 'none';
+            showToast('BE SERIOUS MUSIC Installed to System', 'check');
+        }
+        deferredPrompt = null;
+    });
+}
+
+// Search & Filtering
+function setupSearchAndFilters() {
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            if (!query) {
+                renderSongsGrid(currentPlaylist);
+                return;
+            }
+            const filtered = songs.filter(s =>
+                s.title.toLowerCase().includes(query) ||
+                s.category.toLowerCase().includes(query)
+            );
+            renderSongsGrid(filtered);
+        });
+    }
+
+    filterChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            filterChips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+
+            const filter = chip.getAttribute('data-filter');
+            if (filter === 'all') {
+                currentPlaylist = [...songs];
+            } else if (filter === 'trending') {
+                currentPlaylist = songs.filter(s => s.isTrending || s.isNew);
+            } else if (filter === 'offline') {
+                currentPlaylist = songs.filter(s => cachedSongUrls.has(s.audio));
+                if (currentPlaylist.length === 0) {
+                    showToast('No offline tracks cached yet. Click "Save All Offline".', 'cloudDownload');
+                    currentPlaylist = [...songs];
+                }
+            } else if (filter === 'favorites') {
+                currentPlaylist = songs.filter(s => favorites.includes(s.id));
+                if (currentPlaylist.length === 0) {
+                    showToast('No favorites saved yet. Click the heart icon on any track.', 'heart');
+                    currentPlaylist = [...songs];
+                }
+            } else {
+                currentPlaylist = songs.filter(s => s.category === filter);
+            }
+            renderSongsGrid(currentPlaylist);
+        });
+    });
+}
+
+// =========================================================
+// EMAILJS & GOOGLE APPS SCRIPT VERIFICATION ENGINE
+// =========================================================
+// Official EmailJS Service Credentials
+const EMAILJS_CONFIG = {
+    publicKey: "9zAvP5sivN8AHseBq",
+    privateKey: "b6dktVA-Ku9-nIjMe17Rb",
+    serviceId: "service_skfjvqg",
+    templateId: localStorage.getItem('beserious_emailjs_template_id') || "template_ztxbtio"
+};
+
+// Initialize EmailJS Browser SDK
+function initEmailJSService() {
+    if (window.emailjs && EMAILJS_CONFIG.publicKey) {
+        try {
+            emailjs.init({ publicKey: EMAILJS_CONFIG.publicKey });
+            console.log("EmailJS SDK initialized successfully for BE SERIOUS MUSIC");
+        } catch (e) {
+            console.warn("EmailJS initialization notice:", e);
+        }
+    }
+}
+
+async function sendToGoogleAppsScript(payload) {
+    if (!GOOGLE_APPS_SCRIPT_URL) return false;
+    try {
         await fetch(GOOGLE_APPS_SCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors',
             headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify({
-                type: emailType,
-                name: userData.name,
-                email: userData.email,
-                password: userData.password || '',
-                phone: userData.phone || '',
-                message: userData.message || ''
-            })
+            body: JSON.stringify(payload)
         });
-
-        // With no-cors, we can't read the response, so we assume success if no exception
         return true;
-    } catch (error) {
-        console.error('⚠️ Error sending email:', error);
+    } catch (err) {
+        console.warn('Google Apps Script request error:', err);
         return false;
     }
 }
 
-// Handle Contact Form Inquiry
-async function sendInquiry(name, email, message) {
-    showNotification('Sending inquiry...', 'info');
-    const success = await sendEmailViaGoogleAppsScript('inquiry', { name, email, message });
-    if (success) {
-        showNotification('✅ Inquiry sent! We will contact you soon.', 'success');
-    } else {
-        showNotification('❌ Failed to send inquiry. Try again.', 'error');
-    }
-}
+// Dispatches verification email via EmailJS (SDK + REST API with Private Key)
+async function sendVerificationViaEmailJS(email, name, otp) {
+    // Check if user saved a custom template ID in localStorage
+    const activeTemplateId = localStorage.getItem('beserious_emailjs_template_id') || EMAILJS_CONFIG.templateId;
 
-
-// Initialize Website
-function init() {
-    renderTrendingHits();
-    renderPriyanshuPlaylist();
-    renderMostLikedSongs();
-    // Default to Babes (new song at index 0)
-    currentSongIndex = 0;
-    loadSong(currentSongIndex);
-    setupEventListeners();
-    animateEntry();
-    initAuthSystem();
-    setupLogoutHandler();
-    initListenerCounter();
-    handleNetflixIntro();
-    initLuxuryAnimations();
-}
-
-function handleNetflixIntro() {
-    const intro = document.getElementById('netflix-intro');
-    if (intro) {
-        // Hide after 3.5s (duration of animation)
-        setTimeout(() => {
-            intro.classList.add('fade-out');
-            // Remove from DOM after transition
-            setTimeout(() => {
-                intro.remove();
-            }, 1000);
-        }, 3500);
-    }
-}
-
-// Auth System Functions
-function toggleAuthForm(event) {
-    event.preventDefault();
-    loginForm.classList.toggle('active-form');
-    signupForm.classList.toggle('active-form');
-    // Clear error messages
-    document.querySelectorAll('.auth-error').forEach(el => el.remove());
-}
-
-// Get all stored accounts from localStorage
-function getAllAccounts() {
-    const accounts = localStorage.getItem('thehits_accounts');
-    return accounts ? JSON.parse(accounts) : {};
-}
-
-// Save account to localStorage
-function saveAccount(email, name, password) {
-    const accounts = getAllAccounts();
-    accounts[email] = { name, password, createdAt: new Date().toISOString() };
-    localStorage.setItem('thehits_accounts', JSON.stringify(accounts));
-}
-
-// Check if account exists
-function accountExists(email) {
-    const accounts = getAllAccounts();
-    return accounts.hasOwnProperty(email);
-}
-
-// Verify login credentials
-function verifyLogin(email, password) {
-    const accounts = getAllAccounts();
-    if (accounts[email] && accounts[email].password === password) {
-        return accounts[email];
-    }
-    return null;
-}
-
-// Generate avatar from user initials - Luxury Style
-function generateUserAvatar(name) {
-    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-    const colors = ['#1DB954', '#FF1D8E', '#FF5D2D', '#7928CA', '#0070F3'];
-    const color = colors[Math.floor(Math.random() * colors.length)];
-
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
-        <defs>
-            <linearGradient id="avatar-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:${color};stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#000;stop-opacity:0.8" />
-            </linearGradient>
-        </defs>
-        <rect width="200" height="200" rx="100" fill="url(#avatar-grad)"/>
-        <text x="100" y="105" font-size="80" fill="white" text-anchor="middle" dy=".3em" font-weight="900" font-family="'Montserrat', sans-serif" letter-spacing="-2">${initials}</text>
-    </svg>`;
-
-    return 'data:image/svg+xml;base64,' + btoa(svg);
-}
-
-// Send welcome email (simulated - shows confirmation)
-function sendWelcomeEmail(name, email, password, phone) {
-    const createdDate = new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-
-    console.log('📧 Sending welcome email via Google Apps Script...');
-    console.log(`To: ${email}, Name: ${name}`);
-
-    // Send via Google Apps Script
-    sendEmailViaGoogleAppsScript('signup', {
-        name: name,
+    const templateParams = {
+        to_email: email,
         email: email,
-        password: password,
-        phone: phone
-    }).then(success => {
-        if (success) {
-            showNotification(`✅ Welcome email sent to ${email}!`, 'success');
-        } else {
-            showNotification(`Could not send email. Check console for details.`, 'error');
-        }
-    });
-}
+        user_email: email,
+        recipient_email: email,
+        to_name: name,
+        user_name: name,
+        name: name,
+        otp_code: otp,
+        otp: otp,
+        code: otp,
+        passcode: otp,
+        verification_code: otp,
+        artist_name: "BE SERIOUS MUSIC",
+        admin_email: ADMIN_EMAIL,
+        subject: `BE SERIOUS MUSIC - VIP Verification Code [${otp}]`,
+        message: `Hello ${name},\n\nYour 6-digit VIP verification code for BE SERIOUS MUSIC is: ${otp}\n\nEnter this code on the website to unlock 100% ad-free listening and unlimited offline access.`
+    };
 
-// Show notification
-function showNotification(message, type = 'success') {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.textContent = message;
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${type === 'success' ? '#1DB954' : (type === 'error' ? '#FF6B6B' : 'linear-gradient(135deg, #1e3a8a, #2563eb)')};
-        color: white;
-        padding: 16px 24px;
-        border-radius: 8px;
-        z-index: 10000;
-        font-weight: 600;
-        animation: slideIn 0.3s ease;
-        max-width: 400px;
-    `;
-    document.body.appendChild(notification);
-    setTimeout(() => notification.remove(), 4000);
-}
+    let emailJsDispatched = false;
+    let errorDetail = "";
 
-function showError(formElement, message) {
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'auth-error';
-    errorDiv.textContent = message;
-    errorDiv.style.cssText = `
-        background: #FF6B6B;
-        color: white;
-        padding: 12px 16px;
-        border-radius: 6px;
-        margin-bottom: 16px;
-        font-size: 0.9rem;
-        animation: slideIn 0.3s ease;
-    `;
-    formElement.insertBefore(errorDiv, formElement.firstChild);
-
-    // Auto-remove error after 5 seconds
-    setTimeout(() => {
-        if (errorDiv.parentElement) {
-            errorDiv.remove();
-        }
-    }, 5000);
-}
-
-function hideAuthModal() {
-    authModal.classList.add('hidden');
-    isUserLoggedIn = true;
-    updateUserProfile();
-    greetUser();
-}
-
-function updateUserProfile() {
-    const profilePic = document.getElementById('profile-pic');
-    const nameDisplay = document.getElementById('user-name-display');
-    const dropdownName = document.getElementById('dropdown-user-name');
-
-    if (currentUser && profilePic) {
-        profilePic.src = generateUserAvatar(currentUser.name);
-        if (nameDisplay) nameDisplay.textContent = currentUser.name;
-        if (dropdownName) dropdownName.textContent = currentUser.name;
-        updateTopSongUI();
-    } else {
-        if (nameDisplay) nameDisplay.textContent = 'Guest';
-        if (dropdownName) dropdownName.textContent = 'Guest';
-        const vibeChar = document.getElementById('vibe-character');
-        if (vibeChar) vibeChar.classList.add('hidden');
-    }
-}
-
-function trackSongPlay(songId) {
-    songPlays[songId] = (songPlays[songId] || 0) + 1;
-    localStorage.setItem('thehits_plays', JSON.stringify(songPlays));
-    updateTopSongUI();
-}
-
-function updateTopSongUI() {
-    const topSongBadge = document.getElementById('top-song-badge');
-    if (!topSongBadge) return;
-
-    let maxPlays = 0;
-    let topSongId = null;
-
-    for (const id in songPlays) {
-        if (songPlays[id] > maxPlays) {
-            maxPlays = songPlays[id];
-            topSongId = parseInt(id);
-        }
-    }
-
-    if (topSongId !== null) {
-        const song = songs.find(s => s.id === topSongId);
-        if (song) {
-            topSongBadge.textContent = `#1 Stan: ${song.title}`;
-
-            const vibeChar = document.getElementById('vibe-character');
-            if (vibeChar) {
-                vibeChar.src = song.img;
-                vibeChar.classList.remove('hidden');
+    // 1. Send via EmailJS SDK if available
+    if (window.emailjs && EMAILJS_CONFIG.publicKey) {
+        try {
+            const sdkRes = await emailjs.send(EMAILJS_CONFIG.serviceId, activeTemplateId, templateParams);
+            if (sdkRes && (sdkRes.status === 200 || sdkRes.text === 'OK')) {
+                emailJsDispatched = true;
+                console.log("EmailJS SDK successfully dispatched OTP to:", email);
             }
+        } catch (err) {
+            errorDetail = (err && (err.text || err.message)) || "SDK dispatch error";
+            console.warn("EmailJS SDK dispatch notice:", err);
         }
-    } else {
-        topSongBadge.textContent = "No plays yet";
     }
-}
 
-function greetUser() {
-    if (currentUser) {
-        showNotification(`Welcome back, ${currentUser.name}! 🎵`, 'success');
-    }
-}
-
-function initAuthSystem() {
-    // Login Form Submission
-    if (loginForm) {
-        loginForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value;
-
-            // Clear previous error messages
-            document.querySelectorAll('.auth-error').forEach(el => el.remove());
-
-            if (!email || !password) {
-                showError(loginForm, 'Please fill in all fields');
-                return;
-            }
-
-            // Verify login credentials
-            const account = verifyLogin(email, password);
-
-            if (account) {
-                currentUser = { name: account.name, email: email };
-                localStorage.setItem('userEmail', email);
-                localStorage.setItem('userName', account.name);
-
-                updateUserProfile(); // Added this line
-                hideAuthModal();
-                loginForm.reset();
-            } else if (accountExists(email)) {
-                showError(loginForm, 'Invalid password. Please try again.');
+    // 2. Fallback to EmailJS direct REST API with Private Key (accessToken)
+    if (!emailJsDispatched) {
+        try {
+            const res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    service_id: EMAILJS_CONFIG.serviceId,
+                    template_id: activeTemplateId,
+                    user_id: EMAILJS_CONFIG.publicKey,
+                    accessToken: EMAILJS_CONFIG.privateKey,
+                    template_params: templateParams
+                })
+            });
+            if (res.ok) {
+                emailJsDispatched = true;
+                console.log("EmailJS REST API successfully dispatched to:", email);
             } else {
-                showError(loginForm, 'Account not found. Please sign up first.');
+                const errText = await res.text();
+                errorDetail = errText || `HTTP ${res.status}`;
+                console.warn("EmailJS REST API response:", res.status, errText);
             }
-        });
+        } catch (apiErr) {
+            errorDetail = apiErr.message || "Network request failed";
+            console.warn("EmailJS REST API error:", apiErr);
+        }
     }
 
-    // Signup Form Submission
-    if (signupForm) {
-        signupForm.addEventListener('submit', function (e) {
-            e.preventDefault();
+    // 3. Parallel backup notification to admin mailbox (01adityanegi@gmail.com)
+    await sendToGoogleAppsScript({
+        type: "verify_request",
+        email: email,
+        name: name,
+        code: otp,
+        service: emailJsDispatched ? "EmailJS" : "EmailJS_Bridge"
+    });
 
-            const name = document.getElementById('signup-name').value.trim();
-            const email = document.getElementById('signup-email').value.trim();
-            const phone = document.getElementById('signup-phone').value.trim();
-            const password = document.getElementById('signup-password').value;
-            const confirmPass = document.getElementById('signup-confirm').value;
-
-            // Clear previous error messages
-            document.querySelectorAll('.auth-error').forEach(el => el.remove());
-
-            // Validation
-            if (!name || !email || !phone || !password || !confirmPass) {
-                showError(signupForm, 'Please fill in all fields');
-                return;
-            }
-
-            if (!email.includes('@') || !email.includes('.')) {
-                showError(signupForm, 'Please enter a valid email address');
-                return;
-            }
-
-            if (password.length < 6) {
-                showError(signupForm, 'Password must be at least 6 characters long');
-                return;
-            }
-
-            if (password !== confirmPass) {
-                showError(signupForm, 'Passwords do not match');
-                return;
-            }
-
-            if (accountExists(email)) {
-                showError(signupForm, 'Email already registered. Please log in.');
-                return;
-            }
-
-            // Save account
-            saveAccount(email, name, password);
-
-            // Send welcome email
-            sendWelcomeEmail(name, email, password, phone);
-
-            // Log user in
-            currentUser = { name: name, email: email };
-            localStorage.setItem('userEmail', email);
-            localStorage.setItem('userName', name);
-
-            updateUserProfile();
-            hideAuthModal();
-            signupForm.reset();
-        });
-    }
-
-    // Contact Form Submission
-    const contactForm = document.getElementById('contact-form');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = contactForm.querySelector('input[type="text"]').value;
-            const email = contactForm.querySelector('input[type="email"]').value;
-            const message = contactForm.querySelector('textarea').value;
-            sendInquiry(name, email, message);
-            contactForm.reset();
-        });
-    }
-
-    // Check if user is already logged in
-    const storedEmail = localStorage.getItem('userEmail');
-    const storedName = localStorage.getItem('userName');
-    if (storedEmail && storedName) {
-        currentUser = { name: storedName, email: storedEmail };
-        hideAuthModal();
-    }
+    return { success: emailJsDispatched, error: errorDetail, otp: otp };
 }
 
-// Listener Counter Functions
-function initListenerCounter() {
-    if (listenerCountEl) {
-        updateListenerCount();
-        // Update listener count every 2 seconds (Real-time feel)
-        setInterval(() => {
-            currentListenerCount += Math.floor(Math.random() * 20) - 10; // More frequent, smaller changes
-            if (currentListenerCount < 40000) currentListenerCount = 40000;
-            updateListenerCount();
-        }, 2000);
-    }
-}
+// Cinematic Intro Screen Controller
+function initIntroScreen() {
+    const intro = document.getElementById('intro-screen');
+    if (!intro) return;
 
-function updateListenerCount() {
-    if (listenerCountEl) {
-        // Use GSAP for smooth count animation
-        const countObj = { val: parseInt(listenerCountEl.textContent.replace(/,/g, '')) || 0 };
-        gsap.to(countObj, {
-            val: currentListenerCount,
-            duration: 2,
-            ease: "power2.out",
-            onUpdate: function () {
-                listenerCountEl.textContent = Math.floor(countObj.val).toLocaleString();
-            }
-        });
-    }
-}
-
-// Render Trending Hits (Only trending songs)
-function renderTrendingHits(data = null) {
-    const songsToRender = data || songs.filter(s => s.isTrending);
-    const songHTML = songsToRender.map((song) => {
-        const originalIndex = songs.findIndex(s => s.id === song.id);
-        const newBadge = song.isNew ? '<span class="new-badge">NEW</span>' : '';
-        const trendingBadge = song.isTrending ? `<span class="trending-badge">${TRENDING_ICON} TRENDING</span>` : '';
-        return `
-            <div class="song-card" onclick="playSong(${originalIndex})">
-                ${trendingBadge || newBadge}
-                <img src="${song.img}" alt="${song.title}">
-                <h3>${song.title}</h3>
-                <div class="card-footer">
-                    <p>${song.artist}</p>
-                    <button class="review-btn" onclick="event.stopPropagation(); openReviewModal(${song.id})">Review</button>
-                </div>
-            </div>
-        `;
-    }).join('');
-
-    if (songGrid) songGrid.innerHTML = songHTML;
-}
-
-// Render My Name Priyanshu Playlist (Only songs from this album)
-function renderPriyanshuPlaylist() {
-    const priyanshuSongIds = playlists["My Name Priyanshu"];
-    const priyanshuSongs = songs.filter(song => priyanshuSongIds.includes(song.id));
-
-    const songHTML = priyanshuSongs.map((song) => {
-        const originalIndex = songs.findIndex(s => s.id === song.id);
-        const newBadge = song.isNew ? '<span class="new-badge">NEW</span>' : '';
-        const trendingBadge = song.isTrending ? `<span class="trending-badge">${TRENDING_ICON} TRENDING</span>` : '';
-        return `
-            <div class="song-card" onclick="playSong(${originalIndex})">
-                ${trendingBadge || newBadge}
-                <img src="${song.img}" alt="${song.title}">
-                <h3>${song.title}</h3>
-                <div class="card-footer">
-                    <p>${song.artist}</p>
-                    <button class="review-btn" onclick="event.stopPropagation(); openReviewModal(${song.id})">Review</button>
-                </div>
-            </div>
-        `;
-    }).join('');
-
-    if (priyanshuGrid) priyanshuGrid.innerHTML = songHTML;
-}
-
-// Render Song Cards (for general use)
-function renderSongs(data = songs) {
-    renderTrendingHits(data);
-}
-
-function renderPlaylists() {
-    if (playlistList) {
-        playlistList.innerHTML = userPlaylists.map(pl => `
-            <li onclick="filterByPlaylist('${pl}')">${pl}</li>
-        `).join('');
-    }
-}
-
-function filterByPlaylist(name) {
-    // Get songs for the selected playlist
-    if (playlists[name]) {
-        const playlistSongIds = playlists[name];
-        const playlistSongs = songs.filter(song => playlistSongIds.includes(song.id));
-        renderSongs(playlistSongs);
-        showSection('home');
-    } else {
-        alert(`Playlist not found: ${name}`);
-    }
-}
-
-// Advertisement Popup Function
-function showAdPopup() {
-    const randomUrl = adUrls[Math.floor(Math.random() * adUrls.length)];
-
-    const popupOverlay = document.createElement('div');
-    popupOverlay.id = 'music-ad-popup';
-    popupOverlay.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.9);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10001;
-        backdrop-filter: blur(10px);
-    `;
-
-    const popupContent = document.createElement('div');
-    popupContent.style.cssText = `
-        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-        border-radius: 20px;
-        padding: 40px;
-        text-align: center;
-        max-width: 90%;
-        width: 450px;
-        box-shadow: 0 20px 60px rgba(255, 29, 142, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        position: relative;
-        overflow: hidden;
-    `;
-
-    const closeButton = document.createElement('button');
-    closeButton.innerHTML = '×';
-    closeButton.style.cssText = `
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: transparent;
-        border: none;
-        color: white;
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        transition: all 0.3s ease;
-    `;
-    closeButton.onmouseover = () => {
-        closeButton.style.transform = 'rotate(90deg)';
-        closeButton.style.color = '#ff4d4d';
-    };
-    closeButton.onmouseout = () => {
-        closeButton.style.transform = 'rotate(0deg)';
-        closeButton.style.color = 'white';
-    };
-    closeButton.onclick = () => {
-        if (popupOverlay && popupOverlay.parentNode) {
-            popupOverlay.parentNode.removeChild(popupOverlay);
+    const hideIntro = () => {
+        if (!intro.classList.contains('hide')) {
+            intro.classList.add('hide');
+            setTimeout(() => {
+                intro.style.display = 'none';
+                // Trigger VIP verification modal after intro screen on site entry
+                const entryModal = document.getElementById('vip-entry-modal');
+                if (entryModal) {
+                    entryModal.classList.add('open');
+                }
+            }, 700);
         }
     };
 
-    const timerEl = document.createElement('div');
-    timerEl.style.cssText = `
-        position: absolute;
-        top: 15px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.5);
-        padding: 5px 15px;
-        border-radius: 20px;
-        color: #ff4d4d;
-        font-size: 14px;
-        font-weight: 600;
-    `;
-    timerEl.innerText = '15s';
+    // Auto-dissolve intro after 1.8 seconds, or immediately on click
+    setTimeout(hideIntro, 1800);
+    intro.addEventListener('click', hideIntro);
+}
 
-    const title = document.createElement('h2');
-    title.textContent = '🎵 Advertisement';
-    title.style.cssText = `
-        color: white;
-        font-family: 'Playfair Display', serif;
-        margin-bottom: 20px;
-        font-size: 28px;
-        background: linear-gradient(45deg, #FF1D8E, #FF5D2D);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    `;
+// Global modal opener for nav-links and buttons
+window.openVipModal = function(forceShowForm = false) {
+    const entryModal = document.getElementById('vip-entry-modal');
+    const modalForm = document.getElementById('vip-modal-form');
+    const modalVerifiedBanner = document.getElementById('modal-vip-verified-banner');
+    if (entryModal) {
+        entryModal.classList.add('open');
+        if (forceShowForm || !localStorage.getItem('beserious_verified_email')) {
+            if (modalForm) modalForm.style.display = 'block';
+            if (modalVerifiedBanner) modalVerifiedBanner.classList.remove('show');
+            const emailInput = document.getElementById('modal-vip-email-input');
+            if (emailInput) emailInput.focus();
+        }
+    }
+};
 
-    const message = document.createElement('p');
-    message.textContent = 'Support BE_SERIOUS_MUSIC by visiting:';
-    message.style.cssText = `
-        color: #cccccc;
-        font-family: 'Montserrat', sans-serif;
-        margin-bottom: 25px;
-        font-size: 16px;
-    `;
+// Anti-XSS Sanitizer Utility
+function escapeHtml(str) {
+    if (typeof str !== 'string') return '';
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
 
-    const urlContainer = document.createElement('div');
-    urlContainer.style.cssText = `
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        margin-bottom: 25px;
-    `;
+function initEmailVerification() {
+    initEmailJSService();
 
-    const urlsToShow = [randomUrl, 'instagram.com/beserious_official'];
-    urlsToShow.forEach((url, index) => {
-        const link = document.createElement('a');
-        link.href = index === 0 ? `https://${url}` : `https://${url}`;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        link.textContent = url;
-        link.style.cssText = `
-            display: block;
-            background: linear-gradient(45deg, #FF1D8E, #FF5D2D);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        `;
-        link.onmouseover = () => {
-            link.style.transform = 'translateY(-2px)';
-            link.style.boxShadow = '0 10px 25px rgba(255, 29, 142, 0.4)';
+    // Entry Modal Elements
+    const entryModal = document.getElementById('vip-entry-modal');
+    const modalCloseBtn = document.getElementById('vip-modal-close-btn');
+    const modalGuestBtn = document.getElementById('vip-modal-guest-btn');
+    const modalFinishBtn = document.getElementById('modal-vip-finish-btn');
+    const modalReverifyBtn = document.getElementById('modal-vip-reverify-btn');
+    const modalNameInput = document.getElementById('modal-vip-name-input');
+    const modalEmailInput = document.getElementById('modal-vip-email-input');
+    const modalVerifyBtn = document.getElementById('modal-vip-verify-btn');
+    const modalOtpContainer = document.getElementById('modal-vip-otp-container');
+    const modalOtpInput = document.getElementById('modal-vip-otp-input');
+    const modalConfirmOtpBtn = document.getElementById('modal-vip-confirm-otp-btn');
+    const modalForm = document.getElementById('vip-modal-form');
+    const modalVerifiedBanner = document.getElementById('modal-vip-verified-banner');
+    const statusDesc = document.getElementById('vip-verified-status-desc');
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Rate Limiting Security Configuration (60s cooldown)
+    let lastOtpRequestTime = 0;
+    let otpCooldownTimer = null;
+    const OTP_COOLDOWN_SECONDS = 60;
+
+    function startCooldownTimer() {
+        lastOtpRequestTime = Date.now();
+        if (modalVerifyBtn) {
+            modalVerifyBtn.disabled = true;
+        }
+
+        const updateTick = () => {
+            const elapsed = Math.floor((Date.now() - lastOtpRequestTime) / 1000);
+            const remaining = OTP_COOLDOWN_SECONDS - elapsed;
+            if (remaining > 0) {
+                if (modalVerifyBtn) {
+                    modalVerifyBtn.innerHTML = `
+                        <svg class="badge-svg" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                        Resend Code in ${remaining}s
+                    `;
+                    modalVerifyBtn.disabled = true;
+                }
+            } else {
+                clearInterval(otpCooldownTimer);
+                otpCooldownTimer = null;
+                if (modalVerifyBtn) {
+                    modalVerifyBtn.disabled = false;
+                    modalVerifyBtn.innerHTML = `
+                        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                        Resend Verification Code
+                    `;
+                }
+            }
         };
-        link.onmouseout = () => {
-            link.style.transform = 'translateY(0px)';
-            link.style.boxShadow = 'none';
-        };
-        urlContainer.appendChild(link);
-    });
 
-    popupContent.appendChild(closeButton);
-    popupContent.appendChild(timerEl);
-    popupContent.appendChild(title);
-    popupContent.appendChild(message);
-    popupContent.appendChild(urlContainer);
-    popupOverlay.appendChild(popupContent);
+        if (otpCooldownTimer) clearInterval(otpCooldownTimer);
+        updateTick();
+        otpCooldownTimer = setInterval(updateTick, 1000);
+    }
 
-    document.body.appendChild(popupOverlay);
+    function showFormInputView() {
+        if (modalForm) modalForm.style.display = 'block';
+        if (modalVerifiedBanner) modalVerifiedBanner.classList.remove('show');
+        if (modalOtpContainer) modalOtpContainer.classList.remove('show');
+        if (modalEmailInput) modalEmailInput.focus();
+    }
 
-    let timeLeft = 15;
-    timerEl.innerText = '15s';
-    const timerInterval = setInterval(() => {
-        timeLeft--;
-        timerEl.innerText = `${timeLeft}s`;
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            if (popupOverlay && popupOverlay.parentNode) {
-                popupOverlay.parentNode.removeChild(popupOverlay);
+    // Helper: Mark Verified in UI
+    function markAsVerified(email) {
+        const safeEmail = escapeHtml(email);
+        localStorage.setItem('beserious_verified_email', safeEmail);
+
+        if (modalForm && modalVerifiedBanner) {
+            modalForm.style.display = 'none';
+            modalVerifiedBanner.classList.add('show');
+            if (statusDesc) {
+                statusDesc.innerHTML = `Verified as <strong>${safeEmail}</strong>. You now have complete ad-free listening and unlimited offline access.`;
             }
         }
-    }, 1000);
 
-    setTimeout(() => {
-        clearInterval(timerInterval);
-        if (popupOverlay && popupOverlay.parentNode) {
-            popupOverlay.parentNode.removeChild(popupOverlay);
-        }
-    }, 15000);
-}
-
-// Show Ad at Start or Random Point During Playback
-function maybeShowAdPopup() {
-    if (adShownForCurrentSong) return;
-
-    const showAtStart = Math.random() < 0.3;
-
-    if (showAtStart) {
-        showAdPopup();
-        adShownForCurrentSong = true;
-    } else if (audio.duration) {
-        const randomPoint = Math.random() * 0.5 + 0.25;
-        const triggerTime = audio.duration * randomPoint;
-        const checkInterval = setInterval(() => {
-            if (audio.currentTime >= triggerTime && !adShownForCurrentSong) {
-                clearInterval(checkInterval);
-                showAdPopup();
-                adShownForCurrentSong = true;
-            }
-        }, 1000);
-    }
-}
-
-// Reset ad flag when song changes
-function resetAdFlag() {
-    adShownForCurrentSong = false;
-}
-
-// Render Hero 3D Carousel
-function renderHeroCarousel(currentIndex) {
-    const track = document.getElementById('hero-carousel-track');
-    if (!track) return;
-
-    const numSongs = songs.length;
-    let prevIndex = (currentIndex - 1 + numSongs) % numSongs;
-    let nextIndex = (currentIndex + 1) % numSongs;
-
-    const itemsHTML = [prevIndex, currentIndex, nextIndex].map((idx, pos) => {
-        let className = 'hidden-item';
-        if (pos === 0) className = 'prev';
-        if (pos === 1) className = 'active';
-        if (pos === 2) className = 'next';
-        
-        const song = songs[idx];
-        return `
-            <div class="carousel-item ${className}" onclick="event.stopPropagation(); playSong(${idx})">
-                <img src="${song.img}" alt="${song.title}">
-            </div>
-        `;
-    }).join('');
-
-    track.innerHTML = itemsHTML;
-}
-
-// Load Song
-function loadSong(index) {
-    const song = songs[index];
-    trackSongPlay(song.id);
-    audio.src = song.src;
-    currentTitleEl.innerText = song.title;
-    currentArtistEl.innerText = song.artist;
-    if (playerTrackImg) playerTrackImg.src = song.img;
-
-    // Update Hero Section (Cover Pic)
-    if (heroSongTitle) heroSongTitle.innerText = song.title;
-    if (heroSongArtist) heroSongArtist.innerText = song.artist;
-    
-    renderHeroCarousel(index);
-
-    resetAdFlag();
-    showSongReviewBanner(song);
-
-    // Update Like Button State
-    const likeBtn = document.getElementById('hero-like-btn');
-    if (likeBtn) {
-        if (currentUser && (songLikes[song.id] || []).includes(currentUser.name)) {
-            likeBtn.classList.add('active');
-        } else {
-            likeBtn.classList.remove('active');
-        }
+        // Dismiss any ongoing ad overlays or floating banners immediately
+        dismissAllAdsOnVipUnlock();
     }
 
-    renderLikes(song.id);
-    currentSongIndex = index;
-
-    // Show music change popup
-    showNotification(`Now Playing: ${song.title} - ${song.artist}`, 'info');
-}
-
-// Render Likes for a song
-function renderLikes(songId) {
-    const display = document.getElementById('liked-users-display');
-    if (!display) return;
-
-    const likes = songLikes[songId] || [];
-    if (likes.length === 0) {
-        display.innerHTML = '';
-        return;
-    }
-
-    const namesText = likes.map(name => `<strong>${name}</strong>`).join(', ');
-    const suffix = likes.length === 1 ? 'likes' : 'like';
-    display.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="#ff4d4d" stroke="#ff4d4d" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> <span>${namesText} ${suffix} this song</span>`;
-}
-
-// Like Song Function
-function likeSong(songId) {
-    if (!currentUser) {
-        showNotification('Please sign in to like songs!', 'error');
-        return;
-    }
-
-    if (!songLikes[songId]) {
-        songLikes[songId] = [];
-    }
-
-    const index = songLikes[songId].indexOf(currentUser.name);
-    const likeBtn = document.getElementById('hero-like-btn');
-
-    if (index === -1) {
-        // Add like
-        songLikes[songId].push(currentUser.name);
-        if (likeBtn) {
-            likeBtn.classList.add('active');
-            likeBtn.classList.add('like-animation');
-            setTimeout(() => likeBtn.classList.remove('like-animation'), 400);
-        }
-        showNotification('Song liked! ❤️');
+    // Check if user already verified
+    const storedVerified = localStorage.getItem('beserious_verified_email');
+    if (storedVerified) {
+        markAsVerified(storedVerified);
     } else {
-        // Remove like
-        songLikes[songId].splice(index, 1);
-        if (likeBtn) likeBtn.classList.remove('active');
+        showFormInputView();
     }
 
-    localStorage.setItem('thehits_likes', JSON.stringify(songLikes));
-    renderLikes(songId);
-    renderMostLikedSongs();
-}
-
-// Render Most Liked Songs Section
-function renderMostLikedSongs() {
-    if (!mostLikedGrid) return;
-
-    // Target specific songs by ID
-    const targetIds = [11, 6, 8];
-    const likedSongsList = songs.filter(s => targetIds.includes(s.id));
-
-    mostLikedGrid.innerHTML = '';
-
-    likedSongsList.forEach(song => {
-        const likeCount = (songLikes[song.id] || []).length;
-        const songIndex = songs.findIndex(s => s.id === song.id);
-
-        const card = document.createElement('div');
-        card.className = 'song-card';
-        if (song.isTrending) card.classList.add('featured-song');
-        card.onclick = () => playSong(songIndex);
-
-        let badgeHtml = `
-            <div class="like-count-badge">
-                <svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                ${likeCount} ${likeCount === 1 ? 'Like' : 'Likes'}
-            </div>
-        `;
-
-        card.innerHTML = `
-            ${badgeHtml}
-            <img src="${song.img}" alt="${song.title}">
-            <h3>${song.title}</h3>
-            <div class="card-footer">
-                <p>${song.artist}</p>
-                <button class="review-btn" onclick="event.stopPropagation(); openReviewModal(${song.id})">Review</button>
-            </div>
-        `;
-        mostLikedGrid.appendChild(card);
-    });
-}
-
-// Play/Pause Logic
-function togglePlay() {
-    if (!audio.src) return;
-    if (isPlaying) {
-        audio.pause();
-        if (playIcon) playIcon.style.display = 'block';
-        if (pauseIcon) pauseIcon.style.display = 'none';
-        if (heroPlayBtn) heroPlayBtn.innerText = 'Play Mix';
-    } else {
-        audio.play();
-        if (playIcon) playIcon.style.display = 'none';
-        if (pauseIcon) pauseIcon.style.display = 'block';
-        if (heroPlayBtn) heroPlayBtn.innerText = 'Pause Mix';
-        maybeShowAdPopup();
-    }
-    isPlaying = !isPlaying;
-}
-
-function playSong(index) {
-    loadSong(index);
-    isPlaying = false;
-    togglePlay();
-}
-
-// Event Listeners
-function setupEventListeners() {
-    if (playPauseBtn) playPauseBtn.addEventListener('click', togglePlay);
-    if (heroPlayBtn) heroPlayBtn.addEventListener('click', togglePlay);
-
-    const heroLikeBtn = document.getElementById('hero-like-btn');
-    if (heroLikeBtn) {
-        heroLikeBtn.addEventListener('click', () => {
-            const currentSong = songs[currentSongIndex];
-            likeSong(currentSong.id);
+    if (modalReverifyBtn) {
+        modalReverifyBtn.addEventListener('click', () => {
+            showFormInputView();
         });
     }
 
-    // Keyboard Spacebar for Play/Pause
-    document.addEventListener('keydown', (e) => {
-        if (e.code === 'Space') {
-            // Check if the active element is an input field
-            const activeElement = document.activeElement;
-            const isInputField = activeElement.tagName === 'INPUT' ||
-                activeElement.tagName === 'TEXTAREA';
+    // Modal Close handlers
+    const closeModal = () => {
+        if (entryModal) entryModal.classList.remove('open');
+    };
 
-            // Only toggle play if not typing in a form field
-            if (!isInputField) {
-                e.preventDefault();
-                togglePlay();
-            }
-        }
-    });
+    if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
+    if (modalGuestBtn) modalGuestBtn.addEventListener('click', closeModal);
+    if (modalFinishBtn) modalFinishBtn.addEventListener('click', closeModal);
+    if (entryModal) {
+        entryModal.addEventListener('click', (e) => {
+            if (e.target === entryModal) closeModal();
+        });
+    }
 
-    // Search Logic - Global and Robust
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase().trim();
-            if (term === '') {
-                renderTrendingHits(songs);
-                renderPriyanshuPlaylist();
+    // Modal Email Request
+    if (modalVerifyBtn && modalEmailInput) {
+        modalVerifyBtn.addEventListener('click', async () => {
+            // Security: Enforce 60-second cooldown rate limit
+            const secondsSinceLast = Math.floor((Date.now() - lastOtpRequestTime) / 1000);
+            if (secondsSinceLast < OTP_COOLDOWN_SECONDS) {
+                const waitSec = OTP_COOLDOWN_SECONDS - secondsSinceLast;
+                showToast(`Security Limit: Please wait ${waitSec}s before requesting a new code.`, 'sparkle');
                 return;
             }
 
-            const filtered = songs.filter(song =>
-                song.title.toLowerCase().includes(term) ||
-                song.artist.toLowerCase().includes(term)
-            );
-
-            // Show searched songs in the main grid
-            renderTrendingHits(filtered);
-
-            // Hide other sections during search for clarity
-            const exclusiveSection = document.getElementById('exclusive-playlists');
-            if (exclusiveSection) exclusiveSection.style.display = term ? 'none' : 'block';
-
-            const priyanshuSection = document.getElementById('priyanshu-playlist').parentElement;
-            if (priyanshuSection) priyanshuSection.style.display = term ? 'none' : 'block';
-        });
-    }
-
-    // Navigation Switching
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const section = btn.getAttribute('data-section');
-            showSection(section);
-
-            // Update active state
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        });
-    });
-
-    // Playlist Creation
-    if (createPlaylistBtn) {
-        createPlaylistBtn.addEventListener('click', () => {
-            const name = prompt("Enter playlist name:");
-            if (name) {
-                userPlaylists.push(name);
-                renderPlaylists();
-            }
-        });
-    }
-
-    if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-            playSong(currentSongIndex);
-        });
-    }
-
-    if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-            currentSongIndex = (currentSongIndex + 1) % songs.length;
-            playSong(currentSongIndex);
-        });
-    }
-
-    audio.addEventListener('timeupdate', () => {
-        if (audio.duration) {
-            const percent = (audio.currentTime / audio.duration) * 100;
-            if (progressBarFill) progressBarFill.style.width = `${percent}%`;
-            if (currentTimeEl) currentTimeEl.innerText = formatTime(audio.currentTime);
-            if (totalDurationEl) totalDurationEl.innerText = formatTime(audio.duration);
-        }
-    });
-
-    if (progressBarBg) {
-        progressBarBg.addEventListener('click', (e) => {
-            const width = progressBarBg.clientWidth;
-            const clickX = e.offsetX;
-            const duration = audio.duration;
-            if (duration) audio.currentTime = (clickX / width) * duration;
-        });
-    }
-
-    if (volumeSlider) {
-        volumeSlider.addEventListener('input', (e) => {
-            audio.volume = e.target.value;
-        });
-    }
-
-    audio.addEventListener('ended', () => {
-        handleSongEnded();
-    });
-
-    function handleSongEnded() {
-        // Show Ad and wait for it to finish or be skipped
-        showAdOverlay();
-    }
-
-    function showAdOverlay() {
-        let adOverlay = document.getElementById('ad-overlay');
-        const reelUrl = adReels[currentAdIndex];
-        currentAdIndex = (currentAdIndex + 1) % adReels.length;
-
-        if (!adOverlay) {
-            adOverlay = document.createElement('div');
-            adOverlay.id = 'ad-overlay';
-            document.body.appendChild(adOverlay);
-        }
-
-        adOverlay.innerHTML = `
-            <div class="ad-container">
-                <div class="ad-header">
-                    <span class="ad-tag">SPONSORED</span>
-                    <span class="ad-timer">Music resumes in 15s</span>
-                    <button id="skip-ad-btn" class="skip-btn hidden">Skip Ad</button>
-                </div>
-                <div class="reel-wrapper">
-                    <iframe src="${reelUrl}" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
-                </div>
-            </div>
-        `;
-
-        adOverlay.style.display = 'flex';
-
-        let timeLeft = 15;
-        const timerEl = adOverlay.querySelector('.ad-timer');
-        const skipBtn = adOverlay.querySelector('#skip-ad-btn');
-
-        const interval = setInterval(() => {
-            timeLeft--;
-            if (timerEl) timerEl.innerText = `Music resumes in ${timeLeft}s`;
-
-            if (timeLeft <= 3 && skipBtn) {
-                skipBtn.classList.remove('hidden');
-            }
-
-            if (timeLeft <= 0) {
-                clearInterval(interval);
-                hideAdOverlay();
-                if (nextBtn) nextBtn.click();
-            }
-        }, 1000);
-
-        if (skipBtn) {
-            skipBtn.onclick = () => {
-                clearInterval(interval);
-                hideAdOverlay();
-                if (nextBtn) nextBtn.click();
-            };
-        }
-    }
-
-    function hideAdOverlay() {
-        const adOverlay = document.getElementById('ad-overlay');
-        if (adOverlay) {
-            adOverlay.style.display = 'none';
-        }
-    }
-
-    // Contact Form Submission - Enhanced with Validation
-    const contactForm = document.getElementById('contact-form');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const nameInput = contactForm.querySelector('input[placeholder="Your Name"]');
-            const emailInput = contactForm.querySelector('input[placeholder="Email Address"]');
-            const messageInput = contactForm.querySelector('textarea');
-            const btn = contactForm.querySelector('button');
-
-            const name = nameInput ? nameInput.value.trim() : '';
-            const email = emailInput ? emailInput.value.trim() : '';
-            const message = messageInput ? messageInput.value.trim() : '';
-
-            // Validation
-            if (!name || !email || !message) {
-                showNotification('❌ Please fill in all fields', 'error');
+            const rawName = (modalNameInput && modalNameInput.value.trim()) || "";
+            const name = escapeHtml(rawName.slice(0, 50));
+            if (!name || name.length < 2) {
+                showToast('Please enter your full name.', 'sparkle');
+                if (modalNameInput) modalNameInput.focus();
                 return;
             }
 
-            // Email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                showNotification('❌ Please enter a valid email address', 'error');
+            const rawEmail = modalEmailInput.value.trim();
+            const email = escapeHtml(rawEmail.slice(0, 100).toLowerCase());
+            if (!email || !emailRegex.test(email)) {
+                showToast('Please enter a valid email address.', 'sparkle');
+                modalEmailInput.focus();
                 return;
             }
 
-            // Message length validation
-            if (message.length < 10) {
-                showNotification('❌ Please write a detailed message (at least 10 characters)', 'error');
-                return;
-            }
+            activeGeneratedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+            activeTargetEmail = email;
+            activeTargetName = name;
 
-            if (message.length > 5000) {
-                showNotification('❌ Message is too long (max 5000 characters)', 'error');
-                return;
-            }
+            modalVerifyBtn.disabled = true;
+            modalVerifyBtn.innerHTML = `
+                <svg class="badge-svg" style="animation: spinBuffering 1s infinite linear;" viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+                Sending Verification Code...
+            `;
 
-            // Animate button on submit
-            if (typeof gsap !== 'undefined') {
-                gsap.to(btn, {
-                    scale: 0.95,
-                    duration: 0.1
-                });
-                gsap.to(btn, {
-                    scale: 1,
-                    duration: 0.2,
-                    delay: 0.1,
-                    ease: 'back.out(2)'
-                });
-            }
+            const result = await sendVerificationViaEmailJS(email, name, activeGeneratedOtp);
 
-            const originalText = btn.innerText;
-            btn.innerText = '📤 Sending...';
-            btn.disabled = true;
+            startCooldownTimer();
 
-            console.log('📧 Sending inquiry via Google Apps Script...');
-            console.log('From:', { name, email });
-            console.log('Message:', message);
-
-            // Send via Google Apps Script
-            sendEmailViaGoogleAppsScript('inquiry', {
-                name: name,
-                email: email,
-                message: message
-            }).then(success => {
-                if (success) {
-                    showNotification('✅ Your inquiry has been sent! Check your email.', 'success');
-                    showNotification(`📧 Admin will respond to ${email}`, 'success');
-
-                    // Clear form with animation
-                    if (typeof gsap !== 'undefined') {
-                        gsap.to(contactForm, {
-                            opacity: 0.8,
-                            duration: 0.3,
-                            onComplete: () => {
-                                contactForm.reset();
-                                gsap.to(contactForm, {
-                                    opacity: 1,
-                                    duration: 0.3
-                                });
-                            }
-                        });
-                    } else {
-                        contactForm.reset();
+            if (modalOtpContainer) {
+                modalOtpContainer.classList.add('show');
+                const otpNotice = document.getElementById('modal-otp-notice-text');
+                
+                if (result.success) {
+                    showToast(`Verification code sent to ${email}`, 'mail', 5000);
+                    if (otpNotice) {
+                        otpNotice.innerHTML = `Enter the 6-digit verification code sent to your email (<strong>${escapeHtml(email)}</strong>). Check your inbox & spam folder:`;
                     }
                 } else {
-                    showNotification('⚠️ Could not send inquiry. Check browser console.', 'error');
-                    console.error('Email sending failed. Make sure Google Apps Script URL is configured!');
+                    // EmailJS returned an error (e.g. template ID not configured in dashboard yet)
+                    showToast(`EmailJS: Template ID required. Displaying code on screen.`, 'sparkle', 6000);
+                    if (otpNotice) {
+                        otpNotice.innerHTML = `
+                            <div style="background: rgba(255, 215, 0, 0.08); border: 1px solid rgba(255, 215, 0, 0.35); border-radius: 8px; padding: 12px; margin-bottom: 12px; text-align: center;">
+                                <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #FFD700; font-weight: 700; margin-bottom: 4px;">Direct Verification Passcode</div>
+                                <div style="font-size: 26px; font-weight: 800; letter-spacing: 6px; color: #FFFFFF; font-family: monospace; margin: 4px 0;">${activeGeneratedOtp}</div>
+                                <div style="font-size: 11px; color: #8F94A6;">EmailJS requires a Template ID from dashboard.emailjs.com/admin/templates. Use the code above to verify immediately!</div>
+                            </div>
+                            Enter the 6-digit verification code:
+                        `;
+                    }
+                    if (modalOtpInput) {
+                        modalOtpInput.value = activeGeneratedOtp;
+                    }
                 }
-                btn.innerText = originalText;
-                btn.disabled = false;
-            }).catch(err => {
-                console.error('Inquiry submission error:', err);
-                showNotification('⚠️ Network error. Please try again.', 'error');
-                btn.innerText = originalText;
-                btn.disabled = false;
-            });
-        });
-    }
-}
-
-function handleArtistInquiry(data) {
-    sendEmailViaGoogleAppsScript('inquiry', data)
-        .then(success => {
-            if (success) {
-                showNotification('🚀 Inquiry sent! We\'ll be in touch.', 'success');
-            } else {
-                showNotification('❌ Submission failed. Try again later.', 'error');
+                if (modalOtpInput) modalOtpInput.focus();
             }
         });
-}
-
-function showSection(sectionId) {
-    const sections = document.querySelectorAll('.app-section');
-    sections.forEach(section => {
-        section.classList.remove('active');
-        section.style.display = 'none';
-    });
-
-    const target = document.getElementById(`${sectionId}-section`);
-    if (target) {
-        target.classList.add('active');
-        target.style.display = 'block';
-    } else if (sectionId === 'search') {
-        showSection('home');
-        if (searchInput) searchInput.focus();
-    }
-}
-
-function openPlaylist(name, imgSrc) {
-    showSection('playlist-detail');
-
-    const plTitle = document.getElementById('pl-detail-title');
-    const plImg = document.getElementById('pl-detail-img');
-    const plTracklist = document.getElementById('playlist-tracklist');
-
-    if (plTitle) plTitle.innerText = name;
-    if (plImg) plImg.src = imgSrc || 'MY_name_priyanshu/cover-pic/playlist_pic.png';
-
-    // Get songs for the selected playlist
-    let playlistSongs = [];
-    if (playlists[name]) {
-        const playlistSongIds = playlists[name];
-        playlistSongs = songs.filter(song => playlistSongIds.includes(song.id));
     }
 
-    if (plTracklist) {
-        plTracklist.innerHTML = playlistSongs.map((song, index) => {
-            const originalIndex = songs.findIndex(s => s.id === song.id);
-            return `
-                <div class="track-item" onclick="playSong(${originalIndex})">
-                    <span class="num">${index + 1}</span>
-                    <span class="title">${song.title}</span>
-                    <span class="artist">${song.artist}</span>
-                </div>
-            `;
-        }).join('');
-    }
+    // Modal OTP Confirm
+    if (modalConfirmOtpBtn && modalOtpInput) {
+        modalConfirmOtpBtn.addEventListener('click', async () => {
+            const entered = modalOtpInput.value.trim();
+            if (entered !== activeGeneratedOtp) {
+                showToast('Invalid verification code. Please check your inbox.', 'sparkle');
+                return;
+            }
 
-    // Play all button logic
-    const playAllBtn = document.getElementById('pl-play-all');
-    if (playAllBtn && playlistSongs.length > 0) {
-        const firstSongIndex = songs.findIndex(s => s.id === playlistSongs[0].id);
-        playAllBtn.onclick = () => playSong(firstSongIndex);
-    }
-}
+            modalConfirmOtpBtn.disabled = true;
+            modalConfirmOtpBtn.textContent = 'Verifying...';
 
-// Utility: Format Time
-function formatTime(seconds) {
-    if (isNaN(seconds)) return "0:00";
-    const min = Math.floor(seconds / 60);
-    const sec = Math.floor(seconds % 60);
-    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
-}
-
-// Instagram Popup Function
-function showInstagramPopup(event) {
-    event.preventDefault(); // Prevent default link behavior
-
-    // Create popup overlay
-    const popupOverlay = document.createElement('div');
-    popupOverlay.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10000;
-        backdrop-filter: blur(5px);
-    `;
-
-    // Create popup content
-    const popupContent = document.createElement('div');
-    popupContent.style.cssText = `
-        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-        border-radius: 20px;
-        padding: 40px;
-        text-align: center;
-        max-width: 90%;
-        width: 400px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        position: relative;
-        overflow: hidden;
-    `;
-
-    // Close button
-    const closeButton = document.createElement('button');
-    closeButton.innerHTML = '×';
-    closeButton.style.cssText = `
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: transparent;
-        border: none;
-        color: white;
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        transition: all 0.3s ease;
-    `;
-    closeButton.onmouseover = () => {
-        closeButton.style.transform = 'rotate(90deg)';
-        closeButton.style.color = '#ff4d4d';
-    };
-    closeButton.onmouseout = () => {
-        closeButton.style.transform = 'rotate(0deg)';
-        closeButton.style.color = 'white';
-    };
-    closeButton.onclick = () => {
-        document.body.removeChild(popupOverlay);
-    };
-
-    // Instagram logo
-    const instagramLogo = document.createElement('img');
-    instagramLogo.src = 'https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg';
-    instagramLogo.alt = 'Instagram';
-    instagramLogo.style.cssText = `
-        width: 80px;
-        height: 80px;
-        margin-bottom: 20px;
-        filter: brightness(0) invert(1);
-    `;
-
-    // Title
-    const title = document.createElement('h2');
-    title.textContent = 'Follow BE_SERIOUS_MUSIC on Instagram';
-    title.style.cssText = `
-        color: white;
-        font-family: 'Playfair Display', serif;
-        margin-bottom: 15px;
-        font-size: 24px;
-    `;
-
-    // Subtitle
-    const subtitle = document.createElement('p');
-    subtitle.textContent = 'Get exclusive behind-the-scenes content, new releases, and more!';
-    subtitle.style.cssText = `
-        color: #cccccc;
-        font-family: 'Montserrat', sans-serif;
-        margin-bottom: 30px;
-        font-size: 16px;
-        line-height: 1.5;
-    `;
-
-    // Follow button
-    const followButton = document.createElement('a');
-    followButton.href = 'https://www.instagram.com/beserious_official?igsh=M2loNW12dDJrcTlw';
-    followButton.target = '_blank';
-    followButton.rel = 'noopener noreferrer';
-    followButton.textContent = 'Follow on Instagram';
-    followButton.style.cssText = `
-        display: inline-block;
-        background: linear-gradient(45deg, #FF1D8E, #FF5D2D);
-        color: white;
-        padding: 15px 30px;
-        border-radius: 50px;
-        text-decoration: none;
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 600;
-        font-size: 18px;
-        transition: all 0.3s ease;
-        box-shadow: 0 10px 20px rgba(255, 29, 142, 0.3);
-        border: none;
-        cursor: pointer;
-    `;
-    followButton.onmouseover = () => {
-        followButton.style.transform = 'translateY(-3px)';
-        followButton.style.boxShadow = '0 15px 25px rgba(255, 29, 142, 0.4)';
-    };
-    followButton.onmouseout = () => {
-        followButton.style.transform = 'translateY(0px)';
-        followButton.style.boxShadow = '0 10px 20px rgba(255, 29, 142, 0.3)';
-    };
-
-    // Assemble popup
-    popupContent.appendChild(closeButton);
-    popupContent.appendChild(instagramLogo);
-    popupContent.appendChild(title);
-    popupContent.appendChild(subtitle);
-    popupContent.appendChild(followButton);
-    popupOverlay.appendChild(popupContent);
-
-    // Add to body
-    document.body.appendChild(popupOverlay);
-
-    // Animate in
-    popupContent.style.opacity = '0';
-    popupContent.style.transform = 'scale(0.9)';
-    setTimeout(() => {
-        popupContent.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-        popupContent.style.opacity = '1';
-        popupContent.style.transform = 'scale(1)';
-    }, 10);
-}
-
-// ============================================
-// PREMIUM ANIMATIONS - PRIME & LUXURY EFFECTS
-// ============================================
-
-// Prime Animations - High energy, quick movements
-function addPrimeAnimations() {
-    if (typeof gsap === 'undefined') return;
-
-    // Prime hover effect on cards
-    document.querySelectorAll('.song-card, .playlist-card').forEach(card => {
-        card.addEventListener('mouseenter', function () {
-            gsap.to(this, {
-                scale: 1.08,
-                y: -10,
-                duration: 0.3,
-                ease: 'power2.out',
-                boxShadow: '0 20px 40px rgba(29, 185, 84, 0.4)'
+            await sendToGoogleAppsScript({
+                type: "verify_confirmed",
+                email: activeTargetEmail,
+                name: (modalNameInput && modalNameInput.value.trim()) || "VIP Listener",
+                code: activeGeneratedOtp,
+                service: "EmailJS"
             });
+
+            markAsVerified(activeTargetEmail);
+            showToast('Email Verified Successfully!', 'check', 4500);
         });
+    }
+}
 
-        card.addEventListener('mouseleave', function () {
-            gsap.to(this, {
-                scale: 1,
-                y: 0,
-                duration: 0.3,
-                ease: 'power2.out',
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)'
-            });
+// =========================================================
+// BE SERIOUS AI MUSIC CONCIERGE & SOUND ADVISOR
+// =========================================================
+let currentAiRecommendedSong = songs[0];
+
+function recommendSongForVibe(queryOrVibe) {
+    const q = (queryOrVibe || '').toLowerCase().trim();
+    
+    // 1. Mountain & Atmospheric Peace
+    if (q.includes('mountain') || q.includes('peace') || q.includes('nature') || q.includes('himalaya') || q.includes('sujal') || q.includes('chill')) {
+        return {
+            song: songs.find(s => s.id === 16) || songs[0],
+            matchScore: '99.8%',
+            reason: 'Engine match: Atmospheric high-altitude acoustic guitar harmonies layered with expansive sub-bass and pristine vocal master balance.'
+        };
+    }
+    // 2. Gym & Hustle / Hard Work
+    if (q.includes('gym') || q.includes('hustle') || q.includes('hard work') || q.includes('built') || q.includes('workout') || q.includes('motivat') || q.includes('grind')) {
+        return {
+            song: songs.find(s => s.id === 2) || songs.find(s => s.id === 1) || songs[6],
+            matchScore: '99.4%',
+            reason: 'Engine match: High-octane rhythm, driving basslines, and raw determination lyricism crafted to ignite peak adrenaline.'
+        };
+    }
+    // 3. Luxury Swag & Street Confidence
+    if (q.includes('babes') || q.includes('luxury') || q.includes('swag') || q.includes('style') || q.includes('party') || q.includes('club') || q.includes('confidence')) {
+        return {
+            song: songs.find(s => s.id === 14) || songs[3],
+            matchScore: '99.7%',
+            reason: 'Engine match: Ultra-crisp 808 percussion, hypnotic flow, and modern high-roller street luxury ambiance.'
+        };
+    }
+    // 4. Gang & High-Energy Flow
+    if (q.includes('priyanshu') || q.includes('gang') || q.includes('energy') || q.includes('banger')) {
+        return {
+            song: songs.find(s => s.id === 4) || songs[4],
+            matchScore: '99.2%',
+            reason: 'Engine match: Unstoppable personal anthem featuring sharp vocal clarity and signature BE SERIOUS hard trap bounce.'
+        };
+    }
+    // 5. Late Night Melodies & Romantic Emotion
+    if (q.includes('night') || q.includes('melod') || q.includes('sad') || q.includes('love') || q.includes('heart') || q.includes('kamal') || q.includes('adhoori') || q.includes('kiran') || q.includes('ishq') || q.includes('soul') || q.includes('emotional')) {
+        const lateNightSongs = [
+            songs.find(s => s.id === 8),
+            songs.find(s => s.id === 12),
+            songs.find(s => s.id === 5),
+            songs.find(s => s.id === 11),
+            songs.find(s => s.id === 9)
+        ].filter(Boolean);
+        const picked = lateNightSongs[Math.floor(Math.random() * lateNightSongs.length)] || songs[9];
+        return {
+            song: picked,
+            matchScore: '98.9%',
+            reason: 'Engine match: Deep emotional acoustic resonance, late-night introspective melodies, and soulful poetic cadence.'
+        };
+    }
+    // 6. Hard Street Underground Rap
+    if (q.includes('rap') || q.includes('street') || q.includes('golu') || q.includes('raj') || q.includes('bars') || q.includes('rhymes')) {
+        const rapSongs = [
+            songs.find(s => s.id === 15),
+            songs.find(s => s.id === 10),
+            songs.find(s => s.id === 13)
+        ].filter(Boolean);
+        const picked = rapSongs[Math.floor(Math.random() * rapSongs.length)] || songs[12];
+        return {
+            song: picked,
+            matchScore: '99.5%',
+            reason: 'Engine match: Relentless lyrical cadence, heavy hitting trap snares, and authentic underground flow.'
+        };
+    }
+    
+    // Default smart match
+    const randomSong = songs[Math.floor(Math.random() * songs.length)];
+    return {
+        song: randomSong,
+        matchScore: '98.4%',
+        reason: 'Engine match: Handpicked from BE SERIOUS MUSIC master archives based on acoustic richness and studio harmonic balance.'
+    };
+}
+
+function initAiConcierge() {
+    const aiModal = document.getElementById('ai-concierge-modal');
+    const closeBtn = document.getElementById('ai-modal-close-btn');
+    const moodChips = document.querySelectorAll('.ai-mood-chip');
+    const promptInput = document.getElementById('ai-user-prompt-input');
+    const askBtn = document.getElementById('ai-ask-advisor-btn');
+    const thinkingIndicator = document.getElementById('ai-thinking-indicator');
+    const resultContainer = document.getElementById('ai-result-container');
+    const recArt = document.getElementById('ai-rec-art');
+    const recTitle = document.getElementById('ai-rec-title');
+    const recDuration = document.getElementById('ai-rec-duration');
+    const recReason = document.getElementById('ai-rec-reason');
+    const matchScoreEl = document.getElementById('ai-match-score');
+    const playRecBtn = document.getElementById('ai-play-rec-btn');
+    const saveOfflineBtn = document.getElementById('ai-save-offline-btn');
+
+    window.openAiConciergeModal = function(initialVibe = null) {
+        if (aiModal) {
+            aiModal.classList.add('open');
+            aiModal.setAttribute('aria-hidden', 'false');
+            if (initialVibe) {
+                moodChips.forEach(c => {
+                    if (c.getAttribute('data-vibe') === initialVibe) {
+                        c.classList.add('active');
+                    } else {
+                        c.classList.remove('active');
+                    }
+                });
+                processAiRecommendation(initialVibe);
+            }
+            if (promptInput) promptInput.focus();
+        }
+    };
+
+    window.closeAiConciergeModal = function() {
+        if (aiModal) {
+            aiModal.classList.remove('open');
+            aiModal.setAttribute('aria-hidden', 'true');
+        }
+    };
+
+    if (closeBtn) closeBtn.addEventListener('click', window.closeAiConciergeModal);
+    if (aiModal) {
+        aiModal.addEventListener('click', (e) => {
+            if (e.target === aiModal) window.closeAiConciergeModal();
+        });
+    }
+
+    function processAiRecommendation(query) {
+        if (thinkingIndicator) thinkingIndicator.style.display = 'flex';
+        if (resultContainer) resultContainer.style.display = 'none';
+
+        setTimeout(() => {
+            if (thinkingIndicator) thinkingIndicator.style.display = 'none';
+
+            const recommendation = recommendSongForVibe(query);
+            currentAiRecommendedSong = recommendation.song;
+
+            if (recArt) recArt.src = currentAiRecommendedSong.img;
+            if (recTitle) recTitle.textContent = currentAiRecommendedSong.title;
+            if (recDuration) recDuration.textContent = currentAiRecommendedSong.duration || '3:30';
+            if (recReason) recReason.textContent = recommendation.reason;
+            if (matchScoreEl) matchScoreEl.textContent = recommendation.matchScore;
+
+            if (resultContainer) resultContainer.style.display = 'block';
+        }, 550);
+    }
+
+    moodChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            moodChips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            const vibe = chip.getAttribute('data-vibe');
+            processAiRecommendation(vibe);
         });
     });
 
-    // Prime button animations
-    document.querySelectorAll('.btn-primary').forEach(btn => {
-        btn.addEventListener('mouseenter', function () {
-            gsap.to(this, {
-                scale: 1.12,
-                duration: 0.25,
-                ease: 'back.out(1.7)',
-                boxShadow: '0 0 30px rgba(29, 185, 84, 0.6)'
-            });
-        });
-
-        btn.addEventListener('mouseleave', function () {
-            gsap.to(this, {
-                scale: 1,
-                duration: 0.25,
-                ease: 'power2.out'
-            });
-        });
-    });
-}
-
-// Luxury Animations - Smooth, elegant movements
-function addLuxuryAnimations() {
-    if (typeof gsap === 'undefined') return;
-
-    // Luxury glow effect on player
-    const playerBar = document.querySelector('.player-bar');
-    if (playerBar) {
-        gsap.to(playerBar, {
-            boxShadow: '0 0 30px rgba(29, 185, 84, 0.3), 0 10px 40px rgba(0, 0, 0, 0.5)',
-            duration: 2,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut'
+    if (askBtn) {
+        askBtn.addEventListener('click', () => {
+            const val = promptInput ? promptInput.value.trim() : '';
+            processAiRecommendation(val || 'mountain');
         });
     }
 
-    // Luxury smooth scroll animation on sections
-    document.querySelectorAll('.section-container').forEach((section, index) => {
-        const observerOptions = { threshold: 0.15 };
-        const observer = new IntersectionObserver((entries) => {
+    if (promptInput) {
+        promptInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const val = promptInput.value.trim();
+                processAiRecommendation(val || 'mountain');
+            }
+        });
+    }
+
+    if (playRecBtn) {
+        playRecBtn.addEventListener('click', () => {
+            if (currentAiRecommendedSong) {
+                const songIdx = songs.findIndex(s => s.id === currentAiRecommendedSong.id);
+                if (songIdx !== -1) {
+                    currentPlaylist = [...songs];
+                    loadSong(songIdx, true);
+                    showToast(`Playing AI Match: ${currentAiRecommendedSong.title}`, 'sparkle', 4000);
+                    window.closeAiConciergeModal();
+                }
+            }
+        });
+    }
+
+    if (saveOfflineBtn) {
+        saveOfflineBtn.addEventListener('click', () => {
+            if (currentAiRecommendedSong) {
+                cacheSingleSongInBackground(currentAiRecommendedSong);
+                showToast(`Saved ${currentAiRecommendedSong.title} to offline vault`, 'cloudDone', 3500);
+            }
+        });
+    }
+
+    // Initialize with mountain peaceful vibe
+    processAiRecommendation('mountain');
+}
+
+// Keyboard Shortcuts
+function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', (e) => {
+        if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+        switch (e.code) {
+            case 'Space':
+                e.preventDefault();
+                togglePlayPause();
+                break;
+            case 'ArrowRight':
+                e.preventDefault();
+                if (audio.duration) {
+                    audio.currentTime = Math.min(audio.duration, audio.currentTime + 5);
+                }
+                break;
+            case 'ArrowLeft':
+                e.preventDefault();
+                audio.currentTime = Math.max(0, audio.currentTime - 5);
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                audio.volume = Math.min(1, audio.volume + 0.05);
+                if (volumeSlider) volumeSlider.value = audio.volume;
+                updateVolumeIcon();
+                break;
+            case 'ArrowDown':
+                e.preventDefault();
+                audio.volume = Math.max(0, audio.volume - 0.05);
+                if (volumeSlider) volumeSlider.value = audio.volume;
+                updateVolumeIcon();
+                break;
+            case 'KeyN':
+                playNextSong();
+                break;
+            case 'KeyP':
+                playPrevSong();
+                break;
+            case 'KeyM':
+                if (volumeBtn) volumeBtn.click();
+                break;
+            case 'KeyL':
+                if (songs[currentSongIndex]) toggleLikeSong(songs[currentSongIndex].id);
+                break;
+        }
+    });
+}
+
+// Connection State Listeners (Zero Emojis)
+window.addEventListener('online', () => {
+    updateOfflineStatusUI();
+    showToast('Network Connection Restored', 'globe');
+});
+
+window.addEventListener('offline', () => {
+    updateOfflineStatusUI();
+    showToast('Offline Mode Active. Playing from Local Vault', 'offline', 3500);
+});
+
+// 2G Network Optimization: Lazy-load external beserious.in portal iframe on scroll intersection
+function initPortalIframeLazyLoad() {
+    const iframe = document.getElementById('beserious-live-iframe');
+    if (!iframe) return;
+
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries, obs) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    gsap.from(entry.target, {
-                        opacity: 0,
-                        y: 40,
-                        duration: 1.2,
-                        ease: 'power3.out',
-                        delay: index * 0.1
-                    });
-                    observer.unobserve(entry.target);
+                    const dataSrc = iframe.getAttribute('data-src');
+                    if (dataSrc && (!iframe.src || iframe.src === 'about:blank')) {
+                        iframe.src = dataSrc;
+                    }
+                    obs.disconnect();
                 }
             });
-        }, observerOptions);
+        }, { rootMargin: '300px' });
 
-        observer.observe(section);
-    });
-
-    // Luxury hero section animation
-    const heroContent = document.querySelector('.hero-content');
-    if (heroContent) {
-        gsap.to(heroContent, {
-            backgroundPositionX: '120%',
-            duration: 20,
-            repeat: -1,
-            ease: 'none'
-        });
+        observer.observe(iframe);
+    } else {
+        setTimeout(() => {
+            if (iframe && iframe.getAttribute('data-src')) {
+                iframe.src = iframe.getAttribute('data-src');
+            }
+        }, 3000);
     }
 }
 
-// Enhanced Player Button Animations
-function addPlayerAnimations() {
-    if (typeof gsap === 'undefined') return;
+// Clean URL & Seamless Anchor Navigation Engine (Prevents #spotlight, #vip, etc. in URL)
+function initCleanUrlNavigation() {
+    // 1. Clean address bar immediately
+    sanitizeAddressBarUrl();
 
-    const playPauseBtn = document.getElementById('play-pause-btn');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
+    // 2. Intercept clicks on ALL internal hash links site-wide in capture phase
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('a[href^="#"]');
+        if (!link) return;
 
-    [playPauseBtn, prevBtn, nextBtn].forEach(btn => {
-        if (!btn) return;
+        const href = link.getAttribute('href');
+        if (!href) return;
 
-        btn.addEventListener('click', function () {
-            gsap.to(this, {
-                scale: 0.88,
-                duration: 0.1
-            });
-            gsap.to(this, {
-                scale: 1,
-                duration: 0.2,
-                delay: 0.1,
-                ease: 'back.out(2)'
-            });
-        });
-
-        btn.addEventListener('mouseenter', function () {
-            gsap.to(this, {
-                scale: 1.2,
-                duration: 0.25,
-                ease: 'power2.out'
-            });
-        });
-
-        btn.addEventListener('mouseleave', function () {
-            gsap.to(this, {
-                scale: 1,
-                duration: 0.25,
-                ease: 'power2.out'
-            });
-        });
-    });
-
-    // Play icon rotation animation when playing
-    const originalTogglePlay = window.togglePlay;
-    window.togglePlay = function () {
-        originalTogglePlay.call(this);
-
-        if (isPlaying) {
-            gsap.to(playPauseBtn, {
-                rotation: 360,
-                duration: 0.6,
-                ease: 'back.out(1.7)'
-            });
-        }
-    };
-}
-
-// Track image rotation effect
-function addTrackImageAnimation() {
-    if (typeof gsap === 'undefined') return;
-
-    const trackImg = document.getElementById('player-track-img');
-    if (trackImg && isPlaying) {
-        gsap.to(trackImg, {
-            rotation: 360,
-            duration: 8,
-            repeat: -1,
-            ease: 'none'
-        });
-    } else if (trackImg) {
-        gsap.to(trackImg, { rotation: 0, duration: 0.5 });
-    }
-}
-
-// Animations with GSAP
-function animateEntry() {
-    if (typeof gsap !== 'undefined') {
-        // Initial page load animations
-        gsap.from('.sidebar', { x: -100, opacity: 0, duration: 1, ease: 'power4.out' });
-        gsap.from('.hero-content h1', { y: 50, opacity: 0, duration: 1, delay: 0.5, ease: 'power4.out' });
-        gsap.from('.song-card', {
-            scale: 0.8,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.1,
-            delay: 0.8,
-            ease: 'back.out(1.7)'
-        });
-
-        // Apply premium animations
-        addPrimeAnimations();
-        addLuxuryAnimations();
-        addPlayerAnimations();
-        addTrackImageAnimation();
-    }
-}
-
-// ============================================
-// REVIEW SYSTEM
-// ============================================
-
-let currentReviewSongId = null;
-let reviews = JSON.parse(localStorage.getItem('thehits_reviews')) || {};
-
-function openReviewModal(songId) {
-    currentReviewSongId = songId;
-    const song = songs.find(s => s.id === songId);
-    if (!song) return;
-
-    const modal = document.getElementById('review-modal');
-    const titleEl = document.getElementById('review-song-title');
-
-    titleEl.innerText = song.title;
-
-    // Pre-fill user name if logged in
-    const reviewUserInput = document.getElementById('review-user');
-    if (reviewUserInput) {
-        if (currentUser) {
-            reviewUserInput.value = currentUser.name;
-            reviewUserInput.readOnly = true;
-        } else {
-            reviewUserInput.value = '';
-            reviewUserInput.readOnly = false;
-        }
-    }
-
-    modal.classList.remove('hidden');
-    renderReviews(songId);
-}
-
-function closeReviewModal() {
-    const modal = document.getElementById('review-modal');
-    modal.classList.add('hidden');
-    currentReviewSongId = null;
-}
-
-function renderReviews(songId) {
-    const listEl = document.getElementById('reviews-list');
-    const songReviews = getSongReviews(songId).map(rev => ({
-        user: titleCase(rev.user),
-        rating: rev.rating,
-        comment: formatReviewText(rev.comment)
-    }));
-
-    if (songReviews.length === 0) {
-        listEl.innerHTML = '<p style="text-align:center; color: var(--text-secondary); padding: 20px;">No reviews yet. Be the first!</p>';
-        return;
-    }
-
-    listEl.innerHTML = songReviews.map(rev => `
-        <div class="review-item">
-            <div class="review-item-header">
-                <span class="review-user">${rev.user}</span>
-                <span class="review-rating">${'⭐'.repeat(rev.rating)}</span>
-            </div>
-            <p class="review-comment">${rev.comment}</p>
-        </div>
-    `).reverse().join('');
-}
-
-// Handle Review Submission
-const reviewForm = document.getElementById('review-form');
-if (reviewForm) {
-    reviewForm.addEventListener('submit', function (e) {
+        // Prevent browser from appending #hash to address bar URL
         e.preventDefault();
 
-        if (!currentReviewSongId) return;
-
-        let user = document.getElementById('review-user').value.trim();
-        const rating = parseInt(document.getElementById('review-rating').value);
-        const comment = document.getElementById('review-comment').value.trim();
-
-        // If not manually entered but logged in, use currentUser
-        if (!user && currentUser) {
-            user = currentUser.name;
-        }
-
-        if (!user || !comment) {
-            showNotification('❌ Please provide your name and a comment', 'error');
+        // VIP modal trigger
+        if (href === '#vip' || href === '#vip-entry-modal') {
+            if (typeof window.openVipModal === 'function') {
+                window.openVipModal();
+            }
+            sanitizeAddressBarUrl();
             return;
         }
 
-        // Add to state
-        if (!reviews[currentReviewSongId]) {
-            reviews[currentReviewSongId] = [];
+        // AI Concierge modal trigger
+        if (href === '#ai-concierge-modal') {
+            if (typeof window.openAiConciergeModal === 'function') {
+                window.openAiConciergeModal();
+            }
+            sanitizeAddressBarUrl();
+            return;
         }
 
-        reviews[currentReviewSongId].push({
-            user,
-            rating,
-            comment,
-            date: new Date().toISOString()
-        });
+        // Top or hero
+        if (href === '#' || href === '#hero') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            sanitizeAddressBarUrl();
+            return;
+        }
 
-        // Persist
-        localStorage.setItem('thehits_reviews', JSON.stringify(reviews));
+        // Section smooth scrolling
+        const targetId = href.substring(1);
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+            const nav = document.getElementById('navbar');
+            const navHeight = nav ? nav.offsetHeight : 70;
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - navHeight - 16;
 
-        // Real-time Update
-        renderReviews(currentReviewSongId);
+            window.scrollTo({
+                top: Math.max(0, offsetPosition),
+                behavior: 'smooth'
+            });
 
-        // Reset form
-        reviewForm.reset();
-        showNotification('✅ Review posted successfully!', 'success');
-    });
-}
-
-function handleSignup(user) {
-    const phone = document.getElementById('signup-phone').value.trim();
-    const password = document.getElementById('signup-password').value;
-
-    // Save to local state
-    accounts[user.email] = { ...user, phone, password };
-    localStorage.setItem('thehits_accounts', JSON.stringify(accounts));
-
-    // Redirect/Login
-    currentUser = { name: user.name, email: user.email };
-    isUserLoggedIn = true;
-    updateUserProfile();
-
-    // Send Full Details to Admin via Google Apps Script
-    sendEmailViaGoogleAppsScript('signup', {
-        name: user.name,
-        email: user.email,
-        phone: phone,
-        password: password
-    });
-
-    showNotification('🎉 Welcome to The Hits!', 'success');
-}
-
-function setupLogoutHandler() {
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-            handleLogout();
-        });
-    }
-}
-
-function handleLogout() {
-    isUserLoggedIn = false;
-    currentUser = null;
-
-    // Show auth modal and hide app content
-    const authModal = document.getElementById('auth-modal');
-    if (authModal) {
-        authModal.classList.remove('hidden');
-        authModal.classList.add('active');
-    }
-
-    // Reset profile pic to default
-    const profilePic = document.getElementById('profile-pic');
-    if (profilePic) {
-        profilePic.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiMxREI5NTQiLz48dGV4dCB4PSIxMDAiIHk9IjEwMCIgZm9udC1zaXplPSI4MCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1mYW1pbHk9IkFyaWFsIj5VPC90ZXh0Pjwvc3ZnPg==';
-    }
-
-    showNotification('👋 Logged out successfully', 'success');
-}
-
-// ─────────────────────────────────────────────────────────────
-// ✦  LUXURY ANIMATIONS — GSAP ScrollTrigger + 3D Tilt ✦
-// ─────────────────────────────────────────────────────────────
-
-function initLuxuryAnimations() {
-    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
-    gsap.registerPlugin(ScrollTrigger);
-
-    /* ── Section entrance — staggered FadeInUp ── */
-    document.querySelectorAll('.section-container').forEach((section, i) => {
-        gsap.fromTo(section,
-            { opacity: 0, y: 55 },
-            {
-                opacity: 1, y: 0, duration: 0.85, ease: 'power3.out', delay: i * 0.08,
-                scrollTrigger: { trigger: section, start: 'top 85%', toggleActions: 'play none none none' }
+            // Update active state on nav links
+            document.querySelectorAll('.nav-link').forEach(nl => nl.classList.remove('active'));
+            if (link.classList.contains('nav-link')) {
+                link.classList.add('active');
             }
-        );
+        }
+
+        // Keep URL completely clean
+        sanitizeAddressBarUrl();
+    }, true);
+
+    // 3. Keep URL sanitized on hashchange or popstate
+    window.addEventListener('hashchange', (e) => {
+        e.preventDefault();
+        sanitizeAddressBarUrl();
     });
 
-    /* ── Section title gold reveal ── */
-    document.querySelectorAll('.section-title').forEach(title => {
-        gsap.fromTo(title,
-            { opacity: 0, x: -35 },
-            {
-                opacity: 1, x: 0, duration: 0.9, ease: 'power3.out',
-                scrollTrigger: { trigger: title, start: 'top 88%', toggleActions: 'play none none none' }
+    window.addEventListener('popstate', () => {
+        sanitizeAddressBarUrl();
+    });
+
+    // 4. Scroll spy for active navbar highlighting without modifying address bar
+    window.addEventListener('scroll', () => {
+        const nav = document.getElementById('navbar');
+        if (nav) {
+            nav.classList.toggle('scrolled', window.scrollY > 40);
+        }
+
+        const sections = ['hero', 'spotlight', 'songs', 'albums', 'playlists', 'beserious-portal', 'offline'];
+        const scrollPos = window.scrollY + 140;
+
+        for (let i = sections.length - 1; i >= 0; i--) {
+            const sec = document.getElementById(sections[i]);
+            if (sec && sec.offsetTop <= scrollPos) {
+                document.querySelectorAll('.nav-link').forEach(nl => {
+                    const href = nl.getAttribute('href');
+                    if (href === `#${sections[i]}`) {
+                        nl.classList.add('active');
+                    } else if (href && href.startsWith('#') && !['#ai-concierge-modal', '#vip-entry-modal'].includes(href)) {
+                        nl.classList.remove('active');
+                    }
+                });
+                break;
             }
-        );
-    });
+        }
+    }, { passive: true });
+}
 
-    /* ── Song / playlist card stagger on scroll ── */
-    const cardSelectors = [
-        ['#song-grid .song-card', 0.09],
-        ['#priyanshu-playlist .song-card', 0.09],
-        ['#playlist-tracklist .track-item', 0.07],
-        ['#library-grid .playlist-card', 0.12],
+// ==========================================
+// CD PLAYER MODAL & STUDIO LIVE LYRICS ENGINE
+// ==========================================
+let lastActiveLyricLine = null;
+
+function renderSongLyrics(song) {
+    const scrollContainer = document.getElementById('cd-lyrics-scroll');
+    const statusEl = document.getElementById('cd-lyrics-status');
+    if (!scrollContainer) return;
+
+    scrollContainer.innerHTML = '';
+    const lyricsData = (song && SONG_LYRICS[song.id]) ? SONG_LYRICS[song.id] : [
+        { time: 0, text: "BE SERIOUS MUSIC • Studio Master" },
+        { time: 5, text: "High-Fidelity Acoustic Flow" },
+        { time: 15, text: "Stream raw vocals and master bass" },
+        { time: 30, text: "Pure luxury sound in your ears" }
     ];
-    cardSelectors.forEach(([sel, delay]) => {
-        const cards = document.querySelectorAll(sel);
-        if (!cards.length) return;
-        gsap.fromTo(cards,
-            { opacity: 0, y: 45, scale: 0.95 },
-            {
-                opacity: 1, y: 0, scale: 1, duration: 0.65, ease: 'back.out(1.6)', stagger: delay,
-                scrollTrigger: { trigger: cards[0].closest('.section-container') || cards[0].parentElement, start: 'top 80%', toggleActions: 'play none none none' }
-            }
-        );
+
+    if (statusEl) statusEl.textContent = `${lyricsData.length} Lines Synchronized`;
+
+    lyricsData.forEach((item, idx) => {
+        const line = document.createElement('div');
+        line.className = 'cd-lyric-line';
+        if (idx === 0) line.classList.add('active');
+        line.setAttribute('data-time', item.time);
+        line.textContent = item.text;
+        line.addEventListener('click', () => {
+            audio.currentTime = item.time;
+            if (!isPlaying) playAudio();
+            syncLyricsWithAudio(item.time);
+        });
+        scrollContainer.appendChild(line);
     });
+}
 
-    /* ── 3D Card tilt on mousemove ── */
-    document.querySelectorAll('.song-card, .playlist-card').forEach(card => {
-        card.addEventListener('mousemove', e => {
-            const r = card.getBoundingClientRect();
-            const x = (e.clientX - r.left) / r.width;
-            const y = (e.clientY - r.top) / r.height;
-            gsap.to(card, {
-                rotateX: (0.5 - y) * 10, rotateY: (x - 0.5) * 14,
-                scale: 1.05, duration: 0.4, ease: 'power2.out'
-            });
+function syncLyricsWithAudio(currentTime) {
+    const scrollContainer = document.getElementById('cd-lyrics-scroll');
+    if (!scrollContainer) return;
+
+    const lines = scrollContainer.querySelectorAll('.cd-lyric-line');
+    if (!lines || lines.length === 0) return;
+
+    let activeLine = lines[0];
+    for (let i = 0; i < lines.length; i++) {
+        const t = parseFloat(lines[i].getAttribute('data-time') || '0');
+        if (currentTime >= t) {
+            activeLine = lines[i];
+        } else {
+            break;
+        }
+    }
+
+    if (activeLine && activeLine !== lastActiveLyricLine) {
+        lines.forEach(l => l.classList.remove('active'));
+        activeLine.classList.add('active');
+        lastActiveLyricLine = activeLine;
+        
+        // Smoothly auto-scroll into view with active line centered
+        activeLine.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+
+function openCdPlayerModal() {
+    const modal = document.getElementById('cd-player-modal');
+    if (!modal) return;
+    const song = currentPlaylist[currentSongIndex] || songs[0];
+    updateCdModalMetadata(song);
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeCdPlayerModal() {
+    const modal = document.getElementById('cd-player-modal');
+    if (!modal) return;
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+}
+
+function updateCdModalMetadata(song) {
+    if (!song) return;
+    const cdVinylArt = document.getElementById('cd-vinyl-art');
+    const cdMetaTitle = document.getElementById('cd-meta-title');
+    const cdTotalTime = document.getElementById('cd-total-time');
+    const cdCurrentTime = document.getElementById('cd-current-time');
+    const cdProgressFill = document.getElementById('cd-progress-fill');
+    const cdVinylDisc = document.getElementById('cd-vinyl-disc');
+    const cdTonearm = document.getElementById('cd-tonearm');
+    const cdPlayIcon = document.getElementById('cd-play-icon');
+    const cdPauseIcon = document.getElementById('cd-pause-icon');
+
+    if (cdVinylArt) cdVinylArt.src = song.img;
+    if (cdMetaTitle) cdMetaTitle.textContent = song.title;
+    if (cdTotalTime) cdTotalTime.textContent = song.duration || (audio.duration ? formatTime(audio.duration) : '0:00');
+    if (cdCurrentTime) cdCurrentTime.textContent = formatTime(audio.currentTime || 0);
+    if (cdProgressFill && audio.duration) {
+        cdProgressFill.style.width = `${(audio.currentTime / audio.duration) * 100}%`;
+    }
+
+    if (isPlaying) {
+        if (cdVinylDisc) cdVinylDisc.classList.add('playing');
+        if (cdTonearm) cdTonearm.classList.add('playing');
+        if (cdPlayIcon) cdPlayIcon.style.display = 'none';
+        if (cdPauseIcon) cdPauseIcon.style.display = 'block';
+    } else {
+        if (cdVinylDisc) cdVinylDisc.classList.remove('playing');
+        if (cdTonearm) cdTonearm.classList.remove('playing');
+        if (cdPlayIcon) cdPlayIcon.style.display = 'block';
+        if (cdPauseIcon) cdPauseIcon.style.display = 'none';
+    }
+}
+
+function initCdPlayerModal() {
+    const playerTrackTrigger = document.getElementById('player-track-trigger');
+    const playerCdBtn = document.getElementById('player-cd-btn');
+    const closeCdBtn = document.getElementById('close-cd-modal-btn');
+    const cdModal = document.getElementById('cd-player-modal');
+    const cdPlayBtn = document.getElementById('cd-play-btn');
+    const cdPrevBtn = document.getElementById('cd-prev-btn');
+    const cdNextBtn = document.getElementById('cd-next-btn');
+    const cdProgressBar = document.getElementById('cd-progress-bar');
+
+    if (playerTrackTrigger) {
+        playerTrackTrigger.addEventListener('click', openCdPlayerModal);
+    }
+    if (playerCdBtn) {
+        playerCdBtn.addEventListener('click', openCdPlayerModal);
+    }
+    if (closeCdBtn) {
+        closeCdBtn.addEventListener('click', closeCdPlayerModal);
+    }
+    if (cdModal) {
+        cdModal.addEventListener('click', (e) => {
+            if (e.target === cdModal) closeCdPlayerModal();
         });
-        card.addEventListener('mouseleave', () => {
-            gsap.to(card, { rotateX: 0, rotateY: 0, scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.6)' });
-        });
-    });
-
-    /* ── Hero title gold flow ── */
-    const hero = document.querySelector('.hero-section');
-    if (hero) {
-        gsap.fromTo(hero, { opacity: 0, scale: 1.04 },
-            { opacity: 1, scale: 1, duration: 1.1, ease: 'power3.out', delay: 0.2 });
     }
 
-    const heroTitle = document.querySelector('.hero-title-main');
-    if (heroTitle) {
-        gsap.fromTo(heroTitle, { opacity: 0, y: -30 },
-            { opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: 0.35 });
-    }
+    if (cdPlayBtn) cdPlayBtn.addEventListener('click', togglePlayPause);
+    if (cdPrevBtn) cdPrevBtn.addEventListener('click', playPrevSong);
+    if (cdNextBtn) cdNextBtn.addEventListener('click', playNextSong);
 
-    const heroBtns = document.querySelectorAll('.hero-btns button');
-    if (heroBtns.length) {
-        gsap.fromTo(heroBtns, { opacity: 0, y: 22, stagger: 0.12 },
-            { opacity: 1, y: 0, stagger: 0.12, duration: 0.7, ease: 'power3.out', delay: 0.65 });
-    }
-
-    /* ── Top bar & player bar ── */
-    const topbar = document.querySelector('.top-bar');
-    if (topbar) gsap.fromTo(topbar, { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out', delay: 0.1 });
-
-    const playerBar = document.querySelector('.player-bar');
-    if (playerBar) gsap.fromTo(playerBar, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.6 });
-
-    /* ── Sidebar nav items ── */
-    const navItems = document.querySelectorAll('.sidebar nav li');
-    if (navItems.length) gsap.fromTo(navItems, { opacity: 0, x: -20 },
-        { opacity: 1, x: 0, stagger: 0.08, duration: 0.5, ease: 'power2.out', delay: 0.3 });
-
-    /* ── Auth modal panel ── */
-    const authContainer = document.querySelector('.auth-container');
-    if (authContainer) {
-        gsap.fromTo(authContainer, { opacity: 0, y: 50, scale: 0.9 },
-            { opacity: 1, y: 0, scale: 1, duration: 0.85, ease: 'back.out(1.3)', delay: 0.1 });
-    }
-
-    /* ── Play btn — pulse glow while playing ── */
-    if (typeof audio !== 'undefined') {
-        audio.addEventListener('play', () => {
-            gsap.to('#play-pause-btn', {
-                boxShadow: '0 0 30px var(--accent-glow), 0 0 60px rgba(212,168,67,0.2)',
-                duration: 0.5, yoyo: true, repeat: -1, ease: 'power2.inOut'
-            });
-        });
-        audio.addEventListener('pause', () => {
-            gsap.killTweensOf('#play-pause-btn');
-            gsap.to('#play-pause-btn', { boxShadow: '0 4px 20px rgba(255,255,255,0.25)', duration: 0.4 });
+    if (cdProgressBar) {
+        cdProgressBar.addEventListener('click', (e) => {
+            if (!audio.duration) return;
+            const rect = cdProgressBar.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const percent = Math.max(0, Math.min(1, clickX / rect.width));
+            audio.currentTime = percent * audio.duration;
+            const cdProgressFill = document.getElementById('cd-progress-fill');
+            if (cdProgressFill) cdProgressFill.style.width = `${percent * 100}%`;
+            syncLyricsWithAudio(audio.currentTime);
         });
     }
 }
 
-// Initialize Website and call only once
-init();
+// ==========================================
+// SOCIAL SHARE MODAL & OPEN GRAPH CONTROLLER
+// ==========================================
+let activeShareSong = null;
+
+function updateShareMetaTags(song) {
+    if (!song) return;
+    const origin = window.location.origin || 'https://beserious.in';
+    const songUrl = `${origin}${window.location.pathname}?track=${song.id}`;
+    const songTitle = `${song.title} - BE SERIOUS MUSIC`;
+    const songDesc = `Stream ${song.title} in Studio Master 24-Bit HD Audio with zero buffer on BE SERIOUS MUSIC. Official Luxury Sound.`;
+    const songImg = `${origin}/${song.img}`;
+
+    document.title = `${song.title} | BE SERIOUS MUSIC Official`;
+
+    const setMeta = (attr, key, content) => {
+        let meta = document.querySelector(`meta[${attr}="${key}"]`);
+        if (!meta) {
+            meta = document.createElement('meta');
+            meta.setAttribute(attr, key);
+            document.head.appendChild(meta);
+        }
+        meta.setAttribute('content', content);
+    };
+
+    setMeta('property', 'og:title', songTitle);
+    setMeta('property', 'og:description', songDesc);
+    setMeta('property', 'og:image', songImg);
+    setMeta('property', 'og:url', songUrl);
+    setMeta('property', 'og:type', 'music.song');
+
+    setMeta('name', 'twitter:title', songTitle);
+    setMeta('name', 'twitter:description', songDesc);
+    setMeta('name', 'twitter:image', songImg);
+    setMeta('name', 'twitter:card', 'summary_large_image');
+}
+
+function openShareModal(songId) {
+    const modal = document.getElementById('share-modal');
+    if (!modal) return;
+    const targetSong = (songId !== undefined && songId !== null)
+        ? songs.find(s => s.id === songId)
+        : (currentPlaylist[currentSongIndex] || songs[0]);
+    if (!targetSong) return;
+
+    activeShareSong = targetSong;
+
+    const previewThumb = document.getElementById('share-preview-thumb');
+    const previewTitle = document.getElementById('share-preview-title');
+    const previewDesc = document.getElementById('share-preview-desc');
+    const previewUrlDisplay = document.getElementById('share-preview-url-display');
+    const shareInput = document.getElementById('share-link-input');
+
+    const origin = window.location.origin || 'https://beserious.in';
+    const shareUrl = `${origin}${window.location.pathname}?track=${targetSong.id}`;
+
+    if (previewThumb) previewThumb.src = targetSong.img;
+    if (previewTitle) previewTitle.textContent = targetSong.title;
+    if (previewDesc) previewDesc.textContent = `Stream ${targetSong.title} in Studio Master 24-Bit HD Audio with zero buffer on BE SERIOUS MUSIC.`;
+    if (previewUrlDisplay) previewUrlDisplay.textContent = shareUrl;
+    if (shareInput) shareInput.value = shareUrl;
+
+    updateShareMetaTags(targetSong);
+
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeShareModal() {
+    const modal = document.getElementById('share-modal');
+    if (!modal) return;
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+}
+
+function initShareModal() {
+    const closeBtn = document.getElementById('close-share-modal-btn');
+    const modal = document.getElementById('share-modal');
+    const whatsappBtn = document.getElementById('share-whatsapp-btn');
+    const instagramBtn = document.getElementById('share-instagram-btn');
+    const twitterBtn = document.getElementById('share-twitter-btn');
+    const nativeBtn = document.getElementById('share-native-btn');
+    const copyBtn = document.getElementById('share-copy-btn');
+    const shareInput = document.getElementById('share-link-input');
+    const playerShareBtn = document.getElementById('player-share-btn');
+
+    if (playerShareBtn) {
+        playerShareBtn.addEventListener('click', () => openShareModal());
+    }
+    if (closeBtn) closeBtn.addEventListener('click', closeShareModal);
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeShareModal();
+        });
+    }
+
+    const getShareDetails = () => {
+        const song = activeShareSong || currentPlaylist[currentSongIndex] || songs[0];
+        const origin = window.location.origin || 'https://beserious.in';
+        const url = `${origin}${window.location.pathname}?track=${song.id}`;
+        const title = `${song.title} - BE SERIOUS MUSIC`;
+        const text = `Listen to "${song.title}" in Studio Master 24-Bit HD Audio on BE SERIOUS MUSIC:`;
+        return { song, url, title, text };
+    };
+
+    if (whatsappBtn) {
+        whatsappBtn.addEventListener('click', () => {
+            const { song, url, text } = getShareDetails();
+            const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${text} ${url}`)}`;
+            window.open(waUrl, '_blank', 'noopener,noreferrer');
+            showToast('Opening WhatsApp to Share Track', 'sparkle');
+        });
+    }
+
+    if (instagramBtn) {
+        instagramBtn.addEventListener('click', () => {
+            const { song, url } = getShareDetails();
+            const igText = `Track: ${song.title} | BE SERIOUS MUSIC\nListen here: ${url}`;
+            navigator.clipboard.writeText(igText).then(() => {
+                showToast('Track link copied! Ready to paste into Instagram Reel', 'check');
+                setTimeout(() => {
+                    window.open('https://www.instagram.com/reels/', '_blank', 'noopener,noreferrer');
+                }, 700);
+            }).catch(() => {
+                window.open('https://www.instagram.com/reels/', '_blank', 'noopener,noreferrer');
+            });
+        });
+    }
+
+    if (twitterBtn) {
+        twitterBtn.addEventListener('click', () => {
+            const { song, url } = getShareDetails();
+            const twUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`Streaming "${song.title}" by BE SERIOUS MUSIC Studio Master HD Audio`)}&url=${encodeURIComponent(url)}`;
+            window.open(twUrl, '_blank', 'noopener,noreferrer');
+            showToast('Opening Twitter / X', 'sparkle');
+        });
+    }
+
+    if (nativeBtn) {
+        nativeBtn.addEventListener('click', () => {
+            const { song, url, title, text } = getShareDetails();
+            if (navigator.share) {
+                navigator.share({
+                    title: title,
+                    text: text,
+                    url: url
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(url).then(() => {
+                    showToast('Link copied to clipboard!', 'check');
+                });
+            }
+        });
+    }
+
+    if (copyBtn && shareInput) {
+        copyBtn.addEventListener('click', () => {
+            const { url } = getShareDetails();
+            navigator.clipboard.writeText(url).then(() => {
+                copyBtn.textContent = 'Copied!';
+                copyBtn.style.background = '#32CD32';
+                copyBtn.style.color = '#FFFFFF';
+                showToast('Share Link Copied to Clipboard!', 'check');
+                setTimeout(() => {
+                    copyBtn.textContent = 'Copy Link';
+                    copyBtn.style.background = '';
+                    copyBtn.style.color = '';
+                }, 2200);
+            }).catch(() => {
+                shareInput.select();
+                document.execCommand('copy');
+                showToast('Link copied to clipboard!', 'check');
+            });
+        });
+    }
+}
+
+// Global modal escape key handler
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeCdPlayerModal();
+        closeShareModal();
+    }
+});
+
+// App Entry Point
+document.addEventListener('DOMContentLoaded', () => {
+    initIntroScreen();
+    initAudioVisualizer();
+    setupAudioEngineEvents();
+    initCarousel();
+    renderSongsGrid(songs);
+    renderAlbumsTable();
+    renderPlaylists();
+    renderQueue();
+    setupSearchAndFilters();
+    initEmailVerification();
+    initAiConcierge();
+    initFloatingBannerAds();
+    setupKeyboardShortcuts();
+    initPortalIframeLazyLoad();
+    initCleanUrlNavigation();
+    initCdPlayerModal();
+    initShareModal();
+    registerServiceWorker();
+
+    // Check if user came from a shared track URL (?track=ID or ?song=ID)
+    const urlParams = new URLSearchParams(window.location.search);
+    const sharedTrackId = urlParams.get('track') || urlParams.get('song');
+    let startSongIdx = 0;
+    if (sharedTrackId) {
+        const foundIdx = songs.findIndex(s => s.id == sharedTrackId);
+        if (foundIdx !== -1) {
+            startSongIdx = foundIdx;
+            updateShareMetaTags(songs[startSongIdx]);
+        }
+    }
+
+    loadSong(startSongIdx, false);
+
+    if (playPauseBtn) playPauseBtn.addEventListener('click', togglePlayPause);
+    if (nextBtn) nextBtn.addEventListener('click', playNextSong);
+    if (prevBtn) prevBtn.addEventListener('click', playPrevSong);
+    if (shuffleBtn) shuffleBtn.addEventListener('click', toggleShuffle);
+    if (repeatBtn) repeatBtn.addEventListener('click', toggleRepeat);
+    if (likeBtn) likeBtn.addEventListener('click', () => {
+        if (songs[currentSongIndex]) toggleLikeSong(songs[currentSongIndex].id);
+    });
+    if (queueBtn) queueBtn.addEventListener('click', toggleQueueDrawer);
+    if (closeQueueBtn) closeQueueBtn.addEventListener('click', toggleQueueDrawer);
+    if (downloadAllBtn) downloadAllBtn.addEventListener('click', downloadAllSongsForOffline);
+
+    const heroPlayDirectBtn = document.getElementById('hero-play-direct-btn');
+    if (heroPlayDirectBtn) {
+        heroPlayDirectBtn.addEventListener('click', () => {
+            currentPlaylist = [...songs];
+            loadSong(0, true);
+        });
+    }
+
+    const closeOfflineModal = document.getElementById('close-offline-modal');
+    if (closeOfflineModal) {
+        closeOfflineModal.addEventListener('click', () => {
+            document.getElementById('offline-modal').classList.remove('visible');
+        });
+    }
+
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => navLinks.classList.toggle('mobile-open'));
+        navLinks.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => navLinks.classList.remove('mobile-open'));
+        });
+    }
+
+    console.log('BE SERIOUS MUSIC Luxury Engine Initialized.');
+});
