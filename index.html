@@ -1,650 +1,949 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BE_SERIOUS_MUSIC | Luxury Music Experience</title>
-    <meta name="description"
-        content="BE_SERIOUS_MUSIC - Your premium destination for luxury music streaming and curation.">
-    <!-- Google Fonts: Bodoni Moda (Luxury Display) & Montserrat -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BE SERIOUS MUSIC | Official Luxury WebApp & Offline Player</title>
+    <meta name="description" content="Official BE SERIOUS MUSIC Luxury WebApp. Stream Ek Hai Sujal 2.0 in studio master audio with offline playback and VIP access.">
+    <meta name="theme-color" content="#060609">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="BE SERIOUS MUSIC">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <!-- OpenGraph & Twitter Rich Social Card Preview (Dynamic per Song) -->
+    <meta property="og:type" content="music.song">
+    <meta property="og:site_name" content="BE SERIOUS MUSIC">
+    <meta property="og:title" id="og-title" content="Ek Hai Sujal 2.0 | BE SERIOUS MUSIC">
+    <meta property="og:description" id="og-desc" content="Stream Ek Hai Sujal 2.0 by BE SERIOUS MUSIC in Studio Master Audio with offline playback.">
+    <meta property="og:image" id="og-image" content="ek_hai_sujal/cover_pic/Ek%20Hai%20Sujal%202.0_%20Mountain%20Dreams.png">
+    <meta property="og:url" id="og-url" content="https://beserious.in/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@beseriousmusic">
+    <meta name="twitter:title" id="twitter-title" content="Ek Hai Sujal 2.0 | BE SERIOUS MUSIC">
+    <meta name="twitter:description" id="twitter-desc" content="Stream Ek Hai Sujal 2.0 by BE SERIOUS MUSIC in Studio Master Audio.">
+    <meta name="twitter:image" id="twitter-image" content="ek_hai_sujal/cover_pic/Ek%20Hai%20Sujal%202.0_%20Mountain%20Dreams.png">
+
+    <!-- Content Security Policy: Strict & Secure -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https: data: blob:; media-src 'self' https: data: blob:; connect-src 'self' https://api.emailjs.com https://script.google.com https://cdn.jsdelivr.net https: data: blob:; frame-src 'self' https://beserious.in https://*.beserious.in https://www.instagram.com; object-src 'none'; base-uri 'self';">
+
+    <!-- 2G Network Performance Preconnect & DNS-Prefetch -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://api.emailjs.com">
+    <link rel="dns-prefetch" href="https://script.google.com">
+
+    <!-- PWA Icons & Manifest -->
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+    <!-- Trendy & Highly Readable Fonts (Plus Jakarta Sans, Outfit, DM Sans, Space Grotesk) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;1,6..96,400&family=Montserrat:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <!-- GSAP for Premium Animations -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-</head>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
+    <!-- EmailJS Official Browser SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
 <body>
-    <!-- Netflix-style Intro Overlay -->
-    <div id="netflix-intro" class="netflix-intro">
-        <div class="netflix-logo-container">
-            <h1 class="netflix-text">BE_SERIOUS_MUSIC</h1>
+
+    <!-- Cinematic Luxury Intro Screen -->
+    <div id="intro-screen" class="intro-screen" aria-label="BE SERIOUS MUSIC Intro Screen">
+        <div class="intro-ambient-glow"></div>
+        <div class="intro-content">
+            <div class="intro-pill">
+                <span class="pulse-dot"></span>
+                OFFICIAL LUXURY WEBAPP
+            </div>
+            <h1 class="intro-title">BE SERIOUS MUSIC</h1>
+            <div class="intro-waves">
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <div class="intro-subtitle">STUDIO MASTER AUDIO &bull; ULTRA HD SOUND</div>
         </div>
     </div>
 
-    <!-- Auth Modal (Login/Signup) -->
-    <div id="auth-modal" class="auth-modal active">
-        <div class="auth-container">
-            <div class="auth-header">
-                <h1>BE_SERIOUS_MUSIC</h1>
-                <p>Luxury Music Experience</p>
+    <!-- Dedicated Audio Engine Element (preload=none for 2G network optimization) -->
+    <audio id="main-audio" preload="none" playsinline></audio>
+
+    <!-- VIP Audiophile Entry Verification Modal (Appears upon website entry) -->
+    <div id="vip-entry-modal" class="vip-modal-backdrop" aria-hidden="true">
+        <div class="vip-modal-dialog">
+            <button class="vip-modal-close" id="vip-modal-close-btn" aria-label="Close modal">
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+            <div class="vip-modal-header">
+                <span class="vip-badge">
+                    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                    BE SERIOUS MUSIC VIP ENTRY
+                </span>
+                <h2 class="vip-modal-title">Verify Your Email</h2>
+                <p class="vip-modal-desc">
+                    Enter your email to unlock 100% ad-free listening, studio master audio & offline music downloads.
+                </p>
             </div>
 
-            <!-- Login Form -->
-            <form id="login-form" class="auth-form active-form">
-                <h2>Welcome Back</h2>
-                <div class="form-group">
-                    <input type="email" id="login-email" placeholder="Email Address" required>
+            <!-- Form -->
+            <div class="vip-modal-body" id="vip-modal-form">
+                <div class="vip-form-group">
+                    <label class="vip-label" for="modal-vip-name-input">Listener Name *</label>
+                    <input type="text" class="vip-input" id="modal-vip-name-input" placeholder="Enter your full name" required>
                 </div>
-                <div class="form-group">
-                    <input type="password" id="login-password" placeholder="Password" required>
+                <div class="vip-form-group">
+                    <label class="vip-label" for="modal-vip-email-input">Your Email Address *</label>
+                    <input type="email" class="vip-input" id="modal-vip-email-input" placeholder="e.g. listener@gmail.com" required>
                 </div>
-                <button type="submit" class="btn-primary auth-btn">Sign In</button>
-                <p class="auth-toggle">Don't have an account? <a href="#" onclick="toggleAuthForm(event)">Sign Up</a>
-                </p>
-            </form>
+                <button class="btn btn-primary-play btn-modal-action" id="modal-vip-verify-btn">
+                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    Send Verification Code
+                </button>
 
-            <!-- Signup Form -->
-            <form id="signup-form" class="auth-form">
-                <h2>Join BE_SERIOUS_MUSIC</h2>
-                <div class="form-group">
-                    <input type="text" id="signup-name" placeholder="Full Name" required>
+                <!-- OTP Box -->
+                <div class="otp-container" id="modal-vip-otp-container">
+                    <p class="otp-note" id="modal-otp-notice-text">Enter the 6-digit verification code sent to your email inbox:</p>
+                    <div class="vip-form-group">
+                        <input type="text" class="vip-input" id="modal-vip-otp-input" placeholder="6-digit code" maxlength="6" style="text-align: center; letter-spacing: 4px; font-size: 18px; font-weight: bold;">
+                    </div>
+                    <button class="btn btn-primary-play btn-modal-action" id="modal-vip-confirm-otp-btn">
+                        Confirm & Verify Email
+                    </button>
                 </div>
-                <div class="form-group">
-                    <input type="email" id="signup-email" placeholder="Email Address" required>
+
+                <div class="vip-modal-footer-skip">
+                    <button type="button" class="btn-skip-guest" id="vip-modal-guest-btn">Continue to Music as Guest</button>
                 </div>
-                <div class="form-group">
-                    <input type="tel" id="signup-phone" placeholder="Phone Number" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="signup-password" placeholder="Password" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="signup-confirm" placeholder="Confirm Password" required>
-                </div>
-                <button type="submit" id="signup-btn" class="btn-primary auth-btn">Create Account</button>
-                <p class="auth-toggle">Already have an account? <a href="#" onclick="toggleAuthForm(event)">Sign In</a>
+            </div>
+
+            <!-- Verified State -->
+            <div class="vip-verified-banner" id="modal-vip-verified-banner">
+                <svg class="vip-verified-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                <div class="vip-verified-title">Email Verified Successfully!</div>
+                <p class="vip-verified-sub" id="vip-verified-status-desc">
+                    Welcome to BE SERIOUS MUSIC VIP. You now have complete ad-free listening and unlimited offline access.
                 </p>
-            </form>
+                <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
+                    <button class="btn btn-primary-play btn-modal-action" id="modal-vip-finish-btn" style="flex: 1; min-width: 140px;">
+                        Start Listening
+                    </button>
+                    <button class="btn btn-glass-offline btn-modal-action" id="modal-vip-reverify-btn" style="flex: 1; min-width: 140px; border-color: rgba(197, 160, 89, 0.35);">
+                        Change Email
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div id="app">
-        <!-- Sidebar Navigation (Desktop) -->
-        <aside class="sidebar">
-            <div class="logo">BE_SERIOUS_MUSIC</div>
-            <nav>
-                <ul id="sidebar-nav">
-                    <li class="nav-btn active" data-section="home"><span>Home</span></li>
-                    <li class="nav-btn" data-section="search"><span>Search</span></li>
-                    <li class="nav-btn" data-section="library"><span>Your Library</span></li>
-                </ul>
-                <div class="sidebar-section">
-                    <div class="section-header">
-                        <span class="section-label">PLAYLISTS</span>
-                        <button class="add-btn" id="create-playlist-btn">+</button>
+    <!-- BE SERIOUS AI Music Concierge & Sound Advisor Modal -->
+    <div id="ai-concierge-modal" class="vip-modal-backdrop ai-modal-backdrop" aria-hidden="true">
+        <div class="vip-modal-dialog ai-modal-dialog">
+            <button class="vip-modal-close" id="ai-modal-close-btn" aria-label="Close AI Concierge">
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+            <div class="vip-modal-header">
+                <span class="vip-badge ai-badge">
+                    <svg viewBox="0 0 24 24"><path d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"/></svg>
+                    BE SERIOUS AI CONCIERGE
+                </span>
+                <h2 class="vip-modal-title">What Vibe Are You Seeking?</h2>
+                <p class="vip-modal-desc">
+                    Tell BE SERIOUS AI what sound, mood, or energy you want to experience. Our neural sound advisor will match and play the perfect track.
+                </p>
+            </div>
+
+            <div class="ai-modal-body">
+                <!-- Preset Mood / Vibe Chips -->
+                <div class="ai-mood-section">
+                    <div class="ai-mood-label">Tap Your Mood Vibe:</div>
+                    <div class="ai-mood-chips" id="ai-mood-chips">
+                        <button type="button" class="ai-mood-chip active" data-vibe="mountain">Mountain Peace</button>
+                        <button type="button" class="ai-mood-chip" data-vibe="hustle">Gym & Hustle</button>
+                        <button type="button" class="ai-mood-chip" data-vibe="melodies">Late Night Melodies</button>
+                        <button type="button" class="ai-mood-chip" data-vibe="rap">Street Rap</button>
+                        <button type="button" class="ai-mood-chip" data-vibe="luxury">Luxury Confidence</button>
+                        <button type="button" class="ai-mood-chip" data-vibe="emotional">Emotional Soul</button>
                     </div>
-                    <ul id="user-playlists">
-                        <li onclick="filterByPlaylist('My Name Priyanshu')">My Name Priyanshu</li>
-                    </ul>
                 </div>
-            </nav>
-        </aside>
 
-        <!-- Main Content Area -->
-        <main class="main-content">
-            <div id="home-section" class="app-section active">
-                <header class="top-bar">
-                    <div class="listener-info">
-                        <div class="listener-badge">
-                            <span class="listener-dot"></span>
-                            <span id="listener-count">0</span> Listeners Now
+                <!-- Custom Sound Vibe Input -->
+                <div class="vip-form-group" style="margin-top: 14px;">
+                    <label class="vip-label" for="ai-user-prompt-input">Or Describe Your Musical Feeling:</label>
+                    <div class="ai-input-row">
+                        <input type="text" class="vip-input" id="ai-user-prompt-input" placeholder="e.g. Deep acoustic chords with heavy bass for a late night drive...">
+                        <button type="button" class="btn btn-primary-play" id="ai-ask-advisor-btn">
+                            <svg viewBox="0 0 24 24"><path d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"/></svg>
+                            Ask AI
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Thinking State Indicator -->
+                <div class="ai-thinking-indicator" id="ai-thinking-indicator" style="display: none;">
+                    <div class="ai-thinking-waves">
+                        <span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                    <div class="ai-thinking-text">BE SERIOUS AI is tuning frequencies & matching acoustic master vibes...</div>
+                </div>
+
+                <!-- Recommendation Card Output -->
+                <div class="ai-result-container" id="ai-result-container" style="display: none;">
+                    <div class="ai-result-header">
+                        <span class="ai-result-badge">AI RECOMMENDED TRACK</span>
+                        <span class="ai-match-score" id="ai-match-score">99.6% Match</span>
+                    </div>
+                    
+                    <div class="ai-result-card">
+                        <!-- Full uncropped 1:1 square master artwork showcasing full model face -->
+                        <div class="ai-result-thumb">
+                            <img id="ai-rec-art" src="ek_hai_sujal/cover_pic/Ek Hai Sujal 2.0_ Mountain Dreams.png" alt="Recommended Track">
+                        </div>
+                        <div class="ai-result-info">
+                            <div class="ai-rec-title" id="ai-rec-title">Ek Hai Sujal 2.0</div>
+                            <div class="ai-rec-artist">BE SERIOUS MUSIC &bull; <span id="ai-rec-duration">7:21</span></div>
+                            <p class="ai-rec-reason" id="ai-rec-reason">
+                                Selected for you: Perfectly tuned for an introspective mindset with atmospheric acoustic frequencies and signature 808 bass.
+                            </p>
                         </div>
                     </div>
-                    <div class="search-container">
-                        <input type="text" id="main-search-input" placeholder="What do you want to listen to?">
+                    
+                    <div class="ai-result-actions">
+                        <button type="button" class="btn btn-primary-play btn-modal-action" id="ai-play-rec-btn">
+                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            Play Recommended Track Now
+                        </button>
+                        <button type="button" class="btn btn-glass-offline btn-modal-action" id="ai-save-offline-btn">
+                            <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                            Save Offline
+                        </button>
                     </div>
-                    <div class="user-profile">
-                        <div class="profile-wrapper">
-                            <div class="avatar-container">
-                                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiMxREI5NTQiLz48dGV4dCB4PSIxMDAiIHk9IjEwMCIgZm9udC1zaXplPSI4MCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1mYW1pbHk9IkFyaWFsIj5VPC90ZXh0Pjwvc3ZnPg=="
-                                    alt="Profile" id="profile-pic">
-                                <img src="" alt="Vibe" id="vibe-character" class="vibe-character hidden">
-                            </div>
-                            <span id="user-name-display" class="user-name-text">Guest</span>
-                            <div class="profile-dropdown">
-                                <div class="dropdown-header">
-                                    <span id="dropdown-user-name">Guest</span>
-                                    <small id="top-song-badge">No plays yet</small>
-                                </div>
-                                <div class="dropdown-divider"></div>
-                                <button id="logout-btn"><svg width="16" height="16" viewBox="0 0 24 24"
-                                        fill="currentColor">
-                                        <path
-                                            d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" />
-                                    </svg> Log Out</button>
-                            </div>
-                        </div>
-                    </div>
-                </header>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                <section class="hero-section" id="current-cover-section">
-                    <div class="hero-content text-center">
-                        <h1 class="hero-title-main">Feel Every Beat.<br>Every Moment.</h1>
-                        
-                        <div class="carousel-container">
-                            <div class="carousel-track" id="hero-carousel-track">
-                                <!-- Carousel items will be injected here -->
-                            </div>
-                        </div>
+    <!-- Top Navigation Bar -->
+    <nav id="navbar">
+        <div class="logo-wrapper">
+            <a href="#" class="logo">
+                <span class="logo-text">BE SERIOUS MUSIC</span>
+            </a>
+        </div>
 
-                        <div class="hero-song-info">
-                            <h2 id="hero-song-title">My Name Priyanshu</h2>
-                            <p id="hero-song-artist">Priyanshu</p>
+        <div class="nav-links" id="navLinks">
+            <a href="#hero" class="nav-link active">
+                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                Discover
+            </a>
+            <a href="#spotlight" class="nav-link">
+                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                Spotlight
+            </a>
+            <a href="#songs" class="nav-link">
+                <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+                All Tracks
+            </a>
+            <a href="#albums" class="nav-link">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5zm0-5.5c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"/></svg>
+                Top Charts
+            </a>
+            <a href="#playlists" class="nav-link">
+                <svg viewBox="0 0 24 24"><path d="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/></svg>
+                Playlists
+            </a>
+            <a href="#ai-concierge-modal" class="nav-link" id="nav-ai-link" onclick="if (window.openAiConciergeModal) { window.openAiConciergeModal(); } return false;">
+                <svg viewBox="0 0 24 24"><path d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"/></svg>
+                AI Advisor
+            </a>
+            <a href="#beserious-portal" class="nav-link" id="nav-portal-link">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                beserious.in
+            </a>
+            <a href="#vip-entry-modal" class="nav-link" id="nav-vip-link" onclick="if (window.openVipModal) { window.openVipModal(); } return false;">
+                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                VIP Verify
+            </a>
+            <a href="#offline" class="nav-link">
+                <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM10 17l-3.5-3.5 1.41-1.41L10 14.17l5.59-5.59L17 10l-7 7z"/></svg>
+                Offline Vault
+            </a>
+        </div>
+
+        <div class="nav-actions">
+            <button id="install-app-btn" class="btn-install" aria-label="Install App">
+                <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                Install App
+            </button>
+            <button class="hamburger" id="hamburger" aria-label="Open Navigation Menu">
+                <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero" id="hero">
+        <div class="dynamic-blob" id="blob"></div>
+
+        <h1 class="hero-title" id="parallax-text">
+            Feel Every Beat.<br><span>Every Moment.</span>
+        </h1>
+
+        <!-- 3D Carousel -->
+        <div class="carousel-container" id="carousel">
+            <!-- Injected by script.js -->
+        </div>
+
+        <div class="hero-info" id="hero-info">
+            <div class="hero-song-title" id="hero-song">Ek Hai Sujal 2.0</div>
+            <div class="hero-artist-name" id="hero-artist">BE SERIOUS MUSIC</div>
+        </div>
+
+        <div class="hero-buttons-row">
+            <button class="btn btn-primary-play" id="hero-play-direct-btn">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                Play Now
+            </button>
+            <button class="btn btn-primary-play" style="background: rgba(197, 160, 89, 0.12); border: 1.5px solid var(--gold); color: var(--gold);" onclick="if (window.openAiConciergeModal) window.openAiConciergeModal();">
+                <svg viewBox="0 0 24 24"><path d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"/></svg>
+                Ask AI Sound
+            </button>
+            <button class="btn btn-glass-offline" id="download-all-btn">
+                <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                Download All Offline
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Spotlight Banner: Master Artwork Showcase (Model Face 100% Fully Visible) -->
+        <section id="spotlight">
+            <div class="spotlight-banner">
+                <!-- Ambient luxury artwork glow -->
+                <div class="spotlight-ambient-glow" style="background-image: url('ek_hai_sujal/cover_pic/Ek%20Hai%20Sujal%202.0_%20Mountain%20Dreams.png');"></div>
+
+                <div class="spotlight-grid">
+                    <div class="spotlight-content">
+                        <span class="spotlight-tag">
+                            <svg viewBox="0 0 24 24"><path d="M19 3H5L2 9l10 12L22 9l-3-6zM9.62 8l1.5-3h1.76l1.5 3H9.62zM11 10v6.68L5.44 10H11zm2 0h5.56L13 16.68V10zm3.88-2h-2.5l-1.5-3h2.62l1.38 3zm-9.38 0l1.38-3h2.62l-1.5 3h-2.5z"/></svg>
+                            EXCLUSIVE MASTER RELEASE
+                        </span>
+                        <h2 class="spotlight-title">
+                            Ek Hai Sujal 2.0
+                            <span class="spotlight-subtitle">Ek Hai Sujal</span>
+                        </h2>
+                        <div class="spotlight-artist">
+                            <span class="spotlight-artist-name">BE SERIOUS MUSIC</span>
+                            <span class="spotlight-dot">&bull;</span>
+                            <span class="spotlight-duration">7:21 Min</span>
+                            <span class="hi-res-badge">
+                                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                                STUDIO MASTER QUALITY
+                            </span>
                         </div>
-                        
-                        <div class="hero-btns justify-center">
-                            <button class="btn-primary" id="hero-play-btn">Play Mix</button>
-                            <button class="btn-secondary" id="hero-like-btn">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                                </svg>
-                                Like
+                        <p class="spotlight-desc">
+                            The definitive audio experience produced by BE SERIOUS MUSIC. Atmospheric mountain chords, pristine vocal harmony, and heavy melodic 808s crafted for the ultimate music experience.
+                        </p>
+                        <div class="spotlight-actions">
+                            <button class="btn btn-primary-play" onclick="currentPlaylist = [...songs]; loadSong(0, true);">
+                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                Play Track
+                            </button>
+                            <button class="btn btn-glass-offline" onclick="cacheSingleSongInBackground(songs[0]); showToast('Ek Hai Sujal 2.0 stored for offline playback', 'cloudDone');">
+                                <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                                Save Offline
                             </button>
                         </div>
-                        <div id="liked-users-display" class="liked-by justify-center">
-                            <!-- User names will be injected here -->
-                        </div>
                     </div>
-                    <div id="song-review-banner" class="song-review-banner hidden"></div>
-                </section>
 
-                 <section class="section-container">
-                     <div class="album-header" onclick="playSong(14)">
-                         <img src="Raj/cover-pic/raj-ka-raj.png" alt="Raj Ka Raj Album"
-                             class="album-cover">
-                         <div class="album-info">
-                             <h2 class="album-title">Raj Ka Raj</h2>
-                             <p class="album-artist">BE_SERIOUS_MUSIC Artist</p>
-                             <p class="album-description">The latest premium hit from Raj folder</p>
-                         </div>
-                     </div>
-                 </section>
-
-<section class="section-container">
-                      <h2 class="section-title">Featured Track</h2>
-                      <div class="grid-container">
-                          <div class="song-card featured-song" onclick="playSong(0)">
-                              <span class="new-badge">NEW</span>
-                              <span class="trending-badge">
-                                  <svg class="trending-icon" viewBox="0 0 24 24" fill="none"
-                                      xmlns="http://www.w3.org/2000/svg">
-                                      <path d="M22 7L13.5 15.5L8.5 10.5L2 17" stroke="currentColor" stroke-width="3"
-                                          stroke-linecap="round" stroke-linejoin="round" />
-                                      <path d="M16 7H22V13" stroke="currentColor" stroke-width="3" stroke-linecap="round"
-                                          stroke-linejoin="round" />
-                                  </svg>
-                                  TRENDING
-                              </span>
-                              <img src="Kunal/cover/babes.png" alt="Babes">
-                              <h3>Babes</h3>
-                              <div class="card-footer">
-                                  <p>BE_SERIOUS_MUSIC Artist</p>
-                                  <button class="review-btn"
-                                      onclick="event.stopPropagation(); openReviewModal(14)">Review</button>
-                              </div>
-                          </div>
-                          <div class="song-card featured-song" onclick="playSong(1)">
-                              <span class="trending-badge">
-                                  <svg class="trending-icon" viewBox="0 0 24 24" fill="none"
-                                      xmlns="http://www.w3.org/2000/svg">
-                                      <path d="M22 7L13.5 15.5L8.5 10.5L2 17" stroke="currentColor" stroke-width="3"
-                                          stroke-linecap="round" stroke-linejoin="round" />
-                                      <path d="M16 7H22V13" stroke="currentColor" stroke-width="3" stroke-linecap="round"
-                                          stroke-linejoin="round" />
-                                  </svg>
-                                  TRENDING
-                              </span>
-                              <img src="MY_name_priyanshu/cover-pic/Mynamepriyanshu.png" alt="My Name Priyanshu">
-                              <h3>My Name Priyanshu</h3>
-                              <div class="card-footer">
-                                  <p>BE_SERIOUS_MUSIC Artist</p>
-                                  <button class="review-btn" onclick="event.stopPropagation(); openReviewModal(4)">Review</button>
-                              </div>
-                          </div>
-                          <div class="song-card featured-song" onclick="playSong(2)">
-                              <img src="MY_name_priyanshu/cover-pic/be_serious.png" alt="Be Serious Gang">
-                              <h3>Be Serious Gang</h3>
-                              <div class="card-footer">
-                                  <p>BE_SERIOUS_MUSIC Artist</p>
-                                  <button class="review-btn" onclick="event.stopPropagation(); openReviewModal(1)">Review</button>
-                              </div>
-                          </div>
-                          <div class="song-card featured-song" onclick="playSong(3)">
-                              <img src="MY_name_priyanshu/cover-pic/priyanshu_masti_trip.png" alt="Built by Hard Work">
-                              <h3>Built by Hard Work</h3>
-                              <div class="card-footer">
-                                  <p>BE_SERIOUS_MUSIC Artist</p>
-                                  <button class="review-btn" onclick="event.stopPropagation(); openReviewModal(2)">Review</button>
-                              </div>
-                          </div>
-                          <div class="song-card featured-song" onclick="playSong(4)">
-                              <img src="MY_name_priyanshu/cover-pic/Mountain_dreamer.png" alt="Mountain Dreamer">
-                              <h3>Mountain Dreamer</h3>
-                              <div class="card-footer">
-                                  <p>BE_SERIOUS_MUSIC Artist</p>
-                                  <button class="review-btn" onclick="event.stopPropagation(); openReviewModal(3)">Review</button>
-                              </div>
-                          </div>
-                          <div class="song-card featured-song" onclick="playSong(5)">
-                              <img src="MY_name_priyanshu/cover-pic/Tu_he_meri_jaan.png" alt="Tu Hi Meri Jaan">
-                              <h3>Tu Hi Meri Jaan</h3>
-                              <div class="card-footer">
-                                  <p>BE_SERIOUS_MUSIC Artist</p>
-                                  <button class="review-btn" onclick="event.stopPropagation(); openReviewModal(5)">Review</button>
-                              </div>
-                          </div>
-                          <div class="song-card featured-song" onclick="playSong(6)">
-                              <span class="trending-badge">
-                                  <svg class="trending-icon" viewBox="0 0 24 24" fill="none"
-                                      xmlns="http://www.w3.org/2000/svg">
-                                      <path d="M22 7L13.5 15.5L8.5 10.5L2 17" stroke="url(#trending-gradient-html)"
-                                          stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-                                      <path d="M16 7H22V13" stroke="url(#trending-gradient-html)" stroke-width="3"
-                                          stroke-linecap="round" stroke-linejoin="round" />
-                                      <defs>
-                                          <linearGradient id="trending-gradient-html" x1="2" y1="17" x2="22" y2="7"
-                                              gradientUnits="userSpaceOnUse">
-                                              <stop stop-color="#FF1D8E" />
-                                              <stop offset="1" stop-color="#FF5D2D" />
-                                          </linearGradient>
-                                      </defs>
-                                  </svg>
-                                  TRENDING
-                              </span>
-                              <img src="ek_hai_sujal/cover_pic/ek_hai_sujal.png" alt="Ek Hai Sujal">
-                              <h3>Ek Hai Sujal</h3>
-                              <div class="card-footer">
-                                  <p>The Hits Artist</p>
-                                  <button class="review-btn"
-                                      onclick="event.stopPropagation(); openReviewModal(6)">Review</button>
-                              </div>
-                          </div>
-                          <div class="song-card featured-song" onclick="playSong(7)">
-                              <img src="ek_hai_sujal/cover_pic/aagechala.png" alt="Aage Chala">
-                              <h3>Aage Chala</h3>
-                              <div class="card-footer">
-                                  <p>The Hits Artist</p>
-                                  <button class="review-btn" onclick="event.stopPropagation(); openReviewModal(7)">Review</button>
-                              </div>
-                          </div>
-                          <div class="song-card featured-song" onclick="playSong(8)">
-                              <span class="trending-badge">
-                                  <svg class="trending-icon" viewBox="0 0 24 24" fill="none"
-                                      xmlns="http://www.w3.org/2000/svg">
-                                      <path d="M22 7L13.5 15.5L8.5 10.5L2 17" stroke="currentColor" stroke-width="3"
-                                          stroke-linecap="round" stroke-linejoin="round" />
-                                      <path d="M16 7H22V13" stroke="currentColor" stroke-width="3" stroke-linecap="round"
-                                          stroke-linejoin="round" />
-                                  </svg>
-                                  TRENDING
-                              </span>
-                              <img src="Kamal_ki_khani/cover_pic/adhoori_kahani_kamal_ki.png"
-                                  alt="Adhoori Kahani Kamal Ki">
-                              <h3>Adhoori Kahani Kamal Ki</h3>
-                              <div class="card-footer">
-                                  <p>The Hits Artist</p>
-                                  <button class="review-btn"
-                                      onclick="event.stopPropagation(); openReviewModal(8)">Review</button>
-                              </div>
-                          </div>
-                          <div class="song-card featured-song" onclick="playSong(9)">
-                              <img src="Kamal_ki_khani/cover_pic/kyakamalmkamithi.png" alt="Kya Kamal Mein Kami Thi">
-                              <h3>Kya Kamal Mein Kami Thi</h3>
-                              <div class="card-footer">
-                                  <p>The Hits Artist</p>
-                                  <button class="review-btn"
-                                      onclick="event.stopPropagation(); openReviewModal(9)">Review</button>
-                              </div>
-                          </div>
-                          <div class="song-card featured-song" onclick="playSong(10)">
-                              <span class="new-badge">NEW</span>
-                              <img src="golu/cover/vogoluh.png" alt="Vo Golu Hai">
-                              <h3>Vo Golu Hai</h3>
-                              <div class="card-footer">
-                                  <p>The Hits Artist</p>
-                                  <button class="review-btn"
-                                      onclick="event.stopPropagation(); openReviewModal(10)">Review</button>
-                              </div>
-                          </div>
-                          <div class="song-card featured-song" onclick="playSong(11)">
-                              <span class="trending-badge">
-                                  <svg class="trending-icon" viewBox="0 0 24 24" fill="none"
-                                      xmlns="http://www.w3.org/2000/svg">
-                                      <path d="M22 7L13.5 15.5L8.5 10.5L2 17" stroke="currentColor" stroke-width="3"
-                                          stroke-linecap="round" stroke-linejoin="round" />
-                                      <path d="M16 7H22V13" stroke="currentColor" stroke-width="3" stroke-linecap="round"
-                                          stroke-linejoin="round" />
-                                  </svg>
-                                  TRENDING
-                              </span>
-                              <img src="kiran/cover/kirankiran.png" alt="Kiran Kiran">
-                              <h3>Kiran Kiran</h3>
-                              <div class="card-footer">
-                                  <p>BE_SERIOUS_MUSIC Artist</p>
-                                  <button class="review-btn"
-                                      onclick="event.stopPropagation(); openReviewModal(11)">Review</button>
-                              </div>
-                          </div>
-                          <div class="song-card featured-song" onclick="playSong(12)">
-                              <span class="new-badge">NEW</span>
-                              <img src="Kamal_ki_khani/cover_pic/ishq_e_kamal.png" alt="Ishq-e-kamal">
-                              <h3>Ishq-e-kamal</h3>
-                              <div class="card-footer">
-                                  <p>BE_SERIOUS_MUSIC Artist</p>
-                                  <button class="review-btn" onclick="event.stopPropagation(); openReviewModal(12)">Review</button>
-                              </div>
-                          </div>
-                          <div class="song-card featured-song" onclick="playSong(13)">
-                              <span class="new-badge">NEW</span>
-                              <img src="golu/cover/golu_on_grind.png" alt="Golu on Grind">
-                              <h3>Golu on Grind</h3>
-                              <div class="card-footer">
-                                  <p>The Hits Artist</p>
-                                  <button class="review-btn"
-                                      onclick="event.stopPropagation(); openReviewModal(13)">Review</button>
-                              </div>
-                          </div>
-                          <div class="song-card featured-song" onclick="playSong(14)">
-                              <span class="trending-badge">
-                                  <svg class="trending-icon" viewBox="0 0 24 24" fill="none"
-                                      xmlns="http://www.w3.org/2000/svg">
-                                      <path d="M22 7L13.5 15.5L8.5 10.5L2 17" stroke="currentColor" stroke-width="3"
-                                          stroke-linecap="round" stroke-linejoin="round" />
-                                      <path d="M16 7H22V13" stroke="currentColor" stroke-width="3" stroke-linecap="round"
-                                          stroke-linejoin="round" />
-                                  </svg>
-                                  TRENDING
-                              </span>
-                              <img src="Raj/cover-pic/raj-ka-raj.png" alt="Raj Ka Raj">
-                              <h3>Raj Ka Raj</h3>
-                              <div class="card-footer">
-                                  <p>BE_SERIOUS_MUSIC Artist</p>
-                                  <button class="review-btn"
-                                      onclick="event.stopPropagation(); openReviewModal(15)">Review</button>
-                              </div>
-                          </div>
-                      </div>
-                  </section>
-
-                <section class="section-container">
-                    <div class="section-header">
-                        <h2 class="section-title">My Name Priyanshu</h2>
-                        <span class="see-all">SEE ALL</span>
-                    </div>
-                    <div class="grid-container" id="priyanshu-playlist">
-                        <!-- Songs for 'My Name Priyanshu' playlist will be injected here -->
-                    </div>
-                </section>
-
-                <section class="section-container">
-                    <h2 class="section-title">Trending Hits</h2>
-                    <div class="grid-container" id="song-grid">
-                        <!-- Trending songs -->
-                    </div>
-                </section>
-
-                <section class="section-container">
-                    <h2 class="section-title">Most Liked Songs</h2>
-                    <div class="grid-container" id="most-liked-grid">
-                        <!-- Dynamic liked songs will be injected here -->
-                    </div>
-                </section>
-
-                <section class="section-container" id="exclusive-playlists">
-                    <h2 class="section-title">Exclusive Playlists</h2>
-                    <div class="grid-container">
-                        <div class="playlist-card glass-effect"
-                            onclick="openPlaylist('Luxury Vibes', 'MY_name_priyanshu/cover-pic/Mynamepriyanshu.png')">
-                            <img src="MY_name_priyanshu/cover-pic/Mynamepriyanshu.png" alt="Luxury Vibes">
-                            <h3>Luxury Vibes</h3>
-                        </div>
-                        <div class="playlist-card glass-effect"
-                            onclick="openPlaylist('Late Night Jazz', 'MY_name_priyanshu/cover-pic/be_serious.png')">
-                            <img src="MY_name_priyanshu/cover-pic/be_serious.png" alt="Late Night Jazz">
-                            <h3>Late Night Jazz</h3>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Premium Contact Section -->
-                <section class="section-container" id="contact">
-                    <h2 class="section-title">Artist Inquiry</h2>
-                    <div class="contact-wrapper glass-effect">
-                        <form id="contact-form">
-                            <div class="form-group">
-                                <input type="text" placeholder="Your Name" required>
+                    <!-- Full Cover Picture Showcase: 1:1 Aspect Ratio Preserved so Model Face & Landscape are 100% Uncropped -->
+                    <div class="spotlight-cover-showcase">
+                        <div class="spotlight-art-frame">
+                            <img src="ek_hai_sujal/cover_pic/Ek%20Hai%20Sujal%202.0_%20Mountain%20Dreams.png" alt="Ek Hai Sujal 2.0 - BE SERIOUS MUSIC" class="spotlight-cover-img" id="spotlight-cover-img">
+                            <div class="spotlight-art-badge">
+                                <span class="pulse-dot"></span>
+                                STUDIO MASTER
                             </div>
-                            <div class="form-group">
-                                <input type="email" placeholder="Email Address" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BE SERIOUS AI Concierge Interactive Promo Showcase -->
+        <section class="ai-promo-section" id="ai-advisor-showcase">
+            <div class="ai-promo-card">
+                <div class="ai-promo-ambient-glow"></div>
+                <div class="ai-promo-content">
+                    <div class="ai-promo-badge">
+                        <span class="pulse-dot"></span>
+                        INTELLIGENT SOUND ADVISOR
+                    </div>
+                    <h2 class="ai-promo-title">
+                        Not Sure What to Feel? Let BE SERIOUS AI Find Your Beat.
+                    </h2>
+                    <p class="ai-promo-desc">
+                        Tell BE SERIOUS AI your mood, energy, or setting. Our acoustic neural engine analyzes harmonic frequencies to recommend the exact master track for your moment.
+                    </p>
+                    <div class="ai-promo-vibe-bar">
+                        <button type="button" class="ai-vibe-pill" onclick="if(window.openAiConciergeModal){window.openAiConciergeModal();}">Mountain Peace</button>
+                        <button type="button" class="ai-vibe-pill" onclick="if(window.openAiConciergeModal){window.openAiConciergeModal();}">Gym & Hustle</button>
+                        <button type="button" class="ai-vibe-pill" onclick="if(window.openAiConciergeModal){window.openAiConciergeModal();}">Late Night Melodies</button>
+                        <button type="button" class="ai-vibe-pill" onclick="if(window.openAiConciergeModal){window.openAiConciergeModal();}">Street Rap Flow</button>
+                        <button type="button" class="ai-vibe-pill" onclick="if(window.openAiConciergeModal){window.openAiConciergeModal();}">Luxury Confidence</button>
+                    </div>
+                    <div class="ai-promo-actions">
+                        <button type="button" class="btn btn-primary-play" onclick="if(window.openAiConciergeModal){window.openAiConciergeModal();}">
+                            <svg viewBox="0 0 24 24"><path d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"/></svg>
+                            Launch AI Sound Advisor
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search & Filter Controls -->
+        <section class="search-filter-section">
+            <div class="search-box">
+                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" id="search-input" placeholder="Search track name by BE SERIOUS MUSIC (e.g. Sujal 2.0, Babes, Priyanshu, Adhoori Kahani)...">
+            </div>
+
+            <div class="filter-chips-wrapper">
+                <button class="filter-chip active" data-filter="all">All Tracks (16)</button>
+                <button class="filter-chip" data-filter="trending">
+                    <svg class="chip-icon" viewBox="0 0 24 24"><path d="M12 23c-4.97 0-9-4.03-9-9 0-3.53 2.11-6.57 5.17-7.97-.04.48-.06.97-.06 1.47 0 3.23 1.83 6.04 4.54 7.42-.3-1.04-.47-2.14-.47-3.28 0-2.3 1.05-4.36 2.72-5.73C15.63 4.47 16 3.03 16 1.5c0-.17-.02-.34-.05-.5C19.55 3.39 22 7.41 22 12c0 6.08-4.92 11-10 11z"/></svg>
+                    Trending
+                </button>
+                <button class="filter-chip" data-filter="offline">
+                    <svg class="chip-icon" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM10 17l-3.5-3.5 1.41-1.41L10 14.17l5.59-5.59L17 10l-7 7z"/></svg>
+                    Offline Ready
+                </button>
+                <button class="filter-chip" data-filter="favorites">
+                    <svg class="chip-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    Favorites
+                </button>
+                <button class="filter-chip" data-filter="mountain">Mountain Vibes</button>
+                <button class="filter-chip" data-filter="hustle">Hustle Beats</button>
+                <button class="filter-chip" data-filter="melodies">Late Night Melodies</button>
+                <button class="filter-chip" data-filter="rap">Street Flow</button>
+            </div>
+        </section>
+
+        <!-- Latest Songs Grid -->
+        <section id="songs">
+            <div class="section-heading">
+                <div>
+                    <div class="section-subtitle">BE SERIOUS MUSIC DISCOGRAPHY</div>
+                    <h2>Latest Drops & Anthems</h2>
+                </div>
+            </div>
+            <div class="grid-4" id="songsGrid">
+                <!-- Injected via script.js -->
+            </div>
+        </section>
+
+        <!-- Top Charting Albums -->
+        <section id="albums">
+            <div class="section-heading">
+                <div>
+                    <div class="section-subtitle">GLOBAL RANKINGS</div>
+                    <h2>Top Charting Hits</h2>
+                </div>
+            </div>
+            <div class="albums-table" id="albumsTable">
+                <!-- Injected via script.js -->
+            </div>
+        </section>
+
+        <!-- Curated Playlists -->
+        <section id="playlists">
+            <div class="section-heading">
+                <div>
+                    <div class="section-subtitle">CURATED EXPERIENCES</div>
+                    <h2>Vibes & Playlists</h2>
+                </div>
+            </div>
+            <div class="grid-play" id="playlists-grid">
+                <!-- Injected via script.js -->
+            </div>
+
+            <!-- Dynamic Playlist Songs Drawer / Details View -->
+            <div id="playlist-detail-container" class="playlist-detail-container" style="display:none;" aria-hidden="true">
+                <div class="playlist-detail-card">
+                    <button class="playlist-detail-close" id="close-playlist-detail-btn" aria-label="Close Playlist Details">
+                        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                    </button>
+
+                    <!-- Playlist Header -->
+                    <div class="playlist-detail-header">
+                        <div class="playlist-detail-cover-wrap">
+                            <img id="playlist-detail-cover" src="" alt="Playlist Cover" class="playlist-detail-cover">
+                            <div class="playlist-cover-overlay-badge" id="playlist-detail-track-count">0 Tracks</div>
+                        </div>
+                        <div class="playlist-detail-meta">
+                            <div class="playlist-detail-tag-row">
+                                <span class="playlist-detail-tag">OFFICIAL CURATED PLAYLIST</span>
+                                <span class="playlist-detail-badge" id="playlist-detail-total-duration">Studio Master</span>
                             </div>
-                            <div class="form-group">
-                                <textarea placeholder="Tell us about your project..." rows="4"></textarea>
+                            <h3 class="playlist-detail-title" id="playlist-detail-title">Playlist Title</h3>
+                            <p class="playlist-detail-desc" id="playlist-detail-desc">Playlist description goes here.</p>
+                            <div class="playlist-detail-actions">
+                                <button class="btn btn-primary-play" id="playlist-play-all-btn">
+                                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                    Play All Songs
+                                </button>
+                                <button class="btn btn-secondary" id="playlist-detail-close-action">
+                                    Close Playlist
+                                </button>
                             </div>
-                            <button type="submit" class="btn-primary">Send Inquiry</button>
-                        </form>
-                         <div class="social-links">
-                             <h3>Connect with BE_SERIOUS_MUSIC</h3>
-                             <div class="social-grid">
-                                 <div class="social-item">
-                                     <a href="https://www.instagram.com/beserious_official?igsh=M2loNW12dDJrcTlw" onclick="showInstagramPopup(event)" class="instagram-link">
-                                         <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg"
-                                             alt="Instagram">
-                                     </a>
-                                 </div>
-                                 <div class="social-item">
-                                     <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Logo_of_Twitter.svg"
-                                         alt="Twitter">
-                                 </div>
-                                 <div class="social-item">
-                                     <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Spotify_logo_with_text.svg"
-                                         alt="Spotify">
-                                 </div>
-                                 <div class="social-item">
-                                     <a href="https://priyanshunegi.com" target="_blank" title="Priyanshu Negi">
-                                         <img src="https://www.google.com/s2/favicons?domain=priyanshunegi.com&sz=64" alt="Priyanshu Negi">
-                                     </a>
-                                 </div>
-                                 <div class="social-item">
-                                     <a href="https://adityanegi.in" target="_blank" title="Aditya Negi">
-                                         <img src="https://www.google.com/s2/favicons?domain=adityanegi.in&sz=64" alt="Aditya Negi">
-                                     </a>
-                                 </div>
-                             </div>
-                         </div>
+                        </div>
                     </div>
-                </section>
-            </div>
 
-            <!-- Playlist Detail Section -->
-            <div id="playlist-detail-section" class="app-section" style="display:none;">
-                <div class="playlist-header">
-                    <img id="pl-detail-img" src="" alt="Playlist Cover">
-                    <div class="header-text">
-                        <span class="badge">PLAYLIST</span>
-                        <h1 id="pl-detail-title">Playlist Name</h1>
-                        <p id="pl-detail-desc">A curated collection of hits just for you.</p>
-                        <div class="header-actions">
-                            <button class="play-btn-large" id="pl-play-all">PLAY ALL</button>
-                            <button class="back-btn-nav" onclick="showSection('home')">BACK</button>
+                    <!-- Available Songs in Playlist -->
+                    <div class="playlist-tracks-section">
+                        <div class="playlist-tracks-header">
+                            <span class="pl-col-idx">#</span>
+                            <span class="pl-col-title">TRACK TITLE & ARTIST</span>
+                            <span class="pl-col-cat hide-mobile">CATEGORY</span>
+                            <span class="pl-col-dur">DURATION</span>
+                            <span class="pl-col-action">PLAY</span>
+                        </div>
+                        <div class="playlist-tracks-list" id="playlist-tracks-list">
+                            <!-- Injected dynamically via script.js -->
                         </div>
                     </div>
                 </div>
-                <div class="tracklist-container luxury-glass">
-                    <div class="tracklist-header">
-                        <span>#</span>
-                        <span>TITLE</span>
-                        <span>ARTIST</span>
+            </div>
+        </section>
+
+        <!-- Official beserious.in Live Portal Showcase (Iframe) -->
+        <section id="beserious-portal" class="portal-showcase-section">
+            <div class="section-heading">
+                <div>
+                    <div class="section-subtitle">OFFICIAL DIGITAL HEADQUARTERS</div>
+                    <h2>Explore beserious.in Live Portal</h2>
+                </div>
+            </div>
+            <div class="portal-browser-frame">
+                <div class="portal-browser-bar">
+                    <div class="browser-dots">
+                        <span class="browser-dot red"></span>
+                        <span class="browser-dot yellow"></span>
+                        <span class="browser-dot green"></span>
                     </div>
-                    <div id="playlist-tracklist">
-                        <!-- Tracks injected here -->
+                    <div class="browser-address-bar">
+                        <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                        https://beserious.in
+                    </div>
+                    <div class="browser-actions">
+                        <a href="https://beserious.in" target="_blank" rel="noopener" class="portal-direct-btn">
+                            Visit beserious.in ↗
+                        </a>
+                    </div>
+                </div>
+                <div class="portal-iframe-container">
+                    <iframe data-src="https://beserious.in" src="about:blank" class="portal-iframe" id="beserious-live-iframe" title="beserious.in Live Portal" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
+                </div>
+                <div class="portal-fallback-footer">
+                    <div class="portal-footer-left">
+                        Official BE SERIOUS Portal &bull; Fashion, Music Drops & Digital Universe
+                    </div>
+                    <div class="portal-footer-links">
+                        <a href="https://beserious.in" target="_blank" rel="noopener" class="portal-footer-link">Visit beserious.in</a>
+                        <a href="https://beseriousofficial.in" target="_blank" rel="noopener" class="portal-footer-link">beseriousofficial.in</a>
+                        <a href="https://www.instagram.com/reel/DNN2InkPi5_/" target="_blank" rel="noopener" class="portal-footer-link">Watch Reels</a>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Library Section -->
-            <div id="library-section" class="app-section" style="display:none;">
-                <section class="section-container">
-                    <h2 class="section-title">Your Library</h2>
-                    <div class="grid-container" id="library-grid">
-                        <!-- Playlists and liked songs -->
-                        <div class="playlist-card"
-                            onclick="openPlaylist('Luxury Vibes', 'MY_name_priyanshu/cover-pic/Mynamepriyanshu.png')">
-                            <img src="MY_name_priyanshu/cover-pic/Mynamepriyanshu.png" alt="Luxury Vibes">
-                            <h3>Luxury Vibes</h3>
-                            <p>3 Songs</p>
-                        </div>
-                        <div class="playlist-card"
-                            onclick="openPlaylist('Late Night Jazz', 'MY_name_priyanshu/cover-pic/be_serious.png')">
-                            <img src="MY_name_priyanshu/cover-pic/be_serious.png" alt="Late Night Jazz">
-                            <h3>Late Night Jazz</h3>
-                            <p>3 Songs</p>
-                        </div>
-                        <div class="playlist-card"
-                            onclick="openPlaylist('My Name Priyanshu', 'MY_name_priyanshu/cover-pic/Mynamepriyanshu.png')">
-                            <img src="MY_name_priyanshu/cover-pic/Mynamepriyanshu.png" alt="My Name Priyanshu">
-                            <h3>My Name Priyanshu</h3>
-                            <p>6 Songs</p>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </main>
-
-        <!-- Player Bar (Fixed Bottom) -->
-        <footer class="player-bar luxury-glass">
-            <div class="now-playing">
-                <div class="active-track-img">
-                    <img src="songs /cover-pic/Mynamepriyanshu.png" id="player-track-img" alt="Current Track">
+        <!-- Offline Vault Section -->
+        <section id="offline">
+            <div class="offline-banner-card">
+                <div class="offline-info">
+                    <h3>
+                        <svg class="header-icon" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM10 17l-3.5-3.5 1.41-1.41L10 14.17l5.59-5.59L17 10l-7 7z"/></svg>
+                        Offline Music Vault
+                    </h3>
+                    <p>Enjoy uncompromised master-grade playback by BE SERIOUS MUSIC without network access or data streaming. All 16 tracks run completely offline directly on your hardware.</p>
                 </div>
-                <div class="track-info">
-                    <h4 id="current-title">Select a Track</h4>
-                    <p id="current-artist">BE_SERIOUS_MUSIC Premium</p>
+                <button class="btn btn-download-all" onclick="downloadAllSongsForOffline()">
+                    <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                    Save All 16 Songs Offline
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo">
+                    <span>BE SERIOUS MUSIC</span>
+                </div>
+                <p class="footer-about">High-fidelity web streaming application with zero buffering and seamless offline playback for audiophiles everywhere. All music produced by BE SERIOUS MUSIC.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Collections</h4>
+                <ul>
+                    <li><a href="#spotlight">Ek Hai Sujal 2.0 (New)</a></li>
+                    <li><a href="#songs" onclick="document.querySelector('[data-filter=mountain]').click();">Mountain Vibes</a></li>
+                    <li><a href="#songs" onclick="document.querySelector('[data-filter=hustle]').click();">Hustle Beats</a></li>
+                    <li><a href="#songs" onclick="document.querySelector('[data-filter=melodies]').click();">Late Night Melodies</a></li>
+                    <li><a href="#songs" onclick="document.querySelector('[data-filter=rap]').click();">Street Flow</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>WebApp Features</h4>
+                <ul>
+                    <li><a href="#offline">100% Offline Mode</a></li>
+                    <li><a href="#vip">VIP Email Verification</a></li>
+                    <li><a href="#playlists">Curated Playlists</a></li>
+                    <li>
+                        <a href="#" id="shortcut-help-link" onclick="showToast('Space: Play/Pause | Arrow Left/Right: Seek | Arrow Up/Down: Volume | N/P: Next/Prev | L: Like', 'sparkle', 5000);">
+                            <svg style="width: 14px; height: 14px; fill: currentColor;" viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg>
+                            Shortcuts
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Official Portals</h4>
+                <ul>
+                    <li><a href="https://beserious.in" target="_blank" rel="noopener">beserious.in</a></li>
+                    <li><a href="https://beseriousofficial.in" target="_blank" rel="noopener">beseriousofficial.in</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 BE SERIOUS MUSIC. All rights reserved. High-Fidelity Studio Master WebApp.
+        </div>
+    </footer>
+
+    <!-- Bottom Fixed Music Player -->
+    <div class="music-player">
+        <div class="player-left" id="player-track-trigger" onclick="if(window.openCdPlayerModal) window.openCdPlayerModal();" title="Click to Open Vinyl CD Player &amp; Lyrics">
+            <div class="player-art-wrap">
+                <img src="ek_hai_sujal/cover_pic/Ek Hai Sujal 2.0_ Mountain Dreams.png" alt="Album Cover" class="player-art" id="player-art">
+                <div class="player-art-expand-hint" title="Open Lyrics">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5zm0-5.5c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"/></svg>
                 </div>
             </div>
+            <div class="player-info">
+                <div class="player-title" id="player-title" title="Ek Hai Sujal 2.0">Ek Hai Sujal 2.0</div>
+                <div class="player-artist" id="player-artist">
+                    <span class="player-artist-name">BE SERIOUS MUSIC</span>
+                    <span class="hi-res-badge player-hi-res-badge">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                        STUDIO MASTER
+                    </span>
+                </div>
+            </div>
+            <button class="control-btn card-like-btn" id="like-btn" onclick="event.stopPropagation();" aria-label="Favorite song" data-tooltip="Like Track (L)">
+                <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </button>
+        </div>
 
+        <div class="player-center">
             <div class="player-controls">
-                <div class="main-btns">
-                    <button id="prev-btn" class="ctrl-btn ivory-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
-                        </svg>
-                    </button>
-                    <button id="play-pause-btn" class="play-btn ivory-btn-main">
-                        <svg id="play-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M8 5v14l11-7z" />
-                        </svg>
-                        <svg id="pause-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"
-                            style="display:none;">
-                            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
-                        </svg>
-                    </button>
-                    <button id="next-btn" class="ctrl-btn ivory-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="progress-box">
-                    <span id="current-time">0:00</span>
-                    <div class="progress-bar-bg" id="progress-bar-bg">
-                        <div class="progress-bar-fill" id="progress-bar-fill"></div>
-                    </div>
-                    <span id="total-duration">0:00</span>
-                </div>
+                <button class="control-btn" id="shuffle-btn" data-tooltip="Shuffle (S)" aria-label="Shuffle">
+                    <svg viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+                </button>
+                <button class="control-btn" id="prev-btn" data-tooltip="Previous (P)" aria-label="Previous">
+                    <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+                </button>
+                <button class="control-btn play-pause-btn" id="play-pause-btn" data-tooltip="Play (Space)" aria-label="Play or Pause">
+                    <svg id="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    <svg id="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+                <button class="control-btn" id="next-btn" data-tooltip="Next (N)" aria-label="Next">
+                    <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                </button>
+                <button class="control-btn" id="repeat-btn" data-tooltip="Repeat Off" aria-label="Repeat">
+                    <svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+                </button>
             </div>
+
+            <!-- Scrubber -->
+            <div class="progress-container">
+                <span class="time" id="player-current-time">0:00</span>
+                <div class="progress-bar" id="player-progress-bar">
+                    <div class="buffer-fill" id="player-buffer-fill"></div>
+                    <div class="progress-fill" id="player-progress-fill">
+                        <div class="progress-thumb"></div>
+                    </div>
+                </div>
+                <span class="time" id="player-total-time">7:21</span>
+            </div>
+        </div>
+
+        <div class="player-right">
+            <!-- Audio Visualizer Canvas -->
+            <div class="visualizer-mini-container" title="Audio Visualizer">
+                <canvas id="visualizer-canvas" width="90" height="28"></canvas>
+            </div>
+
+            <button class="control-btn" id="player-cd-btn" onclick="openCdPlayerModal();" data-tooltip="Vinyl CD &amp; Live Lyrics" aria-label="Open Vinyl &amp; Lyrics Player">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5zm0-5.5c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"/></svg>
+            </button>
+
+            <button class="control-btn" id="player-share-btn" onclick="openShareModal();" data-tooltip="Share Track" aria-label="Share Track">
+                <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>
+            </button>
 
             <div class="volume-container">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="vol-icon">
-                    <path
-                        d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
-                </svg>
-                <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="1">
-            </div>
-        </footer>
-
-        <!-- Mobile Navigation Bar -->
-        <nav class="mobile-nav luxury-glass">
-            <div class="nav-item nav-btn active" data-section="home">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-                </svg>
-                <span>Home</span>
-            </div>
-            <div class="nav-item nav-btn" data-section="search">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                        d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-                </svg>
-                <span>Search</span>
-            </div>
-            <div class="nav-item nav-btn" data-section="library">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z" />
-                </svg>
-                <span>Library</span>
-            </div>
-            <div class="nav-item nav-btn" data-section="profile">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                </svg>
-                <span>Profile</span>
-            </div>
-        </nav>
-    </div>
-
-    <!-- Review Modal -->
-    <div id="review-modal" class="auth-modal hidden">
-        <div class="auth-container review-container">
-            <div class="auth-header">
-                <h1>REVIEWS</h1>
-                <p id="review-song-title">Song Title</p>
+                <button class="control-btn" id="volume-btn" data-tooltip="Mute / Unmute (M)" aria-label="Volume">
+                    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                </button>
+                <input type="range" class="volume-slider" id="volume-slider" min="0" max="1" step="0.01" value="0.85" aria-label="Volume Slider">
             </div>
 
-            <div class="reviews-list" id="reviews-list">
-                <!-- Reviews will be injected here -->
-            </div>
-
-            <form id="review-form" class="auth-form active-form">
-                <div class="form-group">
-                    <input type="text" id="review-user" placeholder="Your Name" required>
-                </div>
-                <div class="form-group">
-                    <select id="review-rating" class="review-select">
-                        <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
-                        <option value="4">⭐⭐⭐⭐ (4/5)</option>
-                        <option value="3">⭐⭐⭐ (3/5)</option>
-                        <option value="2">⭐⭐ (2/5)</option>
-                        <option value="1">⭐ (1/5)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <textarea id="review-comment" placeholder="Write your review..." rows="3" required></textarea>
-                </div>
-                <button type="submit" class="btn-primary auth-btn">Post Review</button>
-                <button type="button" class="btn-secondary auth-btn" onclick="closeReviewModal()">Close</button>
-            </form>
+            <button class="control-btn" id="queue-btn" data-tooltip="Playing Queue" aria-label="Open Queue">
+                <svg viewBox="0 0 24 24"><path d="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/></svg>
+            </button>
         </div>
     </div>
 
+    <!-- Slide-out Playing Queue Drawer -->
+    <aside class="queue-drawer" id="queue-drawer">
+        <div class="queue-header">
+            <h3>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/></svg>
+                Current Queue
+            </h3>
+            <button class="close-btn" id="close-queue-btn" aria-label="Close Queue">
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+        </div>
+        <div class="queue-list" id="queue-list">
+            <!-- Queue items injected via script.js -->
+        </div>
+    </aside>
+
+    <!-- Offline Download Progress Modal -->
+    <div class="modal-overlay" id="offline-modal">
+        <div class="modal-card">
+            <h3>
+                <svg class="header-icon" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM10 17l-3.5-3.5 1.41-1.41L10 14.17l5.59-5.59L17 10l-7 7z"/></svg>
+                Offline Music Vault
+            </h3>
+            <p>Downloading high-fidelity music and artwork to your device for offline playback...</p>
+            <div class="modal-progress-bar-container">
+                <div class="modal-progress-fill" id="offline-progress-bar"></div>
+            </div>
+            <div class="modal-status-text" id="offline-progress-text">Preparing storage...</div>
+            <button class="btn btn-glass-offline" id="close-offline-modal" style="margin-top: 20px;">Dismiss</button>
+        </div>
+    </div>
+
+    <!-- Audio Sponsored Ad Overlay (Plays for Non-Verified Users) -->
+    <div id="audio-ad-overlay" class="audio-ad-overlay" aria-hidden="true">
+        <div class="audio-ad-card">
+            <div class="ad-card-header">
+                <span class="ad-sponsor-badge">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    SPONSORED ADVERTISEMENT
+                </span>
+                <div class="ad-countdown-pill" id="ad-countdown-pill">
+                    Ad: <span id="ad-countdown-sec">20</span>s
+                </div>
+            </div>
+            
+            <div class="ad-card-body" id="ad-card-body">
+                <!-- Dynamically injected from PROMO_ADS -->
+            </div>
+
+            <div class="ad-card-footer">
+                <button class="btn btn-primary-play btn-modal-action" id="ad-skip-vip-btn" onclick="openVipModal();">
+                    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                    Verify Email to Skip All Ads
+                </button>
+                <p class="ad-disclaimer">Free listening supported by sponsors. Verify your email to enjoy 100% ad-free playback.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Website Banner Ad (10s periodic promo for non-verified users) -->
+    <div id="floating-ad-banner" class="floating-ad-banner" aria-hidden="true">
+        <button class="floating-ad-close" id="close-floating-ad-btn" aria-label="Dismiss ad">
+            <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+        <div class="floating-ad-thumb" id="floating-ad-thumb">
+            <img src="ek_hai_sujal/cover_pic/Ek%20Hai%20Sujal%202.0_%20Mountain%20Dreams.png" alt="Promo">
+        </div>
+        <div class="floating-ad-content">
+            <div class="floating-ad-badge-row">
+                <span class="ad-mini-pill">PROMOTED</span>
+                <span class="ad-timer-text" id="floating-ad-timer">10s</span>
+            </div>
+            <div class="floating-ad-title" id="floating-ad-title">BE SERIOUS Gang Official</div>
+            <div class="floating-ad-actions">
+                <a href="https://beserious.in" target="_blank" rel="noopener" class="ad-mini-btn gold" id="floating-ad-site-btn">beserious.in</a>
+                <a href="https://instagram.com/reels" target="_blank" rel="noopener" class="ad-mini-btn" id="floating-ad-reel-btn">Reel</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Spinning Vinyl CD Player & Synchronized Live Lyrics Modal -->
+    <div id="cd-player-modal" class="cd-modal-backdrop" aria-hidden="true">
+        <div class="cd-modal-dialog">
+            <button class="cd-modal-close" id="close-cd-modal-btn" aria-label="Close CD Player">
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+
+            <div class="cd-modal-grid">
+                <!-- Left Turntable Section with Realistic Spinning Vinyl Record -->
+                <div class="cd-turntable-panel">
+                    <div class="cd-vinyl-housing">
+                        <!-- Animated Tonearm Stylus -->
+                        <div class="cd-tonearm" id="cd-tonearm">
+                            <div class="cd-tonearm-base"></div>
+                            <div class="cd-tonearm-arm"></div>
+                            <div class="cd-tonearm-head"></div>
+                        </div>
+
+                        <!-- Spinning Vinyl Record Disc -->
+                        <div class="cd-vinyl-disc" id="cd-vinyl-disc">
+                            <div class="cd-vinyl-sheen"></div>
+                            <div class="cd-vinyl-grooves"></div>
+                            <div class="cd-vinyl-center-art">
+                                <img id="cd-vinyl-art" src="ek_hai_sujal/cover_pic/Ek Hai Sujal 2.0_ Mountain Dreams.png" alt="Vinyl Label">
+                                <div class="cd-vinyl-spindle"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cd-track-meta">
+                        <div class="cd-meta-title" id="cd-meta-title">Ek Hai Sujal 2.0</div>
+                        <div class="cd-meta-artist">
+                            <span>BE SERIOUS MUSIC</span>
+                            <span class="hi-res-badge">
+                                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                                STUDIO MASTER 24-BIT
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- CD Playback Controls -->
+                    <div class="cd-controls-row">
+                        <button class="control-btn" id="cd-prev-btn" aria-label="Previous Track">
+                            <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+                        </button>
+                        <button class="control-btn play-pause-btn cd-play-btn" id="cd-play-btn" aria-label="Play or Pause Track">
+                            <svg id="cd-play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <svg id="cd-pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        </button>
+                        <button class="control-btn" id="cd-next-btn" aria-label="Next Track">
+                            <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                        </button>
+                        <button class="btn btn-share-inline" id="cd-share-btn" onclick="openShareModal();" aria-label="Share Track">
+                            <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>
+                            Share Track
+                        </button>
+                    </div>
+
+                    <!-- Scrubber within CD modal -->
+                    <div class="cd-progress-wrap">
+                        <span id="cd-current-time">0:00</span>
+                        <div class="progress-bar cd-progress-bar" id="cd-progress-bar">
+                            <div class="progress-fill" id="cd-progress-fill"></div>
+                        </div>
+                        <span id="cd-total-time">7:21</span>
+                    </div>
+                </div>
+
+                <!-- Right Lyrics & Acoustic Flow Panel -->
+                <div class="cd-lyrics-panel">
+                    <div class="cd-lyrics-header">
+                        <div class="cd-lyrics-badge">
+                            <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+                            STUDIO SYNCHRONIZED LYRICS
+                        </div>
+                        <div class="cd-lyrics-status" id="cd-lyrics-status">Flowing in Real-Time</div>
+                    </div>
+                    <div class="cd-lyrics-scroll" id="cd-lyrics-scroll" tabindex="0">
+                        <!-- Injected dynamically from SONG_LYRICS database -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dedicated Share Song Modal -->
+    <div id="share-modal" class="share-modal-backdrop" aria-hidden="true">
+        <div class="share-modal-card">
+            <button class="share-modal-close" id="close-share-modal-btn" aria-label="Close Share Modal">
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+
+            <div class="share-header">
+                <div class="share-badge">
+                    <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>
+                    SHARE BE SERIOUS MUSIC
+                </div>
+                <h3 class="share-title">Share This Track</h3>
+                <p class="share-subtitle">Share this Studio Master track with friends on WhatsApp, Instagram Reels, YouTube, or direct link with full artwork preview!</p>
+            </div>
+
+            <!-- Preview Card of what social media will show -->
+            <div class="share-card-preview" id="share-card-preview">
+                <img id="share-preview-thumb" src="ek_hai_sujal/cover_pic/Ek Hai Sujal 2.0_ Mountain Dreams.png" alt="Song Preview">
+                <div class="share-preview-info">
+                    <div class="share-preview-tag">BE SERIOUS MUSIC • OFFICIAL TRACK</div>
+                    <div class="share-preview-title" id="share-preview-title">Ek Hai Sujal 2.0</div>
+                    <div class="share-preview-desc" id="share-preview-desc">Stream Ek Hai Sujal 2.0 in Studio Master HD Audio with zero buffer on BE SERIOUS MUSIC.</div>
+                    <div class="share-preview-url" id="share-preview-url-display">beserious.in/?track=16</div>
+                </div>
+            </div>
+
+            <!-- Direct Social Share Buttons -->
+            <div class="share-actions-grid">
+                <button class="share-channel-btn whatsapp" id="share-whatsapp-btn">
+                    <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.32C9.37 7.32 9.12 7.38 8.9 7.62C8.68 7.86 8.07 8.43 8.07 9.6C8.07 10.77 8.92 11.89 9.04 12.05C9.16 12.21 10.7 14.58 13.06 15.6C13.62 15.85 14.06 16 14.4 16.11C14.97 16.29 15.48 16.27 15.9 16.21C16.36 16.14 17.31 15.63 17.5 15.08C17.71 14.53 17.71 14.07 17.65 13.97C17.59 13.87 17.43 13.82 17.18 13.69C16.94 13.57 15.74 12.98 15.5 12.9C15.3 12.82 15.15 12.78 15 13.01C14.85 13.24 14.43 13.73 14.3 13.88C14.18 14.04 14.05 14.06 13.81 13.93C13.56 13.81 12.78 13.55 11.84 12.71C11.11 12.06 10.62 11.25 10.5 11C10.37 10.77 10.48 10.64 10.61 10.5C10.72 10.39 10.85 10.21 10.97 10.07C11.09 9.93 11.14 9.83 11.22 9.67C11.3 9.5 11.26 9.37 11.2 9.25C11.14 9.12 10.65 7.93 10.45 7.44C10.25 6.96 10.05 7.02 9.9 7.02C9.76 7.01 9.61 7.01 9.46 7.01L9.53 7.32Z"/></svg>
+                    WhatsApp
+                </button>
+                <button class="share-channel-btn instagram" id="share-instagram-btn">
+                    <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.13-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    Reels / IG
+                </button>
+                <button class="share-channel-btn twitter" id="share-twitter-btn">
+                    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    Twitter / X
+                </button>
+                <button class="share-channel-btn native" id="share-native-btn">
+                    <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>
+                    More Apps
+                </button>
+            </div>
+
+            <!-- Copy Link Row -->
+            <div class="share-copy-row">
+                <input type="text" id="share-link-input" readonly value="">
+                <button class="btn btn-primary-play" id="share-copy-btn">Copy Link</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating AI Music Concierge Button (Fixed Luxury Orb) -->
+    <button id="floating-ai-btn" class="floating-ai-btn" aria-label="Open BE SERIOUS AI Music Concierge" onclick="if (window.openAiConciergeModal) window.openAiConciergeModal();">
+        <div class="ai-btn-glow"></div>
+        <div class="ai-btn-inner">
+            <svg viewBox="0 0 24 24"><path d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"/></svg>
+            <span class="ai-btn-text">AI Concierge</span>
+        </div>
+    </button>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <!-- WebApp Application Logic -->
     <script src="script.js"></script>
 </body>
-
-</html>
-
 </html>
