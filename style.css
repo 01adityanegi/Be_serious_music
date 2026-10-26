@@ -1,19 +1,18 @@
 :root {
-    /* User Official 5-Color Palette */
-    --c-orange: #FF4500;  /* Energy / Trending / New Releases / Liked Heart */
-    --c-green: #32CD32;   /* Lossless Audio Master / Offline Vault / Verified Success */
-    --c-blue: #1E90FF;    /* Atmospheric Audio / beserious.in Portal / Brand Links */
-    --c-gold: #FFD700;    /* Primary Play Actions / Scrubber Fill / VIP Entry */
-    --c-purple: #8A2BE2;  /* AI Music Concierge / Playlists / Harmonic Ambience */
+    
+    --c-orange: #FF4500;  
+    --c-green: #32CD32;  
+    --c-blue: #1E90FF;   
+    --c-gold: #FFD700;    
+    --c-purple: #8A2BE2; 
 
-    /* Matte Obsidian Architecture (Clean, non-shiny, premium dark mode) */
     --bg-color: #08090D;
     --bg-secondary: #0F1118;
     --card-bg: rgba(18, 20, 29, 0.88);
     --card-hover-bg: rgba(26, 30, 44, 0.96);
     --border-subtle: rgba(255, 255, 255, 0.08);
 
-    /* Functional Mappings */
+    
     --primary: var(--c-gold);
     --primary-light: #FFE033;
     --primary-dark: #CCA800;
@@ -23,7 +22,7 @@
     --accent-cyan: var(--c-blue);
     --gold: var(--c-gold);
 
-    /* Matte Gradients (Soft, refined blends between the 5 colors) */
+    
     --gradient-gold: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
     --gradient-energy: linear-gradient(135deg, #FF4500 0%, #FFD700 100%);
     --gradient-vibe: linear-gradient(135deg, #1E90FF 0%, #8A2BE2 100%);
@@ -4761,5 +4760,92 @@ footer {
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
     margin-bottom: 20px;
+}
+.share-channel-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 6px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #FFFFFF;
+    font-family: var(--font-accent);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.share-channel-btn:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.share-channel-btn svg {
+    width: 22px;
+    height: 22px;
+}
+
+.share-channel-btn.whatsapp svg { fill: #25D366; }
+.share-channel-btn.instagram svg { fill: #E1306C; }
+.share-channel-btn.twitter svg { fill: #1DA1F2; }
+.share-channel-btn.native svg { fill: #FFD700; }
+
+.share-copy-row {
+    display: flex;
+    gap: 8px;
+}
+
+.share-copy-row input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: #FFFFFF;
+    font-family: monospace;
+    font-size: 12px;
+    outline: none;
+}
+
+@media (max-width: 768px) {
+    .cd-modal-grid {
+        grid-template-columns: 1fr;
+        max-height: 90vh;
+    }
+    .cd-turntable-panel {
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 24px 16px;
+    }
+    .cd-vinyl-housing {
+        width: 180px;
+        height: 180px;
+        margin-bottom: 14px;
+    }
+    .cd-vinyl-disc {
+        width: 170px;
+        height: 170px;
+    }
+    .cd-vinyl-center-art {
+        width: 68px;
+        height: 68px;
+    }
+    .cd-lyrics-panel {
+        padding: 20px 16px;
+        min-height: 220px;
+    }
+    .cd-lyric-line {
+        font-size: 16px;
+    }
+    .cd-lyric-line.active {
+        font-size: 19px;
+    }
+    .share-actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
