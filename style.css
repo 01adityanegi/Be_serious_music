@@ -31,7 +31,7 @@
     --gradient: var(--gradient-gold);
     --gradient-warm: var(--gradient-energy);
 
-    /* Matte Typography (No harsh glare, pristine readability) */
+
     --text-primary: #F7F8FA;
     --text-secondary: #9DA3B4;
     --text-muted: #616676;
@@ -39,9 +39,9 @@
     --glass-border: rgba(255, 255, 255, 0.08);
     --glass-hover: rgba(255, 255, 255, 0.05);
 
-    /* Typography */
-    --font-heading: 'Plus Jakarta Sans', 'Outfit', sans-serif;
-    --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+    --font-heading: 'Plus Jakarta Sans', 'Outfit', sans-serif , helvetica;
+    --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif , poppins;
     --font-accent: 'Space Grotesk', sans-serif;
 
     --blob-color: var(--c-gold);
@@ -4807,5 +4807,43 @@ footer {
     font-family: monospace;
     font-size: 12px;
     outline: none;
+}
+
+@media (max-width: 768px) {
+    .cd-modal-grid {
+        grid-template-columns: 1fr;
+        max-height: 90vh;
+    }
+    .cd-turntable-panel {
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 24px 16px;
+    }
+    .cd-vinyl-housing {
+        width: 180px;
+        height: 180px;
+        margin-bottom: 14px;
+    }
+    .cd-vinyl-disc {
+        width: 170px;
+        height: 170px;
+    }
+    .cd-vinyl-center-art {
+        width: 68px;
+        height: 68px;
+    }
+    .cd-lyrics-panel {
+        padding: 20px 16px;
+        min-height: 220px;
+    }
+    .cd-lyric-line {
+        font-size: 16px;
+    }
+    .cd-lyric-line.active {
+        font-size: 19px;
+    }
+    .share-actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
